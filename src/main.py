@@ -2,7 +2,6 @@
 Load environment variables from a .env file, get refresh token for Reddit bot,
 and generate JSON files for submissions grouped by hostname.
 """
-import time
 import json
 import os
 import random
@@ -21,6 +20,7 @@ from praw.reddit import Reddit
 from selenium import webdriver
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.chrome.webdriver import WebDriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -105,7 +105,7 @@ def send_message(client: socket.socket, message: str) -> None:
 def get_submissions(subreddit) -> list[Submission]:
     """Return list of Reddit submissions."""
     submissions: list[Submission] = []
-    for submission in subreddit.new(limit=1000):
+    for submission in subreddit.new(limit=100):
         submissions.append(submission)
     return submissions
 
@@ -123,6 +123,21 @@ def get_hostnames(submissions: list[Submission]) -> set[str]:
                 hostname: str = parts[0]
             hostnames.add(hostname)
     return hostnames
+
+
+def get_udemy_urls(submissions: list[Submission]) -> list[str]:
+    """Return list of Udemy links with coupons for IDC."""
+    udemy_urls: list[str] = []
+    for submission in submissions:
+        if 'idownloadcoupon' in submission.url:
+            response = requests.get(
+                submission.url, allow_redirects=True, timeout=10)
+            url: str = response.url
+            if 'udemy.com' in url:
+                udemy_url: str = url
+                udemy_urls.append(udemy_url)
+
+    return udemy_urls
 
 
 def format_data(*, submissions: list[Submission],
@@ -149,7 +164,7 @@ def write_json(*, hostnames: set[str], data: dict[str, list[dict[str, str]]]) ->
         file_path: Path = data_dir / f'{hostname}.json'
         with file_path.open('w', encoding='utf-8') as f:
             json.dump(data[hostname], f, ensure_ascii=False, indent=4)
-        print(f'Successfully written data to {file_path}')
+        print(f'Successfully written data to {file_path}.')
 
 
 def main() -> None:
@@ -175,6 +190,8 @@ def main() -> None:
         submissions: list[Submission] = get_submissions(subreddit)
         hostnames: set[str] = get_hostnames(submissions)
         print(f'{hostnames=}')
+        udemy_urls: list[str] = get_udemy_urls(submissions)
+        print(f'{udemy_urls=}')
         data: dict[str, list[dict[str, str]]] = format_data(
             submissions=submissions, hostnames=hostnames)
         write_json(hostnames=hostnames, data=data)
