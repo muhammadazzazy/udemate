@@ -1,11 +1,23 @@
-"""Load environment variables from a .env file and get refresh token for Reddit bot."""
+"""
+Load environment variables from a .env file, get refresh token for Reddit bot,
+and generate JSON files for submissions grouped by hostname.
+"""
+import json
 import os
 import random
 import socket
 import sys
+from pathlib import Path
+from typing import Final
+from urllib.parse import urlparse
 
 import praw
 from dotenv import load_dotenv
+from praw.models.reddit.submission import Submission
+from praw.models.reddit.subreddit import Subreddit
+from praw.reddit import Reddit
+
+SUBREDDIT_NAME: Final[str] = 'udemyfreebies'
 
 
 def get_config() -> dict[str, str]:
@@ -32,7 +44,7 @@ def get_config() -> dict[str, str]:
 
 def get_refresh_token(env_vars: dict[str, str]) -> str:
     """Return refresh token."""
-    reddit: praw.reddit.Reddit = praw.Reddit(
+    reddit: Reddit = praw.Reddit(
         client_id=env_vars['CLIENT_ID'],
         client_secret=env_vars['CLIENT_SECRET'],
         redirect_uri='http://localhost:8080',
@@ -82,17 +94,81 @@ def send_message(client, message) -> None:
     client.close()
 
 
+def get_submissions(subreddit) -> list[Submission]:
+    """Return list of Reddit submissions."""
+    submissions: list[Submission] = []
+    for submission in subreddit.new(limit=5000):
+        submissions.append(submission)
+    return submissions
+
+
+def get_hostnames(submissions: list[Submission]) -> set[str]:
+    """Return set of hostnames."""
+    hostnames: set[str] = set()
+    for submission in submissions:
+        domain: str = urlparse(submission.url).netloc
+        parts: list[str] = domain.split('.')
+        if 'reddit' not in domain and domain:
+            if domain.startswith('www.'):
+                hostname: str = parts[1]
+            else:
+                hostname: str = parts[0]
+            hostnames.add(hostname)
+    return hostnames
+
+
+def format_data(*, submissions: list[Submission],
+                hostnames: set[str]) -> list[dict[str, str]]:
+    """Format output data."""
+    data: dict[str, list[dict[str, str]]] = {
+        hostname: [] for hostname in hostnames}
+    for submission in submissions:
+        for hostname in hostnames:
+            if hostname in submission.url:
+                data[hostname].append({
+                    'title': submission.title,
+                    'url': submission.url
+                })
+    return data
+
+
+def write_json(*, hostnames: set[str], data: dict[str, list[dict[str, str]]]) -> None:
+    """Write output to JSON files in a 'data' directory inside the root directory."""
+    root: Path = Path(__file__).parent.parent / 'data'
+    root.mkdir(parents=True, exist_ok=True)
+
+    for hostname in hostnames:
+        file_path: Path = root / f'{hostname}.json'
+        with file_path.open('w', encoding='utf-8') as f:
+            json.dump(data[hostname], f, ensure_ascii=False, indent=4)
+
+
 def main() -> None:
     """
     Coordinate program execution.
 
-    Invoke a function to load environment variables and get refresh token.
+    Invoke functions to load environment variables, get refresh token,
+    get list of submissions, get set of hostnames, format data, 
+    and write formatted data to JSON files grouped by hostname.
     """
     try:
         env_vars: dict[str, str] = get_config()
         print(f'{env_vars=}')
         refresh_token: str = get_refresh_token(env_vars)
         print(f'{refresh_token=}')
+        reddit: Reddit = praw.Reddit(
+            client_id=env_vars['CLIENT_ID'],
+            client_secret=env_vars['CLIENT_SECRET'],
+            user_agent=env_vars['USER_AGENT'],
+            refresh_token=refresh_token
+        )
+        subreddit: Subreddit = reddit.subreddit(SUBREDDIT_NAME)
+        submissions: list[Submission] = get_submissions(subreddit)
+        hostnames: set[str] = get_hostnames(submissions)
+        print(f'{hostnames=}')
+        data: dict[str, list[dict[str, str]]] = format_data(
+            submissions=submissions, hostnames=hostnames)
+        write_json(hostnames=hostnames, data=data)
     except ValueError as e:
         print(e)
         sys.exit()
