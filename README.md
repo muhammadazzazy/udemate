@@ -104,7 +104,8 @@ Create a Reddit bot and get environment variables:
 - [x] Implement environment variable parsing
 - [x] Add requirements.txt
 - [x] Implement refresh token authentication
-- [ ] Add functionality to generate JSON files of submissions grouped by hostname
+- [x] Add functionality to generate JSON files of submissions grouped by hostname
+- [ ] Implement automation of enrollment into courses
 
 See the [open issues](https://github.com/muhammadazzazy/udemy-unlocked/issues) for a full list of proposed features (and known issues).
 
