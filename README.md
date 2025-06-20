@@ -64,6 +64,8 @@ Create a Reddit bot and get environment variables:
 5. Set **description** to an appropriate description (e.g. repo description)
 6. Set **redirect uri** to `http://localhost:8080`
 
+📝 Note: On the first run, the script will provide you with a link that you need to click on to generate a Reddit refresh token and authorize access.
+
 ### Installation
 
 1. Clone the repo
@@ -101,7 +103,8 @@ Create a Reddit bot and get environment variables:
 
 - [x] Implement environment variable parsing
 - [x] Add requirements.txt
-- [ ] Implement refresh token authentication
+- [x] Implement refresh token authentication
+- [ ] Add functionality to generate JSON files of submissions grouped by hostname
 
 See the [open issues](https://github.com/muhammadazzazy/udemy-unlocked/issues) for a full list of proposed features (and known issues).
 
