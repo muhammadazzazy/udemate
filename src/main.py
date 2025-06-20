@@ -2,6 +2,7 @@
 Load environment variables from a .env file, get refresh token for Reddit bot,
 and generate JSON files for submissions grouped by hostname.
 """
+import time
 import json
 import os
 import random
@@ -12,10 +13,17 @@ from typing import Final
 from urllib.parse import urlparse
 
 import praw
+import requests
 from dotenv import load_dotenv
 from praw.models.reddit.submission import Submission
 from praw.models.reddit.subreddit import Subreddit
 from praw.reddit import Reddit
+from selenium import webdriver
+from selenium.common.exceptions import TimeoutException
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 
 SUBREDDIT_NAME: Final[str] = 'udemyfreebies'
 
@@ -88,7 +96,7 @@ def receive_connection() -> socket.socket:
     return client
 
 
-def send_message(client, message) -> None:
+def send_message(client: socket.socket, message: str) -> None:
     """Send message to client and close the connection."""
     client.send(f'HTTP/1.1 200 OK\r\n\r\n{message}'.encode())
     client.close()
@@ -97,7 +105,7 @@ def send_message(client, message) -> None:
 def get_submissions(subreddit) -> list[Submission]:
     """Return list of Reddit submissions."""
     submissions: list[Submission] = []
-    for submission in subreddit.new(limit=5000):
+    for submission in subreddit.new(limit=1000):
         submissions.append(submission)
     return submissions
 
@@ -134,13 +142,14 @@ def format_data(*, submissions: list[Submission],
 
 def write_json(*, hostnames: set[str], data: dict[str, list[dict[str, str]]]) -> None:
     """Write output to JSON files in a 'data' directory inside the root directory."""
-    root: Path = Path(__file__).parent.parent / 'data'
-    root.mkdir(parents=True, exist_ok=True)
+    data_dir: Path = Path(__file__).parent.parent / 'data'
+    data_dir.mkdir(parents=True, exist_ok=True)
 
     for hostname in hostnames:
-        file_path: Path = root / f'{hostname}.json'
+        file_path: Path = data_dir / f'{hostname}.json'
         with file_path.open('w', encoding='utf-8') as f:
             json.dump(data[hostname], f, ensure_ascii=False, indent=4)
+        print(f'Successfully written data to {file_path}')
 
 
 def main() -> None:
@@ -148,7 +157,7 @@ def main() -> None:
     Coordinate program execution.
 
     Invoke functions to load environment variables, get refresh token,
-    get list of submissions, get set of hostnames, format data, 
+    get list of submissions, get set of hostnames, format data,
     and write formatted data to JSON files grouped by hostname.
     """
     try:
