@@ -1,6 +1,6 @@
 """
 Load environment variables from a .env file, get refresh token for Reddit bot,
-and generate JSON files for submissions grouped by hostname.
+get Udemy links with coupons, and generate JSON files for submissions grouped by hostname.
 """
 import json
 import os
@@ -17,13 +17,7 @@ from dotenv import load_dotenv
 from praw.models.reddit.submission import Submission
 from praw.models.reddit.subreddit import Subreddit
 from praw.reddit import Reddit
-from selenium import webdriver
-from selenium.common.exceptions import TimeoutException
-from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.chrome.webdriver import WebDriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
+
 
 SUBREDDIT_NAME: Final[str] = 'udemyfreebies'
 
@@ -173,7 +167,7 @@ def main() -> None:
 
     Invoke functions to load environment variables, get refresh token,
     get list of submissions, get set of hostnames, format data,
-    and write formatted data to JSON files grouped by hostname.
+    get Udemy links with coupons, and write formatted data to JSON files grouped by hostname.
     """
     try:
         env_vars: dict[str, str] = get_config()
