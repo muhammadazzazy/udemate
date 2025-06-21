@@ -54,6 +54,7 @@ A Reddit bot that collects free Udemy coupons from Reddit posts on specific subr
 ### Prerequisites
 
 [Python 3](https://python.org/downloads)
+[ChromeDriver Version: 137.0.7151.119 (r1453031)](https://googlechromelabs.github.io/chrome-for-testing/#stable)
 
 Create a Reddit bot and get environment variables:
 
@@ -78,22 +79,38 @@ Create a Reddit bot and get environment variables:
    ```
 3. Create a .env file
    ```env
-   CLIENT_ID=""
-   CLIENT_SECRET=""
-   USER_AGENT=""
-   LIMIT=1000 # Optional. Default is 1000. Maximum number of submissions to fetch.
+   CLIENT_ID=""         # Required. Your client ID for authentication.
+   CLIENT_SECRET=""     # Required. Your client secret for authentication.
+   USER_AGENT=""        # Required. User agent string to use for requests.
+   LIMIT=1000           # Optional. Default is 1000. Maximum number of submissions to fetch.
+   BINARY_LOCATION=""   # Optional. Full path to Chromium-based browser binary. Default is /usr/bin/google-chrome.
+   DEBUGGER_PORT=9222   # Optional. Port number used by browser's remote debugging interface. Default is 9222.
    ```
-4. Create a virtual environment
+4. Run one of the following commands in your terminal, replacing <username> with your actual Linux username and <port> with the value set in your .env file:
+
    ```sh
-   python3 -m venv .venv
+     # Brave Browser
+     brave-browser --remote-debugging-port=<port> --user-data-dir="/home/<username>/.config/BraveSoftware/Brave-Browser"
+
+     # Google Chrome
+     google-chrome --remote-debugging-port=<port> --user-data-dir="/home/<username>/.config/google-chrome/Default"
    ```
-5. Install dependencies
+
+5. Create a virtual environment
+
    ```sh
-   pip install -r requirements.txt
+     python3 -m venv .venv
    ```
-6. Run the script
+
+6. Install dependencies
+
    ```sh
-   python3 src/main.py
+     pip install -r requirements.txt
+   ```
+
+7. Run the script
+   ```sh
+     python3 src/main.py
    ```
 
 <p align="right">(<a href="#udemyunlocked">back to top</a>)</p>
@@ -106,7 +123,10 @@ Create a Reddit bot and get environment variables:
 - [x] Add requirements.txt
 - [x] Implement refresh token authentication
 - [x] Add functionality to generate JSON files of submissions grouped by hostname
-- [ ] Implement automation of enrollment into courses
+- [ ] Implement automation of enrollment into courses from
+  - [x] IDC
+  - [ ] Freewebcart
+- [x] Implement caching mechanism
 
 See the [open issues](https://github.com/muhammadazzazy/udemy-unlocked/issues) for a full list of proposed features (and known issues).
 

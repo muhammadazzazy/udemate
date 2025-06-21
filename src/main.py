@@ -64,19 +64,16 @@ def get_config() -> dict[str, str]:
 
 def read_cache(data_dir: Path) -> dict[str, set[str]]:
     """Return cached Udemy links with coupons from JSON files."""
-    file_paths = []
-    hostnames = []
+    cached_urls: dict[str, set[str]] = {}
+
     for filename in os.listdir(data_dir):
-        file_path = data_dir / filename
-        if os.path.isfile(file_path) and filename.lower().endswith('.json'):
-            file_paths.append(file_path)
-            hostnames.append(filename[:filename.find('.json')])
-    cached_urls: dict[str, set[str]] = {
-        hostname: set() for hostname in hostnames
-    }
-    for (file_path, hostname) in zip(file_paths, hostnames):
-        with file_path.open('r', encoding='utf-8') as f:
-            cached_urls[hostname] = set(json.load(f))
+        if filename.lower().endswith('.json'):
+            hostname = filename[:filename.find('.json')]
+            file_path = data_dir / filename
+            if file_path.is_file():
+                with file_path.open('r', encoding='utf-8') as f:
+                    cached_urls[hostname] = set(json.load(f))
+
     return cached_urls
 
 
