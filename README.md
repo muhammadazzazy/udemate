@@ -81,6 +81,7 @@ Create a Reddit bot and get environment variables:
    CLIENT_ID=""
    CLIENT_SECRET=""
    USER_AGENT=""
+   LIMIT=1000 # Optional. Default is 1000. Maximum number of submissions to fetch.
    ```
 4. Create a virtual environment
    ```sh

@@ -18,7 +18,8 @@ from praw.models.reddit.submission import Submission
 from praw.models.reddit.subreddit import Subreddit
 from praw.reddit import Reddit
 
-
+DEFAULT_LIMIT: Final[int] = 500
+MAX_LIMIT: Final[int] = 1000
 SUBREDDIT_NAME: Final[str] = 'udemyfreebies'
 
 
@@ -34,13 +35,16 @@ def get_config() -> dict[str, str]:
         'CLIENT_ID': os.environ.get('CLIENT_ID'),
         'CLIENT_SECRET': os.environ.get('CLIENT_SECRET'),
         'USER_AGENT': os.environ.get('USER_AGENT'),
+        'LIMIT': int(os.environ.get('LIMIT', DEFAULT_LIMIT))
     }
     missing: list[str] = [
         env_var[0] for env_var in env_vars.items() if not env_var[1]]
-    print(f'{missing=}')
     if not all(env_vars.values()):
         raise ValueError(
             f'Missing environment variable(s): {', '.join(missing)}')
+    if env_vars['LIMIT'] > MAX_LIMIT:
+        print(f"Maximum value for 'LIMIT' is {MAX_LIMIT}...")
+        env_vars['LIMIT'] = MAX_LIMIT
     return env_vars
 
 
@@ -125,7 +129,7 @@ def get_udemy_urls(submissions: list[Submission]) -> list[str]:
     for submission in submissions:
         if 'idownloadcoupon' in submission.url:
             response = requests.get(
-                submission.url, allow_redirects=True, timeout=10)
+                submission.url, allow_redirects=True, timeout=30)
             url: str = response.url
             if 'udemy.com' in url:
                 udemy_url: str = url
