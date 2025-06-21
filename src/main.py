@@ -4,8 +4,6 @@ get Udemy links with coupons, and generate JSON files for submissions grouped by
 """
 import json
 import os
-import random
-import socket
 import sys
 from pathlib import Path
 from typing import Final
@@ -17,6 +15,8 @@ from dotenv import load_dotenv
 from praw.models.reddit.submission import Submission
 from praw.models.reddit.subreddit import Subreddit
 from praw.reddit import Reddit
+
+from get_refresh_token import get_refresh_token
 
 DEFAULT_LIMIT: Final[int] = 500
 MAX_LIMIT: Final[int] = 1000
@@ -46,58 +46,6 @@ def get_config() -> dict[str, str]:
         print(f"Maximum value for 'LIMIT' is {MAX_LIMIT}...")
         env_vars['LIMIT'] = MAX_LIMIT
     return env_vars
-
-
-def get_refresh_token(env_vars: dict[str, str]) -> str:
-    """Return refresh token."""
-    reddit: Reddit = praw.Reddit(
-        client_id=env_vars['CLIENT_ID'],
-        client_secret=env_vars['CLIENT_SECRET'],
-        redirect_uri='http://localhost:8080',
-        user_agent=env_vars['USER_AGENT']
-    )
-    state: str = str(random.randint(0, 65000))
-    url: str = reddit.auth.url(
-        duration='permanent', scopes=['read'], state=state)
-    print(f'Open this url in your browser: {url}')
-
-    client: socket.socket = receive_connection()
-    data: str = client.recv(1024).decode('utf-8')
-    param_tokens: list[str] = data.split(' ', 2)[1].split('?', 1)[1].split('&')
-    params: dict[str, str] = dict([token.split('=') for token in param_tokens])
-    if state != params['state']:
-        send_message(
-            client,
-            f"State mismatch. Expected: {state} Received: {params['state']}",
-        )
-        raise ValueError("OAuth state mismatch.")
-    if 'error' in params:
-        send_message(client, params['error'])
-        raise ValueError(f"OAuth error: {params['error']}")
-    refresh_token: str = reddit.auth.authorize(params['code'])
-    send_message(client, f'Refresh token: {refresh_token}')
-    return refresh_token
-
-
-def receive_connection() -> socket.socket:
-    """
-    Wait for and then return a connected socket.
-
-    Open a TCP connection on port 8080 and wait for a single client.
-    """
-    server: socket.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-    server.bind(('localhost', 8080))
-    server.listen(1)
-    client: socket.socket = server.accept()[0]
-    server.close()
-    return client
-
-
-def send_message(client: socket.socket, message: str) -> None:
-    """Send message to client and close the connection."""
-    client.send(f'HTTP/1.1 200 OK\r\n\r\n{message}'.encode())
-    client.close()
 
 
 def get_submissions(subreddit) -> list[Submission]:
@@ -165,10 +113,8 @@ def write_json(*, hostnames: set[str], data: dict[str, list[dict[str, str]]]) ->
         print(f'Successfully written data to {file_path}.')
 
 
-def main() -> None:
+def run() -> None:
     """
-    Coordinate program execution.
-
     Invoke functions to load environment variables, get refresh token,
     get list of submissions, get set of hostnames, format data,
     get Udemy links with coupons, and write formatted data to JSON files grouped by hostname.
@@ -195,6 +141,19 @@ def main() -> None:
         write_json(hostnames=hostnames, data=data)
     except ValueError as e:
         print(e)
+        sys.exit()
+
+
+def main() -> None:
+    """Coordinate program execution."""
+    print('📚 Welcome to Udemy Unlocked! 🔐')
+    try:
+        run()
+    except ValueError as e:
+        print(e)
+        sys.exit()
+    except KeyboardInterrupt:
+        print('Interrupt signal (SIGINT) triggered! Exiting...')
         sys.exit()
 
 
