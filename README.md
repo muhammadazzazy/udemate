@@ -78,14 +78,19 @@ Create a Reddit bot and get environment variables:
    cd udemy-unlocked
    ```
 3. Create a .env file
+
    ```env
-   CLIENT_ID=""         # Required. Your client ID for authentication.
-   CLIENT_SECRET=""     # Required. Your client secret for authentication.
-   USER_AGENT=""        # Required. User agent string to use for requests.
-   LIMIT=1000           # Optional. Default is 1000. Maximum number of submissions to fetch.
-   BINARY_LOCATION=""   # Optional. Full path to Chromium-based browser binary. Default is /usr/bin/google-chrome.
-   DEBUGGER_PORT=9222   # Optional. Port number used by browser's remote debugging interface. Default is 9222.
+    # Required
+    CLIENT_ID=""
+    CLIENT_SECRET=""
+    USER_AGENT=""
+
+    # Optional
+    LIMIT=1000
+    BINARY_LOCATION=""
+    DEBUGGER_PORT=9222
    ```
+
 4. Run one of the following commands in your terminal, replacing <username> with your actual Linux username and <port> with the value set in your .env file:
 
    ```sh

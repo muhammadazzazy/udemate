@@ -68,12 +68,11 @@ def read_cache(data_dir: Path) -> dict[str, set[str]]:
 
     for filename in os.listdir(data_dir):
         if filename.lower().endswith('.json'):
-            hostname = filename[:filename.find('.json')]
-            file_path = data_dir / filename
+            hostname: str = filename[:filename.find('.json')]
+            file_path: Path = data_dir / filename
             if file_path.is_file():
                 with file_path.open('r', encoding='utf-8') as f:
                     cached_urls[hostname] = set(json.load(f))
-
     return cached_urls
 
 
@@ -118,7 +117,7 @@ def setup_chromium_browser(debugger_address: str, binary_location: str) -> WebDr
     options = Options()
     options.debugger_address = debugger_address
     options.binary_location = binary_location
-    driver = webdriver.Chrome(options=options)
+    driver: WebDriver = webdriver.Chrome(options=options)
     print('Connected!')
     return driver
 
