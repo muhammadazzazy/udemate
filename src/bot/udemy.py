@@ -13,19 +13,6 @@ class Udemy:
         self.driver = driver
         self.urls = urls
 
-    def run(self) -> None:
-        """Orchestrate automatic enrollment into Udemy courses."""
-        for udemy_url in self.urls:
-            self.driver.get(udemy_url)
-            print("Udemy page title:", self.driver.title)
-            try:
-                wait = WebDriverWait(self.driver, 10)
-                self.enroll(wait)
-                self.confirm(wait)
-            except (AttributeError, TimeoutException):
-                print('Enroll button not found! Skipping...')
-                continue
-
     def enroll(self, wait) -> None:
         """Click on first 'Enroll now' button."""
         buttons = wait.until(lambda d: d.find_elements(
@@ -46,3 +33,16 @@ class Udemy:
         )))
         print("Clicked final enroll button!")
         enroll_button.click()
+
+    def run(self) -> None:
+        """Orchestrate automatic enrollment into Udemy courses."""
+        for udemy_url in self.urls:
+            try:
+                self.driver.get(udemy_url)
+                print("Udemy page title:", self.driver.title)
+                wait = WebDriverWait(self.driver, 10)
+                self.enroll(wait)
+                self.confirm(wait)
+            except (AttributeError, TimeoutException):
+                print('Enroll button not found! Skipping...')
+                continue
