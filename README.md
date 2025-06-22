@@ -58,7 +58,7 @@ A Reddit bot that collects free Udemy coupons from Reddit posts on specific subr
 
 ### Prerequisites
 
-- [Python 3](https://python.org/downloads)
+- [Python 3.12.7](https://www.python.org/downloads/release/python-3127/)
 
 - [ChromeDriver Version: 137.0.7151.119 (r1453031)](https://googlechromelabs.github.io/chrome-for-testing/#stable)
 
