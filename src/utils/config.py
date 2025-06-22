@@ -1,10 +1,10 @@
 """Configure Udemy Unlocked based on environment variables in .env file."""
 import os
 
-
 from dataclasses import asdict, dataclass
 from typing import Final
 
+import getpass
 from dotenv import load_dotenv
 
 DEFAULT_LIMIT: Final[int] = 500
@@ -12,7 +12,7 @@ MAX_LIMIT: Final[int] = 1000
 
 DEFAULT_USER_AGENT: Final[str] = 'UdemyUnlocked:v1.0.0 (by u/)'
 
-# DEFAULT_USER_DATA_DIR: Final[str] = f'/home/{}/.config/google-chrome/Default'
+DEFAULT_USER_DATA_DIR: Final[str] = f'/home/{getpass.getuser()}/.config/google-chrome/Default'
 
 load_dotenv()
 
@@ -32,7 +32,7 @@ class Config:
         self.client_secret = os.environ.get('CLIENT_SECRET')
         self.user_agent = os.environ.get('USER_AGENT', DEFAULT_USER_AGENT)
         self.limit = int(os.environ.get('LIMIT', DEFAULT_LIMIT))
-        self.user_data_dir = os.environ.get('USER_DATA_DIR', '')
+        self.user_data_dir = os.environ.get('USER_DATA_DIR', DEFAULT_USER_DATA_DIR)
 
     def __post_init__(self) -> None:
         missing: list[str] = []

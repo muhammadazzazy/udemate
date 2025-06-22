@@ -57,7 +57,7 @@ A Reddit bot that collects free Udemy coupons from Reddit posts on specific subr
 [Python 3](https://python.org/downloads)
 [ChromeDriver Version: 137.0.7151.119 (r1453031)](https://googlechromelabs.github.io/chrome-for-testing/#stable)
 
-A Chromium based browser:
+A Chromium based browser such as:
 
 - [Google Chrome](https://www.google.com/chrome/)
 - [Brave Browser](https://brave.com/)
@@ -123,12 +123,14 @@ Create a Reddit bot and get environment variables:
 - [x] Add requirements.txt
 - [x] Implement refresh token authentication
 - [x] Add functionality to generate JSON files of submissions grouped by hostname
-- [ ] Implement automation of enrollment into courses from
+- [ ] Scrape intermediate links from the following middlemen:
   - [x] IDC
   - [x] Freewebcart
   - [ ] Line51
+- [x] Automate enrollment into Udemy courses
 - [x] Implement caching mechanism
 - [x] Transform codebase from standalone functions to class-based structure
+- [x] Split driver into headless (for scraping) and non-headless (for enrollment)
 
 See the [open issues](https://github.com/muhammadazzazy/udemy-unlocked/issues) for a full list of proposed features (and known issues).
 
