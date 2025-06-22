@@ -46,6 +46,7 @@ A Reddit bot that collects free Udemy coupons from Reddit posts on specific subr
 
 - [![Python][Python]][Python-url]
 - [![PRAW][PRAW]][PRAW-url]
+- [![undetected-chromedriver][undetected-chromedirver],,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,][undetected-chromedriver-url]
 
 <!-- GETTING STARTED -->
 
@@ -55,6 +56,11 @@ A Reddit bot that collects free Udemy coupons from Reddit posts on specific subr
 
 [Python 3](https://python.org/downloads)
 [ChromeDriver Version: 137.0.7151.119 (r1453031)](https://googlechromelabs.github.io/chrome-for-testing/#stable)
+
+A Chromium based browser:
+
+- [Google Chrome](https://www.google.com/chrome/)
+- [Brave Browser](https://brave.com/)
 
 Create a Reddit bot and get environment variables:
 
@@ -83,37 +89,26 @@ Create a Reddit bot and get environment variables:
     # Required
     CLIENT_ID=""
     CLIENT_SECRET=""
-    USER_AGENT=""
 
     # Optional
+    USER_AGENT=""
     LIMIT=1000
-    BINARY_LOCATION=""
-    DEBUGGER_PORT=9222
+    USER_DATA_DIR=""
    ```
 
-4. Run one of the following commands in your terminal, replacing <username> with your actual Linux username and <port> with the value set in your .env file:
-
-   ```sh
-     # Brave Browser
-     brave-browser --remote-debugging-port=<port> --user-data-dir="/home/<username>/.config/BraveSoftware/Brave-Browser"
-
-     # Google Chrome
-     google-chrome --remote-debugging-port=<port> --user-data-dir="/home/<username>/.config/google-chrome/Default"
-   ```
-
-5. Create a virtual environment
+4. Create a virtual environment
 
    ```sh
      python3 -m venv .venv
    ```
 
-6. Install dependencies
+5. Install dependencies
 
    ```sh
      pip install -r requirements.txt
    ```
 
-7. Run the script
+6. Run the script
    ```sh
      python3 src/main.py
    ```
@@ -130,8 +125,10 @@ Create a Reddit bot and get environment variables:
 - [x] Add functionality to generate JSON files of submissions grouped by hostname
 - [ ] Implement automation of enrollment into courses from
   - [x] IDC
-  - [ ] Freewebcart
+  - [x] Freewebcart
+  - [ ] Line51
 - [x] Implement caching mechanism
+- [x] Transform codebase from standalone functions to class-based structure
 
 See the [open issues](https://github.com/muhammadazzazy/udemy-unlocked/issues) for a full list of proposed features (and known issues).
 
@@ -193,3 +190,5 @@ Project Link: [https://github.com/muhammadazzazy/udemy-unlocked](https://github.
 [Python-url]: https://python.org
 [PRAW]: https://avatars.githubusercontent.com/u/1696888?s=50&v=4
 [PRAW-url]: https://github.com/praw-dev/praw
+[undetected-chromedriver]: https://avatars.githubusercontent.com/u/21027969?v=4
+[undetected-chromedriver-url]: https://github.com/ultrafunkamsterdam/undetected-chromedriver
