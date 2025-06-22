@@ -46,9 +46,13 @@ A Reddit bot that collects free Udemy coupons from Reddit posts on specific subr
 
 - [![Python][Python]][Python-url]
 - [![PRAW][PRAW]][PRAW-url]
-- [![undetected-chromedriver][undetected-chromedirver],,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,][undetected-chromedriver-url]
-
-<!-- GETTING STARTED -->
+- <a href="https://github.com/ultrafunkamsterdam/undetected-chromedriver">
+    <img src="https://avatars.githubusercontent.com/u/21027969?v=4" width="50" alt="undetected-chromedriver">
+  </a>
+- <a href="https://github.com/SeleniumHQ/selenium">
+    <img src="https://raw.githubusercontent.com/SeleniumHQ/selenium/trunk/common/images/selenium_logo_mark_green.svg" width="50" alt="Selenium">
+  </a>
+  <!-- GETTING STARTED -->
 
 ## Getting Started
 
@@ -192,5 +196,4 @@ Project Link: [https://github.com/muhammadazzazy/udemy-unlocked](https://github.
 [Python-url]: https://python.org
 [PRAW]: https://avatars.githubusercontent.com/u/1696888?s=50&v=4
 [PRAW-url]: https://github.com/praw-dev/praw
-[undetected-chromedriver]: https://avatars.githubusercontent.com/u/21027969?v=4
 [undetected-chromedriver-url]: https://github.com/ultrafunkamsterdam/undetected-chromedriver
