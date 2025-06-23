@@ -1,3 +1,7 @@
+"""
+Parse Udemy links with coupons from cache, automate course enrollment,
+scrape middlemen links, get new Udemy links with coupons, and write them back to cache.
+"""
 from bot.freewebcart import Freewebcart
 from bot.idownloadcoupon import IDownloadCoupon
 from bot.udemy import Udemy
@@ -27,16 +31,6 @@ class Controller:
         udemy.run()
         udemy_driver.quit()
 
-    def get_middleman_urls(self) -> dict[str, set[str]]:
-        """Fetch a mapping between middlemen and associated links."""
-        refresh_token: str = get_refresh_token(self.config)
-        reddit_client: RedditClient = RedditClient(refresh_token)
-        hostnames: set[str] = reddit_client.get_hostnames(
-            reddit_client.submissions)
-        middleman_urls: dict[str, set[str]
-                             ] = reddit_client.get_middleman_urls(hostnames)
-        return middleman_urls
-
     def get_udemy_urls(self, middleman_urls: dict[str, set[str]]) -> set[str]:
         """Fetch collection of Udemy links with coupons using middlemen bots."""
         udemy_urls: set[str] = set()
@@ -55,6 +49,13 @@ class Controller:
         self.cache.read()
         if self.cache.udemy_urls:
             self.unlock()
-        middleman_urls: dict[str, set[str]] = self.get_middleman_urls()
+        refresh_token: str = get_refresh_token(self.config)
+        reddit_client: RedditClient = RedditClient(refresh_token)
+        reddit_client.populate_submissions()
+        hostnames: set[str] = reddit_client.get_hostnames(
+            reddit_client.submissions)
+        middleman_urls: dict[str, set[str]
+                             ] = reddit_client.get_middleman_urls(hostnames)
         udemy_urls: set[str] = self.get_udemy_urls(middleman_urls)
+        print(udemy_urls)
         self.cache.write(data=udemy_urls)

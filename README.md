@@ -1,4 +1,4 @@
-# UdemyUnlocked
+# Udemate
 
 <!-- PROJECT SHIELDS -->
 <!--
