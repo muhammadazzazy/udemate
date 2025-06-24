@@ -95,7 +95,8 @@ Create a Reddit bot and get environment variables:
     USER_AGENT=""
     LIMIT=1000
     PORT_NUMBER=9222
-    USER_DATA_DIR=""
+    USER_DATA_DIR="/home/$(whoami)/.config/BraveSoftware/Brave-Browser"
+    PROFILE_DIR="Default"
    ```
 
 4. Create a virtual environment
