@@ -13,7 +13,6 @@ def main() -> None:
     """
     Instantiate and run CLI controller.
     """
-    print('📚 Welcome to Udemy Unlocked! 🔐')
     try:
         controller: Controller = Controller()
         controller.run()

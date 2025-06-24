@@ -1,5 +1,7 @@
 # Udemate
 
+> **Disclaimer:** This tool is not affiliated with, endorsed by, or sponsored by Udemy, Inc. "Udemy" is a registered trademark of Udemy, Inc. All other trademarks are the property of their respective owners.
+
 <!-- PROJECT SHIELDS -->
 <!--
 *** I'm using markdown "reference style" links for readability.
@@ -9,7 +11,7 @@
 *** https://www.markdownguide.org/basic-syntax/#reference-style-links
 -->
 
-[![LinkedIn][linkedin-shield]][linkedin-url]
+[![Buy Me A Coffee](https://img.shields.io/badge/Buy%20Me%20a%20Coffee-yellow?style=for-the-badge&logo=buy-me-a-coffee)](https://www.buymeacoffee.com/muhammadazzazy) [![LinkedIn][linkedin-shield]][linkedin-url]
 
 <!-- TABLE OF CONTENTS -->
 <details>
@@ -46,9 +48,6 @@ A Reddit bot that collects free Udemy coupons from Reddit posts on specific subr
 
 - [![Python][Python]][Python-url]
 - [![PRAW][PRAW]][PRAW-url]
-- <a href="https://github.com/ultrafunkamsterdam/undetected-chromedriver">
-    <img src="https://avatars.githubusercontent.com/u/21027969?v=4" width="50" alt="undetected-chromedriver">
-  </a>
 - <a href="https://github.com/SeleniumHQ/selenium">
     <img src="https://raw.githubusercontent.com/SeleniumHQ/selenium/trunk/common/images/selenium_logo_mark_green.svg" width="50" alt="Selenium">
   </a>
@@ -62,15 +61,13 @@ A Reddit bot that collects free Udemy coupons from Reddit posts on specific subr
 
 - [ChromeDriver Version: 137.0.7151.119 (r1453031)](https://googlechromelabs.github.io/chrome-for-testing/#stable)
 
-- A Chromium based browser such as:
-  - [Google Chrome](https://www.google.com/chrome/)
-  - [Brave Browser](https://brave.com/)
+- [Brave Browser](https://brave.com/)
 
 Create a Reddit bot and get environment variables:
 
 1. Visit [Third-party app authorizations](https://www.reddit.com/prefs/apps/)
 2. Click on **create another app** button at the bottom
-3. Set **name** to `UdemyUnlocked`
+3. Set **name** to `Udemate`
 4. Select **script**
 5. Set **description** to an appropriate description (e.g. repo description)
 6. Set **redirect uri** to `http://localhost:8080`
@@ -81,11 +78,11 @@ Create a Reddit bot and get environment variables:
 
 1. Clone the repo
    ```sh
-   git clone https://github.com/muhammadazzazy/udemy-unlocked.git
+   git clone https://github.com/muhammadazzazy/udemate.git
    ```
 2. Navigate into the project directory
    ```sh
-   cd udemy-unlocked
+   cd udemate
    ```
 3. Create a .env file
 
@@ -97,6 +94,7 @@ Create a Reddit bot and get environment variables:
     # Optional
     USER_AGENT=""
     LIMIT=1000
+    PORT_NUMBER=9222
     USER_DATA_DIR=""
    ```
 
@@ -112,12 +110,18 @@ Create a Reddit bot and get environment variables:
      pip install -r requirements.txt
    ```
 
-6. Run the script
+6. Launch Brave Browser with debugging enabled
+
+   ```sh
+   brave-browser --remote-debugging-port=9222 --user-data-dir="$HOME/.config/BraveSoftware/Brave-Browser" --profile-directory="Default"
+   ```
+
+7. Run the script
    ```sh
      python3 src/main.py
    ```
 
-<p align="right">(<a href="#udemyunlocked">back to top</a>)</p>
+<p align="right">(<a href="#udemate">back to top</a>)</p>
 
 <!-- ROADMAP -->
 
@@ -136,9 +140,9 @@ Create a Reddit bot and get environment variables:
 - [x] Transform codebase from standalone functions to class-based structure
 - [x] Split driver into headless (for scraping) and non-headless (for enrollment)
 
-See the [open issues](https://github.com/muhammadazzazy/udemy-unlocked/issues) for a full list of proposed features (and known issues).
+See the [open issues](https://github.com/muhammadazzazy/udemate/issues) for a full list of proposed features (and known issues).
 
-<p align="right">(<a href="#udemyunlocked">back to top</a>)</p>
+<p align="right">(<a href="#udemate">back to top</a>)</p>
 
 <!-- CONTRIBUTING -->
 
@@ -155,7 +159,7 @@ Don't forget to give the project a star! Thanks again!
 4. Push to the Branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
 
-<p align="right">(<a href="#udemyunlocked">back to top</a>)</p>
+<p align="right">(<a href="#udemate">back to top</a>)</p>
 
 <!-- LICENSE -->
 
@@ -163,7 +167,9 @@ Don't forget to give the project a star! Thanks again!
 
 Distributed under the MIT License. See [LICENSE](LICENSE) for more information.
 
-<p align="right">(<a href="#udemyunlocked">back to top</a>)</p>
+<p align="right">(<a href="#udemate">back to top</a>)</p>
+
+> **Disclaimer:** This tool is not affiliated with, endorsed by, or sponsored by Udemy, Inc. "Udemy" is a registered trademark of Udemy, Inc. All other trademarks are the property of their respective owners.
 
 <!-- CONTACT -->
 
@@ -171,9 +177,9 @@ Distributed under the MIT License. See [LICENSE](LICENSE) for more information.
 
 Muhammad Azzazy - muhammadazzazy8@gmail.com
 
-Project Link: [https://github.com/muhammadazzazy/udemy-unlocked](https://github.com/muhammadazzazy/udemy-unlocked)
+Project Link: [https://github.com/muhammadazzazy/udemate](https://github.com/muhammadazzazy/udemate)
 
-<p align="right">(<a href="#udemyunlocked">back to top</a>)</p>
+<p align="right">(<a href="#udemate">back to top</a>)</p>
 
 <!-- ACKNOWLEDGMENTS -->
 
@@ -196,4 +202,3 @@ Project Link: [https://github.com/muhammadazzazy/udemy-unlocked](https://github.
 [Python-url]: https://python.org
 [PRAW]: https://avatars.githubusercontent.com/u/1696888?s=50&v=4
 [PRAW-url]: https://github.com/praw-dev/praw
-[undetected-chromedriver-url]: https://github.com/ultrafunkamsterdam/undetected-chromedriver

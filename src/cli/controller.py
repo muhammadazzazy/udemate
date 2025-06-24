@@ -1,6 +1,6 @@
 """
 Parse Udemy links with coupons from cache, automate course enrollment,
-scrape middlemen links, get new Udemy links with coupons, and write them back to cache.
+scrape middleman links, get new Udemy links with coupons, and write them back to cache.
 """
 from bot.freewebcart import Freewebcart
 from bot.idownloadcoupon import IDownloadCoupon
@@ -9,11 +9,11 @@ from client.get_refresh_token import get_refresh_token
 from client.reddit import RedditClient
 from utils.cache import Cache
 from utils.config import Config
-from web.setup_browser import setup_browser
+from web.setup_browser import setup_brave
 
 
 class Controller:
-    """Control the flow of UdemyUnlocked."""
+    """Control the flow of Udemate."""
 
     def __init__(self) -> None:
         self.config = Config()
@@ -25,17 +25,16 @@ class Controller:
 
     def unlock(self) -> None:
         """Unlock Udemy courses found in cache."""
-        udemy_driver = setup_browser(self.config.user_data_dir, headless=False)
+        udemy_driver = setup_brave(headless=False)
         udemy: Udemy = Udemy(driver=udemy_driver,
                              urls=self.cache.udemy_urls)
         udemy.run()
         udemy_driver.quit()
 
     def get_udemy_urls(self, middleman_urls: dict[str, set[str]]) -> set[str]:
-        """Fetch collection of Udemy links with coupons using middlemen bots."""
+        """Fetch collection of Udemy links with coupons using middleman bots."""
         udemy_urls: set[str] = set()
-        headless_driver = setup_browser(
-            self.config.user_data_dir, headless=True)
+        headless_driver = setup_brave(headless=True)
         for key, cls in self.middleman_classes.items():
             if key in middleman_urls:
                 bot: Freewebcart | IDownloadCoupon = cls(

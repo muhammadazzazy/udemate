@@ -3,7 +3,7 @@
 """
 Adapted from https://praw.readthedocs.io/en/stable/tutorials/refresh_token.html.
 
-Acquire a refresh token within Udemy Unlocked.
+Acquire a refresh token for setting up the Reddit client.
 """
 import random
 import socket

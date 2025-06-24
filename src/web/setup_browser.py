@@ -1,16 +1,21 @@
-"""Manage Undetected ChromeDriver for scraping links and automating course enrollment."""
-import undetected_chromedriver as uc
+"""Manage Selenium WebDriver for scraping links and automating course enrollment."""
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
+
+from utils.config import Config
 
 
-def setup_browser(user_data_dir: str, headless: bool):
-    """Return Undetected ChromeDriver in headless mode."""
-    options = uc.ChromeOptions()
+def setup_brave(headless: bool):
+    """Return Selenium WebDriver for Brave Browser."""
+    config: Config = Config()
+    options = Options()
+    options.add_experimental_option(
+        'debuggerAddress',
+        f'127.0.0.1:{config.port_number}')
+    options.binary_location = '/usr/bin/brave-browser'
     if headless:
-        options.add_argument("--headless=new")
+        options.headless = True
     else:
-        options.add_argument(f"--user-data-dir={user_data_dir}")
-    options.add_argument("--disable-gpu")
-    options.add_argument("--no-sandbox")
-    options.add_argument("--disable-dev-shm-usage")
-    driver = uc.Chrome(options=options)
+        options.add_argument(f'--user-data-dir={config.user_data_dir}')
+    driver = webdriver.Chrome(options=options)
     return driver

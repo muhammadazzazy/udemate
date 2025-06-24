@@ -1,4 +1,4 @@
-"""Configure Udemy Unlocked based on environment variables in .env file."""
+"""Configure Udemate based on environment variables in .env file."""
 import os
 
 from dataclasses import asdict, dataclass
@@ -7,12 +7,14 @@ from typing import Final
 import getpass
 from dotenv import load_dotenv
 
+DEFAULT_USER_AGENT: Final[str] = 'Udemate:v1.0.0 (by u/kemitche)'
+
 DEFAULT_LIMIT: Final[int] = 500
 MAX_LIMIT: Final[int] = 1000
 
-DEFAULT_USER_AGENT: Final[str] = 'UdemyUnlocked:v1.0.0 (by u/kemitche)'
-
-DEFAULT_USER_DATA_DIR: Final[str] = f'/home/{getpass.getuser()}/.config/google-chrome/Default'
+DEFAULT_PORT_NUMBER: Final[int] = 9222
+USER: Final[str] = getpass.getuser()
+DEFAULT_USER_DATA_DIR: Final[str] = f"/home/{USER}/.config/BraveSoftware/Brave-Browser/Default"
 
 load_dotenv()
 
@@ -24,8 +26,8 @@ class Config:
     client_secret: str
     user_agent: str
     limit: int
-    debugger_port: int
-    binary_location: str
+    port_number: int
+    user_data_dir: str
 
     def __init__(self) -> None:
         self.client_id = os.environ.get('CLIENT_ID')
@@ -34,6 +36,8 @@ class Config:
         self.limit = int(os.environ.get('LIMIT', DEFAULT_LIMIT))
         self.user_data_dir = os.environ.get(
             'USER_DATA_DIR', DEFAULT_USER_DATA_DIR)
+        self.port_number = int(os.environ.get(
+            'PORT_NUMBER', DEFAULT_PORT_NUMBER))
 
     def __post_init__(self) -> None:
         missing: list[str] = []
