@@ -4,18 +4,12 @@ import os
 from dataclasses import asdict, dataclass
 from typing import Final
 
-import getpass
 from dotenv import load_dotenv
 
 DEFAULT_USER_AGENT: Final[str] = 'Udemate:v1.0.0 (by u/kemitche)'
 
 DEFAULT_LIMIT: Final[int] = 500
 MAX_LIMIT: Final[int] = 1000
-
-DEFAULT_PORT: Final[int] = 9222
-USER: Final[str] = getpass.getuser()
-DEFAULT_USER_DATA_DIR: Final[str] = f'/home/{USER}/.config/BraveSoftware/Brave-Browser'
-DEFAULT_PROFILE_DIR: Final[str] = 'Default'
 
 load_dotenv()
 
@@ -27,20 +21,12 @@ class Config:
     client_secret: str
     user_agent: str
     limit: int
-    port: int
-    user_data_dir: str
-    profile_dir: str
 
     def __init__(self) -> None:
         self.client_id = os.environ.get('CLIENT_ID')
         self.client_secret = os.environ.get('CLIENT_SECRET')
         self.user_agent = os.environ.get('USER_AGENT', DEFAULT_USER_AGENT)
         self.limit = int(os.environ.get('LIMIT', DEFAULT_LIMIT))
-        self.user_data_dir = os.environ.get(
-            'USER_DATA_DIR', DEFAULT_USER_DATA_DIR)
-        self.port = int(os.environ.get(
-            'PORT_NUMBER', DEFAULT_PORT))
-        self.profile_dir = os.environ.get('PROFILE_DIR', DEFAULT_PROFILE_DIR)
 
     def __post_init__(self) -> None:
         missing: list[str] = []

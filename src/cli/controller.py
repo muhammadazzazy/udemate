@@ -9,13 +9,14 @@ from client.get_refresh_token import get_refresh_token
 from client.reddit import RedditClient
 from utils.cache import Cache
 from utils.config import Config
-from web.setup_browser import setup_brave
+from web.browser import Browser
 
 
 class Controller:
     """Control the flow of Udemate."""
 
     def __init__(self) -> None:
+        self.browser = Browser()
         self.config = Config()
         self.cache = Cache()
         self.middleman_classes = {
@@ -25,7 +26,7 @@ class Controller:
 
     def unlock(self) -> None:
         """Unlock Udemy courses found in cache."""
-        udemy_driver = setup_brave(headless=False)
+        udemy_driver = self.browser.setup(headless=False)
         udemy: Udemy = Udemy(driver=udemy_driver,
                              urls=self.cache.udemy_urls)
         udemy.run()
@@ -34,7 +35,7 @@ class Controller:
     def get_udemy_urls(self, middleman_urls: dict[str, set[str]]) -> set[str]:
         """Fetch collection of Udemy links with coupons using middleman bots."""
         udemy_urls: set[str] = set()
-        headless_driver = setup_brave(headless=True)
+        headless_driver = self.browser.setup(headless=True)
         for key, cls in self.middleman_classes.items():
             if key in middleman_urls:
                 bot: Freewebcart | IDownloadCoupon = cls(
