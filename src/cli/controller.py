@@ -9,6 +9,7 @@ from client.get_refresh_token import get_refresh_token
 from client.reddit import RedditClient
 from utils.cache import Cache
 from utils.config import Config
+from utils.logger import setup_logging
 from web.browser import Browser
 
 
@@ -16,9 +17,10 @@ class Controller:
     """Control the flow of Udemate."""
 
     def __init__(self) -> None:
-        self.browser = Browser()
+        self.logger = setup_logging()
         self.config = Config()
         self.cache = Cache()
+        self.browser = Browser()
         self.middleman_classes = {
             'freewebcart': Freewebcart,
             'idownloadcoupon': IDownloadCoupon
@@ -26,11 +28,15 @@ class Controller:
 
     def unlock(self) -> None:
         """Unlock Udemy courses found in cache."""
+        self.logger.info('Configuring browser for course enrollment...')
         udemy_driver = self.browser.setup(headless=False)
         udemy: Udemy = Udemy(driver=udemy_driver,
                              urls=self.cache.udemy_urls)
+        self.logger.info('Starting the Udemy bot...')
         udemy.run()
+        self.logger.info('Udemy bot finished! Closing browser...')
         udemy_driver.quit()
+        self.logger.info('Browser closed.')
 
     def get_udemy_urls(self, middleman_urls: dict[str, set[str]]) -> set[str]:
         """Fetch collection of Udemy links with coupons using middleman bots."""
@@ -46,6 +52,7 @@ class Controller:
 
     def run(self) -> None:
         """Coordinate program execution."""
+        self.logger.info('Controller started.')
         self.cache.read()
         if self.cache.udemy_urls:
             self.unlock()
@@ -58,3 +65,4 @@ class Controller:
                              ] = reddit_client.get_middleman_urls(hostnames)
         udemy_urls: set[str] = self.get_udemy_urls(middleman_urls)
         self.cache.write(data=udemy_urls)
+        self.logger.info('Controller terminated.')

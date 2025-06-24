@@ -1,7 +1,7 @@
 """Configure Udemate based on environment variables in .env file."""
 import os
-
 from dataclasses import asdict, dataclass
+
 from typing import Final
 
 from dotenv import load_dotenv

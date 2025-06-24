@@ -5,6 +5,8 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
+from utils.logger import setup_logging
+
 
 class Udemy:
     """Autoenroll into free Udemy courses."""
@@ -12,6 +14,7 @@ class Udemy:
     def __init__(self, *, driver: WebDriver, urls: set[str]) -> None:
         self.driver = driver
         self.urls = urls
+        self.logger = setup_logging()
 
     def enroll(self, wait) -> None:
         """Click on first 'Enroll now' button."""
@@ -21,17 +24,11 @@ class Udemy:
         ))
         enroll_button = next(
             (b for b in buttons if b.is_displayed() and b.is_enabled()), None)
-        print(f"Clicking visible enroll button: {enroll_button.text}")
         enroll_button.click()
-        print("Clicked first enroll button!")
-
-    def confirm(self, wait) -> None:
-        """Click on final 'Enroll now' button."""
         enroll_button = wait.until(EC.element_to_be_clickable((
             By.XPATH,
             '//*[@id="udemy"]/div[1]/div[2]/div/div/div/aside/div/div/div[2]/div[2]/button[1]'
         )))
-        print("Clicked final enroll button!")
         enroll_button.click()
 
     def run(self) -> None:
@@ -39,10 +36,11 @@ class Udemy:
         for udemy_url in self.urls:
             try:
                 self.driver.get(udemy_url)
-                print("Udemy page title:", self.driver.title)
+                course_name: str = self.driver.title.removesuffix(' | Udemy')
+                self.logger.info(course_name)
                 wait = WebDriverWait(self.driver, 10)
                 self.enroll(wait)
-                self.confirm(wait)
+                self.logger.info('Successfully enrolled into %s', course_name)
             except (AttributeError, TimeoutException):
-                print('Enroll button not found! Skipping...')
+                self.logger.exception('Enroll button not found! Skipping...')
                 continue

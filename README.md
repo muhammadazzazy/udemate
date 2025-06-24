@@ -1,6 +1,6 @@
 # Udemate
 
-> **Disclaimer:** This tool is not affiliated with, endorsed by, or sponsored by Udemy, Inc. "Udemy" is a registered trademark of Udemy, Inc. All other trademarks are the property of their respective owners.
+> **Disclaimer:** This software is not affiliated with, endorsed by, or sponsored by Udemy, Inc. "Udemy" is a registered trademark of Udemy, Inc. All other trademarks are the property of their respective owners.
 
 <!-- PROJECT SHIELDS -->
 <!--
@@ -42,7 +42,7 @@
 
 ## About The Project
 
-A Reddit bot that collects free Udemy coupons from Reddit posts on specific subreddits.
+A collection of automation tools that read Reddit posts from [r/udemyfreebies](https://www.reddit.com/r/udemyfreeebies/), extract course links from middleman websites, convert them into direct Udemy links with coupons, and automate the enrollment process into free courses.
 
 ### Built With
 
@@ -164,7 +164,7 @@ Distributed under the MIT License. See [LICENSE](LICENSE) for more information.
 
 <p align="right">(<a href="#udemate">back to top</a>)</p>
 
-> **Disclaimer:** This tool is not affiliated with, endorsed by, or sponsored by Udemy, Inc. "Udemy" is a registered trademark of Udemy, Inc. All other trademarks are the property of their respective owners.
+> **Disclaimer:** This software is not affiliated with, endorsed by, or sponsored by Udemy, Inc. "Udemy" is a registered trademark of Udemy, Inc. All other trademarks are the property of their respective owners.
 
 <!-- CONTACT -->
 

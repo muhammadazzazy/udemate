@@ -9,12 +9,16 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
 
+from utils.logger import setup_logging
+
+
 class IDownloadCoupon:
     """Get Udemy links with coupons from IDC."""
 
     def __init__(self, driver: WebDriver, urls: set[str]) -> None:
         self.driver = driver
         self.urls = urls
+        self.logger = setup_logging()
 
     def scrape(self, url: str) -> str:
         """Scrape Udemy link from IDC link."""
@@ -31,7 +35,6 @@ class IDownloadCoupon:
         response = requests.get(url, allow_redirects=True, timeout=10)
         if 'udemy.com' not in response.url:
             udemy_url: str = self.scrape(url)
-            print(udemy_url)
             return udemy_url
         return response.url
 
@@ -43,6 +46,6 @@ class IDownloadCoupon:
                 udemy_url: str = self.transform(url)
                 udemy_urls.add(udemy_url)
             except (RequestException, TimeoutException) as e:
-                print(e)
+                self.logger.exception('%s. Skipping...', e)
                 continue
         return udemy_urls

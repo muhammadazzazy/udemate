@@ -4,9 +4,10 @@
 Unlock Udemy courses based on links posted on various middlemen websites.
 """
 import sys
-
+from logging import Logger
 
 from cli.controller import Controller
+from utils.logger import setup_logging
 
 
 def main() -> None:
@@ -14,13 +15,15 @@ def main() -> None:
     Instantiate and run CLI controller.
     """
     try:
+        logger: Logger = setup_logging()
         controller: Controller = Controller()
+        logger.info('Udemate: Your Automation Companion for Udemy 🤖 📚')
         controller.run()
     except ValueError as e:
-        print(e)
+        logger.error(e)
         sys.exit()
     except KeyboardInterrupt:
-        print('Interrupt signal (SIGINT) triggered! Exiting...')
+        logger.warning('Interrupt signal (SIGINT) triggered! Exiting...')
         sys.exit()
 
 
