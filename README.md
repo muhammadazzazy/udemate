@@ -111,13 +111,7 @@ Create a Reddit bot and get environment variables:
      pip install -r requirements.txt
    ```
 
-6. Launch Brave Browser with debugging enabled
-
-   ```sh
-   brave-browser --remote-debugging-port=9222 --user-data-dir="$HOME/.config/BraveSoftware/Brave-Browser" --profile-directory="Default"
-   ```
-
-7. Run the script
+6. Run the script
    ```sh
      python3 src/main.py
    ```
