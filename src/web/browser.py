@@ -26,7 +26,7 @@ class Browser:
 
     def launch(self) -> None:
         """
-        Launch Brave Browser.
+        Launch Brave Browser for automating Udemy course enrollment.
         """
         subprocess.run([
             'brave-browser',
@@ -38,11 +38,12 @@ class Browser:
 
     def setup(self, headless: bool):
         """
-        Return WebDriver for Brave Browser using a specific debugger address.
+        Return Selenium WebDriver either in headless mode for scraping Udemy links 
+        or in debugger address when automating course enrollment.
         """
         options = Options()
         if headless:
-            options.headless = True
+            options.add_argument('--headless')
         else:
             self.launch()
             options.add_experimental_option(

@@ -57,5 +57,4 @@ class Controller:
         middleman_urls: dict[str, set[str]
                              ] = reddit_client.get_middleman_urls(hostnames)
         udemy_urls: set[str] = self.get_udemy_urls(middleman_urls)
-        print(udemy_urls)
         self.cache.write(data=udemy_urls)
