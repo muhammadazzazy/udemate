@@ -1,5 +1,5 @@
 """Scrape Udemy links with coupons from Freewebcart."""
-from selenium.common.exceptions import TimeoutException
+from selenium.common.exceptions import WebDriverException
 from selenium.webdriver.chrome.webdriver import WebDriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -36,7 +36,7 @@ class Freewebcart:
             try:
                 udemy_url: str = self.scrape(url)
                 udemy_urls.add(udemy_url)
-            except TimeoutException as e:
+            except WebDriverException as e:
                 self.logger.exception('%s. Skipping...', e)
                 continue
         return udemy_urls

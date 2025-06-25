@@ -2,7 +2,7 @@
 import requests
 from requests.exceptions import RequestException
 
-from selenium.common.exceptions import TimeoutException
+from selenium.common.exceptions import WebDriverException
 from selenium.webdriver.chrome.webdriver import WebDriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -49,7 +49,7 @@ class IDownloadCoupon:
             try:
                 udemy_url: str = self.transform(url)
                 udemy_urls.add(udemy_url)
-            except (RequestException, TimeoutException) as e:
+            except (RequestException, WebDriverException) as e:
                 self.logger.exception('%s. Skipping...', e)
                 continue
         return udemy_urls

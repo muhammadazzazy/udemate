@@ -25,6 +25,7 @@ class Browser:
         self.user_data_dir = os.environ.get(
             'USER_DATA_DIR', DEFAULT_USER_DATA_DIR)
         self.profile_dir = os.environ.get('PROFILE_DIR', DEFAULT_PROFILE_DIR)
+        self.user_agent = os.environ.get('BROWSER_USER_AGENT')
         self.logger = setup_logging()
 
     def launch(self) -> None:
@@ -50,6 +51,7 @@ class Browser:
         options = Options()
         options.binary_location = '/usr/bin/brave-browser'
         if headless:
+            options.add_argument(f'user-agent={self.user_agent}')
             options.add_argument('--headless')
             return webdriver.Chrome(options=options)
         self.launch()

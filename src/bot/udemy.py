@@ -1,5 +1,5 @@
 """Automatically enroll into free Udemy courses."""
-from selenium.common.exceptions import TimeoutException
+from selenium.common.exceptions import WebDriverException
 from selenium.webdriver.chrome.webdriver import WebDriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -41,6 +41,6 @@ class Udemy:
                 wait = WebDriverWait(self.driver, 10)
                 self.enroll(wait)
                 self.logger.info('Successfully enrolled into %s', course_name)
-            except (AttributeError, TimeoutException):
+            except (AttributeError, WebDriverException):
                 self.logger.exception('Enroll button not found! Skipping...')
                 continue
