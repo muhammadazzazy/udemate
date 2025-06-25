@@ -35,10 +35,11 @@ class IDownloadCoupon:
     def transform(self, url: str) -> str:
         """Convert IDC link to final Udemy link with coupon."""
         response = requests.get(url, allow_redirects=True, timeout=10)
-        if 'udemy.com' not in response.url:
+        if 'udemy.com' not in url:
             udemy_url: str = self.scrape(url)
+            self.logger.info('%s ==> %s', url, udemy_url)
             return udemy_url
-        self.logger.info('%s ==> %s', url, udemy_url)
+        self.logger.info('%s ==> %s', url, response.url)
         return response.url
 
     def run(self) -> set[str]:
