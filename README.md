@@ -94,8 +94,8 @@ Create a Reddit bot and get environment variables:
     # Optional
     USER_AGENT=""
     LIMIT=1000
-    PORT_NUMBER=9222
-    USER_DATA_DIR="/home/$(whoami)/.config/BraveSoftware/Brave-Browser"
+    PORT=9222
+    USER_DATA_DIR="/home/<username>/.config/BraveSoftware/Brave-Browser" # Replace <username> with your Linux username
     PROFILE_DIR="Default"
    ```
 
@@ -134,6 +134,7 @@ Create a Reddit bot and get environment variables:
 - [x] Implement caching mechanism
 - [x] Transform codebase from standalone functions to class-based structure
 - [x] Split driver into headless (for scraping) and non-headless (for enrollment)
+- [x] Add logging across modules
 
 See the [open issues](https://github.com/muhammadazzazy/udemate/issues) for a full list of proposed features (and known issues).
 

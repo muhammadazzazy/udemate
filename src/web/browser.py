@@ -33,6 +33,8 @@ class Browser:
             f'--remote-debugging-port={self.port}',
             f'--user-data-dir={self.user_data_dir}',
             f'--profile-directory={self.profile_dir}',
+            '--no-first-run',
+            '--no-default-browser-check',
         ], check=True)
         time.sleep(3)
 
@@ -42,6 +44,7 @@ class Browser:
         or in debugger address when automating course enrollment.
         """
         options = Options()
+        options.binary_location = '/usr/bin/brave-browser'
         if headless:
             options.add_argument('--headless')
         else:
