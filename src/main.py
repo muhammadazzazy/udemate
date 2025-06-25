@@ -17,13 +17,13 @@ def main() -> None:
     try:
         logger: Logger = setup_logging()
         controller: Controller = Controller()
-        logger.info('Udemate: Your Automation Companion for Udemy 🤖 📚')
+        logger.info('Starting Udemate...')
         controller.run()
     except ValueError as e:
         logger.exception(e)
         sys.exit()
     except KeyboardInterrupt:
-        logger.exception('Interrupt signal (SIGINT) triggered! Exiting...')
+        logger.warning('Interrupt signal (SIGINT) triggered! Exiting...')
         sys.exit()
 
 

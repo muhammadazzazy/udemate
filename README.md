@@ -59,9 +59,16 @@ A collection of automation tools that read Reddit posts from [r/udemyfreebies](h
 
 - [Python 3.12.7](https://www.python.org/downloads/release/python-3127/)
 
-- [ChromeDriver Version: 137.0.7151.119 (r1453031)](https://googlechromelabs.github.io/chrome-for-testing/#stable)
+- [ChromeDriver Version: 137.0.7151.119 (r1453031)](https://storage.googleapis.com/chrome-for-testing-public/137.0.7151.119/linux64/chromedriver-linux64.zip)
 
-- [Brave Browser](https://brave.com/)
+Download and install ChromeDriver Version: 137.0.7151.119 (r1453031)
+
+```sh
+wget https://storage.googleapis.com/chrome-for-testing-public/137.0.7151.119/linux64/chromedriver-linux64.zip && unzip chrome-linux64.zip && cd chrome-linux64
+sudo mv chromedriver /usr/local/bin
+```
+
+- [Brave Browser](https://brave.com/linux/)
 
 Create a Reddit bot and get environment variables:
 

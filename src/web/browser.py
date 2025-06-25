@@ -31,7 +31,7 @@ class Browser:
         """
         Launch Brave Browser for automating Udemy course enrollment.
         """
-        self.logger.info('Launching 🚀 Brave Browser 🦁')
+        self.logger.info('Launching Brave Browser')
         subprocess.run([
             'brave-browser',
             f'--remote-debugging-port={self.port}',

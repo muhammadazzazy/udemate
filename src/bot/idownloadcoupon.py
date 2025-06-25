@@ -28,7 +28,9 @@ class IDownloadCoupon:
             (By.CSS_SELECTOR, "form.cart")))
         action_url = form.get_attribute("action")
         response = requests.get(action_url, allow_redirects=True, timeout=15)
-        return response.url
+        udemy_url: str = response.url
+        self.logger.info('%s ===> %s', url, udemy_url)
+        return udemy_url
 
     def transform(self, url: str) -> str:
         """Convert IDC link to final Udemy link with coupon."""
@@ -36,10 +38,12 @@ class IDownloadCoupon:
         if 'udemy.com' not in response.url:
             udemy_url: str = self.scrape(url)
             return udemy_url
+        self.logger.info('%s ==> %s', url, udemy_url)
         return response.url
 
     def run(self) -> set[str]:
         """Return set of Udemy links extracted from IDC."""
+        self.logger.info('IDC bot starting...')
         udemy_urls: set[str] = set()
         for url in self.urls:
             try:

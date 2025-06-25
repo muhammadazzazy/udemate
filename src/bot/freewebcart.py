@@ -16,7 +16,7 @@ class Freewebcart:
         self.urls = urls
         self.logger = setup_logging()
 
-    def scrape(self, url) -> str:
+    def scrape(self, url: str) -> str:
         """Return Udemy link from Freewebcart link."""
         self.driver.get(url)
         wait = WebDriverWait(self.driver, 20)
@@ -24,10 +24,13 @@ class Freewebcart:
             EC.visibility_of_element_located(
                 (By.XPATH, '//a[contains(text(), "🎁 Get 100% OFF Coupon")]'))
         )
-        return link.get_attribute("href")
+        udemy_url: str = link.get_attribute("href")
+        self.logger.info('%s ==> %s', url, udemy_url)
+        return udemy_url
 
     def run(self) -> set[str]:
         """Return set of Udemy links extracted from Freewebcart."""
+        self.logger.info('Freewebcart bot starting...')
         udemy_urls: set[str] = set()
         for url in self.urls:
             try:
