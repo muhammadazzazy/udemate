@@ -135,14 +135,18 @@ Create a Reddit bot and get environment variables:
 - [x] Implement refresh token authentication
 - [x] Add functionality to generate JSON files of submissions grouped by hostname
 - [ ] Scrape intermediate links from the following middlemen:
-  - [x] IDC
+
+  - [ ] Easy Learning
   - [x] Freewebcart
+  - [x] IDC
   - [ ] Line51
+
 - [x] Automate enrollment into Udemy courses
 - [x] Implement caching mechanism
 - [x] Transform codebase from standalone functions to class-based structure
 - [x] Split driver into headless (for scraping) and non-headless (for enrollment)
 - [x] Add logging across modules
+- [x] Spoof User-Agent in browser when scraping intermediary websites
 
 See the [open issues](https://github.com/muhammadazzazy/udemate/issues) for a full list of proposed features (and known issues).
 

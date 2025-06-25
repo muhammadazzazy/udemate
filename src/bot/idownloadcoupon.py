@@ -23,11 +23,11 @@ class IDownloadCoupon:
     def scrape(self, url: str) -> str:
         """Scrape Udemy link from IDC link."""
         self.driver.get(url)
-        wait = WebDriverWait(self.driver, 15)
+        wait = WebDriverWait(self.driver, 30)
         form = wait.until(EC.presence_of_element_located(
-            (By.CSS_SELECTOR, "form.cart")))
-        action_url = form.get_attribute("action")
-        response = requests.get(action_url, allow_redirects=True, timeout=15)
+            (By.CSS_SELECTOR, 'form.cart')))
+        action_url = form.get_attribute('action')
+        response = requests.get(action_url, allow_redirects=True, timeout=10)
         udemy_url: str = response.url
         self.logger.info('%s ===> %s', url, udemy_url)
         return udemy_url

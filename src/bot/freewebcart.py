@@ -19,7 +19,7 @@ class Freewebcart:
     def scrape(self, url: str) -> str:
         """Return Udemy link from Freewebcart link."""
         self.driver.get(url)
-        wait = WebDriverWait(self.driver, 20)
+        wait = WebDriverWait(self.driver, 30)
         link = wait.until(
             EC.visibility_of_element_located(
                 (By.XPATH, '//a[contains(text(), "🎁 Get 100% OFF Coupon")]'))

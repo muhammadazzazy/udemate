@@ -1,13 +1,16 @@
 """Setup Udemate logger to display stdout and write messages to log files."""
+
 import logging
 from logging import FileHandler, Formatter, Logger, StreamHandler
 from pathlib import Path
+
+from utils.config import FORMATTED_DATE
 
 
 def setup_logging() -> logging.Logger:
     """Configure and return logger for Udemate."""
     logger: Logger = logging.getLogger('udemate')
-    logs_dir = Path(__file__).resolve().parents[2] / 'logs'
+    logs_dir = Path(__file__).resolve().parents[2] / 'logs' / FORMATTED_DATE
     logs_dir.mkdir(parents=True, exist_ok=True)
     if not logger.hasHandlers():
         file_handler: FileHandler = logging.FileHandler(

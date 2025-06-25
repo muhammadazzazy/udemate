@@ -1,7 +1,7 @@
 """Configure Udemate based on environment variables in .env file."""
 import os
 from dataclasses import asdict, dataclass
-
+from datetime import datetime
 from typing import Final
 
 from dotenv import load_dotenv
@@ -11,6 +11,7 @@ DEFAULT_USER_AGENT: Final[str] = 'Udemate:v1.0.0 (by u/kemitche)'
 DEFAULT_LIMIT: Final[int] = 500
 MAX_LIMIT: Final[int] = 1000
 
+FORMATTED_DATE: Final[str] = datetime.today().strftime('%Y%m%d')
 load_dotenv()
 
 

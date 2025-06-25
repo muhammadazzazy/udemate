@@ -3,13 +3,15 @@ import json
 from pathlib import Path
 
 from utils.logger import setup_logging
+from utils.config import FORMATTED_DATE
 
 
 class Cache:
     """Read and write cached Udemy links to JSON files."""
 
     def __init__(self) -> None:
-        self.data_dir: Path = Path(__file__).parent.parent.parent / 'data'
+        self.data_dir: Path = Path(
+            __file__).parent.parent.parent / 'data' / FORMATTED_DATE
         self.data_dir.mkdir(parents=True, exist_ok=True)
         self.logger = setup_logging()
         self.udemy_urls: set[str] = set()
