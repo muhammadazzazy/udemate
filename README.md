@@ -64,7 +64,7 @@ A collection of automation tools that read Reddit posts from [r/udemyfreebies](h
 Download and install ChromeDriver Version: 137.0.7151.119 (r1453031)
 
 ```sh
-wget https://storage.googleapis.com/chrome-for-testing-public/137.0.7151.119/linux64/chromedriver-linux64.zip && unzip chrome-linux64.zip && cd chrome-linux64
+wget https://storage.googleapis.com/chrome-for-testing-public/137.0.7151.119/linux64/chromedriver-linux64.zip && unzip chrome-linux64.zip && cd chromedriver-linux64
 sudo mv chromedriver /usr/local/bin
 ```
 
