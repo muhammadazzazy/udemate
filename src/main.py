@@ -20,10 +20,10 @@ def main() -> None:
         logger.info('Udemate: Your Automation Companion for Udemy 🤖 📚')
         controller.run()
     except ValueError as e:
-        logger.error(e)
+        logger.exception(e)
         sys.exit()
     except KeyboardInterrupt:
-        logger.warning('Interrupt signal (SIGINT) triggered! Exiting...')
+        logger.exception('Interrupt signal (SIGINT) triggered! Exiting...')
         sys.exit()
 
 

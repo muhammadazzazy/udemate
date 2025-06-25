@@ -7,7 +7,9 @@ from typing import Final
 
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.chrome.webdriver import WebDriver
 
+from utils.logger import setup_logging
 
 DEFAULT_PORT: Final[int] = 9222
 USER: Final[str] = getpass.getuser()
@@ -23,11 +25,13 @@ class Browser:
         self.user_data_dir = os.environ.get(
             'USER_DATA_DIR', DEFAULT_USER_DATA_DIR)
         self.profile_dir = os.environ.get('PROFILE_DIR', DEFAULT_PROFILE_DIR)
+        self.logger = setup_logging()
 
     def launch(self) -> None:
         """
         Launch Brave Browser for automating Udemy course enrollment.
         """
+        self.logger.info('Launching 🚀 Brave Browser 🦁')
         subprocess.run([
             'brave-browser',
             f'--remote-debugging-port={self.port}',
@@ -38,18 +42,29 @@ class Browser:
         ], check=True)
         time.sleep(3)
 
-    def setup(self, headless: bool):
+    def setup(self, headless: bool) -> WebDriver:
         """
-        Return Selenium WebDriver either in headless mode for scraping Udemy links 
-        or in debugger address when automating course enrollment.
+        Return Selenium WebDriver for Brave Browser either in headless mode for scraping
+        or with debugger address when automating course enrollment.
         """
         options = Options()
         options.binary_location = '/usr/bin/brave-browser'
         if headless:
             options.add_argument('--headless')
-        else:
-            self.launch()
-            options.add_experimental_option(
-                'debuggerAddress', f'127.0.0.1:{self.port}')
-        driver = webdriver.Chrome(options=options)
+            return webdriver.Chrome(options=options)
+        self.launch()
+        options.add_experimental_option(
+            'debuggerAddress', f'127.0.0.1:{self.port}')
+        driver: WebDriver = webdriver.Chrome(options=options)
+        tabs = driver.window_handles
+        target_url: str = 'chrome://newtab/'
+        for tab in tabs:
+            driver.switch_to.window(tab)
+            current_url: str = driver.current_url
+            if current_url == target_url:
+                self.logger.info(
+                    'Switched to Brave Browser\'s launch tab.')
+                return driver
+        self.logger.warning('Launch tab not found — defaulting to last tab.')
+        driver.switch_to.window(driver.window_handles[-1])
         return driver
