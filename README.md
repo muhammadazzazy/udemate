@@ -85,6 +85,17 @@ wget https://storage.googleapis.com/chrome-for-testing-public/137.0.7151.119/lin
 sudo mv chromedriver /usr/local/bin
 ```
 
+#### Brave + ChromeDriver Version Match
+
+⚠️ The Brave Browser and ChromeDriver versions **must match** for automation to work correctly.
+
+Check your installed versions
+
+```sh
+brave-browser --version
+chromedriver --version
+```
+
 ### Installation
 
 1. Clone the repo
@@ -123,7 +134,13 @@ sudo mv chromedriver /usr/local/bin
      pip install -r requirements.txt
    ```
 
-6. Run the script
+6. Run Brave Browser with default user profile and debugging port 9222
+
+   ```sh
+     brave-browser --remote-debugging-port=9222 --user-data-dir="$HOME/.config/BraveSoftware/Brave-Browser" --profile-directory="Default"
+   ```
+
+7. Run the script
    ```sh
      python3 src/main.py
    ```

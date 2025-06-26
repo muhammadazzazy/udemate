@@ -3,22 +3,16 @@ import requests
 from requests.exceptions import RequestException
 
 from selenium.common.exceptions import WebDriverException
-from selenium.webdriver.chrome.webdriver import WebDriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
 
-from utils.logger import setup_logging
+from bot.base import Bot
 
 
-class IDownloadCoupon:
+class IDownloadCoupon(Bot):
     """Get Udemy links with coupons from IDC."""
-
-    def __init__(self, driver: WebDriver, urls: set[str]) -> None:
-        self.driver = driver
-        self.urls = urls
-        self.logger = setup_logging()
 
     def scrape(self, url: str) -> str:
         """Scrape Udemy link from IDC link."""
@@ -53,4 +47,5 @@ class IDownloadCoupon:
             except (RequestException, WebDriverException) as e:
                 self.logger.exception('%s. Skipping...', e)
                 continue
+        self.logger.info('IDC bot collected %d links.', len(udemy_urls))
         return udemy_urls

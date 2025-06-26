@@ -28,21 +28,6 @@ class Browser:
         self.user_agent = os.environ.get('BROWSER_USER_AGENT')
         self.logger = setup_logging()
 
-    def launch(self) -> None:
-        """
-        Launch Brave Browser for automating Udemy course enrollment.
-        """
-        self.logger.info('Launching Brave Browser')
-        subprocess.run([
-            'brave-browser',
-            f'--remote-debugging-port={self.port}',
-            f'--user-data-dir={self.user_data_dir}',
-            f'--profile-directory={self.profile_dir}',
-            '--no-first-run',
-            '--no-default-browser-check',
-        ], check=True)
-        time.sleep(3)
-
     def setup(self, headless: bool) -> WebDriver:
         """
         Return Selenium WebDriver for Brave Browser either in headless mode for scraping
@@ -54,7 +39,6 @@ class Browser:
             options.add_argument(f'user-agent={self.user_agent}')
             options.add_argument('--headless')
             return webdriver.Chrome(options=options)
-        self.launch()
         options.add_experimental_option(
             'debuggerAddress', f'127.0.0.1:{self.port}')
         driver: WebDriver = webdriver.Chrome(options=options)

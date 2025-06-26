@@ -1,20 +1,14 @@
 """Scrape Udemy links with coupons from Freewebcart."""
 from selenium.common.exceptions import WebDriverException
-from selenium.webdriver.chrome.webdriver import WebDriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
-from utils.logger import setup_logging
+from bot.base import Bot
 
 
-class Freewebcart:
+class Freewebcart(Bot):
     """Get Udemy links with coupons from Freewebcart."""
-
-    def __init__(self, driver: WebDriver, urls: set[str]) -> None:
-        self.driver = driver
-        self.urls = urls
-        self.logger = setup_logging()
 
     def scrape(self, url: str) -> str:
         """Return Udemy link from Freewebcart link."""
@@ -39,4 +33,6 @@ class Freewebcart:
             except WebDriverException as e:
                 self.logger.exception('%s. Skipping...', e)
                 continue
+        self.logger.info('Freewebcart bot collected %d links.',
+                         len(udemy_urls))
         return udemy_urls

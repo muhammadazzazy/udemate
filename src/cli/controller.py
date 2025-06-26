@@ -6,7 +6,7 @@ import sys
 
 from bot.easylearning import EasyLearning
 from bot.freewebcart import Freewebcart
-from bot.idownloadcoupon import IDownloadCoupon
+# from bot.idownloadcoupon import IDownloadCoupon
 from bot.udemy import Udemy
 from client.get_refresh_token import get_refresh_token
 from client.reddit import RedditClient
@@ -25,7 +25,7 @@ class Controller:
         self.middleman_classes = {
             'easylearn.ing': EasyLearning,
             'freewebcart': Freewebcart,
-            'idownloadcoupon': IDownloadCoupon
+            # 'idownloadcoupon': IDownloadCoupon
         }
 
     def unlock(self) -> None:
