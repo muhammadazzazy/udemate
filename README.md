@@ -59,18 +59,15 @@ A collection of automation tools that read Reddit posts from [r/udemyfreebies](h
 
 - [Python 3.12.7](https://www.python.org/downloads/release/python-3127/)
 
-- [ChromeDriver Version: 137.0.7151.119 (r1453031)](https://storage.googleapis.com/chrome-for-testing-public/137.0.7151.119/linux64/chromedriver-linux64.zip)
+- [ChromeDriver Version: 137.0.7151.119 (r1453031)](https://storage.googleapis.com/chrome-for-testing-public/137.0.7151.119/linux64/chromedriver-linux64.zip).
 
-Download and install ChromeDriver Version: 137.0.7151.119 (r1453031)
-
-```sh
-wget https://storage.googleapis.com/chrome-for-testing-public/137.0.7151.119/linux64/chromedriver-linux64.zip && unzip chrome-linux64.zip && cd chromedriver-linux64
-sudo mv chromedriver /usr/local/bin
-```
+  📌 Follow this [guide](#download-and-install-chromedriver-version-13707151119-r1453031) to download and install the appropriate version.
 
 - [Brave Browser](https://brave.com/linux/)
 
-Create a Reddit bot and get environment variables:
+#### Reddit Bot Setup
+
+Create a Reddit bot and get environment variables
 
 1. Visit [Third-party app authorizations](https://www.reddit.com/prefs/apps/)
 2. Click on **create another app** button at the bottom
@@ -80,6 +77,13 @@ Create a Reddit bot and get environment variables:
 6. Set **redirect uri** to `http://localhost:8080`
 
 📝 Note: On the first run, the script will provide you with a link that you need to click on to generate a Reddit refresh token and authorize access.
+
+#### Download and Install ChromeDriver (Version 137.0.7151.119)
+
+```sh
+wget https://storage.googleapis.com/chrome-for-testing-public/137.0.7151.119/linux64/chromedriver-linux64.zip && unzip chrome-linux64.zip && cd chromedriver-linux64
+sudo mv chromedriver /usr/local/bin
+```
 
 ### Installation
 
@@ -136,7 +140,7 @@ Create a Reddit bot and get environment variables:
 - [x] Add functionality to generate JSON files of submissions grouped by hostname
 - [ ] Scrape intermediate links from the following middlemen:
 
-  - [ ] Easy Learning
+  - [x] Easy Learning
   - [x] Freewebcart
   - [x] IDC
   - [ ] Line51
