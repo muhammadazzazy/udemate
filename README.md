@@ -59,9 +59,9 @@ A collection of automation tools that read Reddit posts from [r/udemyfreebies](h
 
 - [Python 3.12.7](https://www.python.org/downloads/release/python-3127/)
 
-- [ChromeDriver Version: 137.0.7151.119 (r1453031)](https://storage.googleapis.com/chrome-for-testing-public/137.0.7151.119/linux64/chromedriver-linux64.zip).
+- [ChromeDriver (Version 137.0.7151.119)](https://storage.googleapis.com/chrome-for-testing-public/137.0.7151.119/linux64/chromedriver-linux64.zip).
 
-  📌 Follow this [guide](#download-and-install-chromedriver-version-13707151119-r1453031) to download and install the appropriate version.
+  📌 Follow this [guide](#download-and-install-chromedriver-version-13707151119) to download and install the appropriate version.
 
 - [Brave Browser](https://brave.com/linux/)
 

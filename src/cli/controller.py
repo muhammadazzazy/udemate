@@ -62,5 +62,4 @@ class Controller:
             udemy_urls: set[str] = self.get_udemy_urls(middleman_urls)
             self.cache.write(data=udemy_urls)
         except KeyboardInterrupt:
-            self.logger.warning('Controller interrupted. Exiting...')
             sys.exit()
