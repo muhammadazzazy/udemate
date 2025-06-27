@@ -8,10 +8,10 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
 
-from bot.base import Bot
+from bot.spider import Spider
 
 
-class IDownloadCoupon(Bot):
+class IDownloadCoupon(Spider):
     """Get Udemy links with coupons from IDC."""
 
     def scrape(self, url: str) -> str:
@@ -39,7 +39,6 @@ class IDownloadCoupon(Bot):
         self.logger.info('Processing %d links from IDC...',
                          len(self.urls))
         udemy_urls: set[str] = set()
-        max_len: int = max(self.urls, key=len)
         for url in self.urls:
             try:
                 udemy_url: str = self.transform(url)
@@ -48,5 +47,5 @@ class IDownloadCoupon(Bot):
             except (RequestException, WebDriverException) as e:
                 self.logger.info('%s. Skipping...', e)
                 continue
-        self.logger.info('IDC bot collected %d links.', len(udemy_urls))
+        self.logger.info('IDC bot scraped %d Udemy links.', len(udemy_urls))
         return udemy_urls

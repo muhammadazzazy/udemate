@@ -15,7 +15,7 @@ from utils.config import Config
 from web.browser import Browser
 
 
-class Controller:
+class Udemate:
     """Control the flow of Udemate."""
 
     def __init__(self) -> None:

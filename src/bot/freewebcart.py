@@ -4,10 +4,10 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
-from bot.base import Bot
+from bot.spider import Spider
 
 
-class Freewebcart(Bot):
+class Freewebcart(Spider):
     """Get Udemy links with coupons from Freewebcart."""
 
     def scrape(self, url: str) -> str:
@@ -27,7 +27,6 @@ class Freewebcart(Bot):
         self.logger.info('Processing %d links from Freewebcart...',
                          len(self.urls))
         udemy_urls: set[str] = set()
-        max_len: int = max(self.urls, key=len)
         for url in self.urls:
             try:
                 udemy_url: str = self.scrape(url)
@@ -36,6 +35,6 @@ class Freewebcart(Bot):
             except WebDriverException as e:
                 self.logger.info('%s. Skipping...', e)
                 continue
-        self.logger.info('Freewebcart bot collected %d links.',
+        self.logger.info('Freewebcart bot scraped %d Udemy links.',
                          len(udemy_urls))
         return udemy_urls

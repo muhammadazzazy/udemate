@@ -4,8 +4,8 @@ from abc import ABC, abstractmethod
 from utils.logger import setup_logging
 
 
-class Bot(ABC):
-    """Implements constructor and abstract methods for all bots."""
+class Spider(ABC):
+    """Implements constructor and abstract methods for all intermediary spiders."""
 
     def __init__(self, driver, urls) -> None:
         self.driver = driver

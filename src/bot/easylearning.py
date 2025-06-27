@@ -4,10 +4,10 @@ import requests
 from selenium.common.exceptions import WebDriverException
 from selenium.webdriver.common.by import By
 
-from bot.base import Bot
+from bot.spider import Spider
 
 
-class EasyLearning(Bot):
+class EasyLearning(Spider):
     """Get Udemy links with coupons from EasyLearning."""
 
     def scrape(self, url: str) -> str:
@@ -22,10 +22,9 @@ class EasyLearning(Bot):
     def run(self) -> set[str]:
         """Return set of Udemy links extracted from Easylearning."""
         self.logger.info('Easy Learning bot starting...')
-        self.logger.info('Processing %d links from Easy Learning...',
+        self.logger.info('Processing %d intermediary links from Easy Learning...',
                          len(self.urls))
         udemy_urls: set[str] = set()
-        max_len: int = max(self.urls, key=len)
         for url in self.urls:
             try:
                 udemy_url: str = self.scrape(url)
@@ -34,6 +33,6 @@ class EasyLearning(Bot):
             except WebDriverException as e:
                 self.logger.info('%s. Skipping...', e)
                 continue
-        self.logger.info('Easy Learning bot collected %d links.',
+        self.logger.info('Easy Learning bot scraped %d Udemy links.',
                          len(udemy_urls))
         return udemy_urls
