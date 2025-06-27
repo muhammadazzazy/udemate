@@ -23,7 +23,6 @@ class IDownloadCoupon(Bot):
         action_url = form.get_attribute('action')
         response = requests.get(action_url, allow_redirects=True, timeout=10)
         udemy_url: str = response.url
-        self.logger.info('%s ===> %s', url, udemy_url)
         return udemy_url
 
     def transform(self, url: str) -> str:
@@ -31,18 +30,20 @@ class IDownloadCoupon(Bot):
         response = requests.get(url, allow_redirects=True, timeout=10)
         if 'udemy.com' not in url:
             udemy_url: str = self.scrape(url)
-            self.logger.info('%s ==> %s', url, udemy_url)
             return udemy_url
-        self.logger.info('%s ==> %s', url, response.url)
         return response.url
 
     def run(self) -> set[str]:
         """Return set of Udemy links extracted from IDC."""
         self.logger.info('IDC bot starting...')
         udemy_urls: set[str] = set()
+        self.logger.info('Processing %d links from IDC...',
+                         len(udemy_urls))
+        max_len: int = max(self.urls, key=len)
         for url in self.urls:
             try:
                 udemy_url: str = self.transform(url)
+                self.logger.info('%-*s ==> %s', max_len, url, udemy_url)
                 udemy_urls.add(udemy_url)
             except (RequestException, WebDriverException) as e:
                 self.logger.exception('%s. Skipping...', e)

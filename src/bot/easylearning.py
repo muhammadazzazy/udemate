@@ -17,16 +17,19 @@ class EasyLearning(Bot):
             By.CSS_SELECTOR, "a.purple-button").get_attribute('href')
         response = requests.get(enroll_url, timeout=10)
         udemy_url: str = response.url
-        self.logger.info('%s ==> %s', url, udemy_url)
         return udemy_url
 
     def run(self) -> set[str]:
         """Return set of Udemy links extracted from Easylearning."""
         self.logger.info('Easy Learning bot starting...')
         udemy_urls: set[str] = set()
+        self.logger.info('Processing %d links from Easy Learning...',
+                         len(udemy_urls))
+        max_len: int = max(self.urls, key=len)
         for url in self.urls:
             try:
                 udemy_url: str = self.scrape(url)
+                self.logger.info('%-*s ==> %s', max_len, url, udemy_url)
                 udemy_urls.add(udemy_url)
             except WebDriverException as e:
                 self.logger.exception('%s. Skipping...', e)
