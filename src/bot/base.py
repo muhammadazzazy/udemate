@@ -5,7 +5,7 @@ from utils.logger import setup_logging
 
 
 class Bot(ABC):
-    """Abstract Base Class for all middleman bots"""
+    """Implements constructor and abstract methods for all bots."""
 
     def __init__(self, driver, urls) -> None:
         self.driver = driver

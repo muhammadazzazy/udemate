@@ -36,17 +36,17 @@ class IDownloadCoupon(Bot):
     def run(self) -> set[str]:
         """Return set of Udemy links extracted from IDC."""
         self.logger.info('IDC bot starting...')
-        udemy_urls: set[str] = set()
         self.logger.info('Processing %d links from IDC...',
-                         len(udemy_urls))
+                         len(self.urls))
+        udemy_urls: set[str] = set()
         max_len: int = max(self.urls, key=len)
         for url in self.urls:
             try:
                 udemy_url: str = self.transform(url)
-                self.logger.info('%-*s ==> %s', max_len, url, udemy_url)
+                self.logger.info('%s ==> %s', url, udemy_url)
                 udemy_urls.add(udemy_url)
             except (RequestException, WebDriverException) as e:
-                self.logger.exception('%s. Skipping...', e)
+                self.logger.info('%s. Skipping...', e)
                 continue
         self.logger.info('IDC bot collected %d links.', len(udemy_urls))
         return udemy_urls

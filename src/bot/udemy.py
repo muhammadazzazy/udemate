@@ -7,16 +7,11 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
-from utils.logger import setup_logging
+from bot.base import Bot
 
 
-class Udemy:
+class Udemy(Bot):
     """Autoenroll into free Udemy courses."""
-
-    def __init__(self, *, driver: WebDriver, urls: set[str]) -> None:
-        self.driver = driver
-        self.urls = urls
-        self.logger = setup_logging()
 
     def enroll(self, wait) -> None:
         """Click on first 'Enroll now' button."""
