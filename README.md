@@ -27,6 +27,11 @@
       <a href="#getting-started">Getting Started</a>
       <ul>
         <li><a href="#prerequisites">Prerequisites</a></li>
+        <ul>
+          <li><a href="#reddit-bot-setup">Reddit Bot Setup</a></li>
+          <li><a href="#download-and-install-chromedriver-version-13707151119">Download and Install ChromeDriver (Version 137.0.7151.119)</a></li>
+          <li><a href="#brave--chromedriver-version-match">Brave + ChromeDriver Version Match</a></li>
+        </ul>
         <li><a href="#installation">Installation</a></li>
       </ul>
     </li>
@@ -134,10 +139,10 @@ chromedriver --version
      pip install -r requirements.txt
    ```
 
-6. Run Brave Browser with default user profile and debugging port 9222
+6. Run `launch_brave.sh` script to start Brave Browser with debugging and default user profile
 
    ```sh
-     brave-browser --remote-debugging-port=9222 --user-data-dir="$HOME/.config/BraveSoftware/Brave-Browser" --profile-directory="Default"
+    ./src/web/launch_brave.sh
    ```
 
 7. Run the script
