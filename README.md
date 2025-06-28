@@ -64,9 +64,9 @@ A collection of automation tools that read Reddit posts from [r/udemyfreebies](h
 
 - [Python 3.12.7](https://www.python.org/downloads/release/python-3127/)
 
-- [ChromeDriver (Version 137.0.7151.119)](https://storage.googleapis.com/chrome-for-testing-public/137.0.7151.119/linux64/chromedriver-linux64.zip).
+- [ChromeDriver (Version 138.0.7204.49)](https://storage.googleapis.com/chrome-for-testing-public/137.0.7151.119/linux64/chromedriver-linux64.zip).
 
-  📌 Follow this [guide](#download-and-install-chromedriver-version-13707151119) to download and install the appropriate version.
+  📌 Follow this [guide](#download-and-install-chromedriver-version-138.0.7204.49) to download and install the appropriate version.
 
 - [Brave Browser](https://brave.com/linux/)
 
@@ -83,10 +83,10 @@ Create a Reddit bot and get environment variables
 
 📝 Note: On the first run, the script will provide you with a link that you need to click on to generate a Reddit refresh token and authorize access.
 
-#### Download and Install ChromeDriver (Version 137.0.7151.119)
+#### Download and Install ChromeDriver (Version 138.0.7204.49)
 
 ```sh
-wget https://storage.googleapis.com/chrome-for-testing-public/137.0.7151.119/linux64/chromedriver-linux64.zip && unzip chrome-linux64.zip && cd chromedriver-linux64
+wget https://storage.googleapis.com/chrome-for-testing-public/138.0.7204.49/linux64/chrome-linux64.zip && unzip chrome-linux64.zip && cd chromedriver-linux64
 sudo mv chromedriver /usr/local/bin
 ```
 
