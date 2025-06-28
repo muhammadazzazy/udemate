@@ -50,7 +50,7 @@ class Udemate:
     def run(self) -> None:
         """Coordinate program execution."""
         try:
-            self.cache.read()
+            self.cache.read_json()
             if self.cache.udemy_urls:
                 self.unlock()
             refresh_token: str = get_refresh_token(self.config)
@@ -60,6 +60,6 @@ class Udemate:
             middleman_urls: dict[str, set[str]
                                  ] = reddit_client.get_middleman_urls(hostnames)
             udemy_urls: set[str] = self.get_udemy_urls(middleman_urls)
-            self.cache.write(data=udemy_urls)
+            self.cache.write_json(data=udemy_urls)
         except KeyboardInterrupt:
             sys.exit()

@@ -16,7 +16,7 @@ class Cache:
         self.logger = setup_logging()
         self.udemy_urls: set[str] = set()
 
-    def read(self) -> None:
+    def read_json(self) -> None:
         """Parse cached Udemy links with coupons from JSON files."""
         file_path: Path = self.data_dir / 'udemy.json'
         if file_path.exists():
@@ -25,10 +25,10 @@ class Cache:
         self.logger.info("Read %d Udemy links from cache.",
                          len(self.udemy_urls))
 
-    def write(self, data: set[str]) -> None:
+    def write_json(self, data: set[str]) -> None:
         """Write output to JSON file in a 'data' directory inside root directory."""
-        file_path: Path = self.data_dir / 'udemy.json'
+        file_path: Path = self.data_dir / 'json/udemy.json'
         with file_path.open('w', encoding='utf-8') as f:
             json.dump(list(data), f,
                       ensure_ascii=False, indent=4)
-        self.logger.info('Successfully written data to %s.', file_path)
+            self.logger.info('Successfully written data to %s.', file_path)
