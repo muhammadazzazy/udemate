@@ -1,5 +1,6 @@
 """Scrape Udemy links with coupons from EasyLearning."""
 import requests
+from requests.exceptions import RequestException
 
 from selenium.common.exceptions import WebDriverException
 from selenium.webdriver.common.by import By
@@ -15,7 +16,7 @@ class EasyLearning(Spider):
         self.driver.get(url)
         enroll_url: str = self.driver.find_element(
             By.CSS_SELECTOR, "a.purple-button").get_attribute('href')
-        response = requests.get(enroll_url, timeout=10)
+        response = requests.get(enroll_url, timeout=20)
         udemy_url: str = response.url
         return udemy_url
 
@@ -30,7 +31,7 @@ class EasyLearning(Spider):
                 udemy_url: str = self.scrape(url)
                 self.logger.info('%s ==> %s', url, udemy_url)
                 udemy_urls.add(udemy_url)
-            except WebDriverException as e:
+            except (RequestException, WebDriverException) as e:
                 self.logger.info('%s. Skipping...', e)
                 continue
         self.logger.info('Easy Learning bot scraped %d Udemy links.',
