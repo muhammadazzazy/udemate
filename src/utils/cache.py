@@ -26,7 +26,7 @@ class Cache:
                          len(self.udemy_urls))
 
     def write_json(self, data: set[str]) -> None:
-        """Write output to JSON file in a 'data' directory inside root directory."""
+        """Write output to JSON file in 'json' directory within 'data' directory."""
         file_path: Path = self.json_dir / 'udemy.json'
         with file_path.open('w', encoding='utf-8') as f:
             json.dump(list(data), f,

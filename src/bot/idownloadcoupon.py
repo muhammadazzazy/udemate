@@ -45,7 +45,7 @@ class IDownloadCoupon(Spider):
                 self.logger.info('%s ==> %s', url, udemy_url)
                 udemy_urls.add(udemy_url)
             except (RequestException, WebDriverException) as e:
-                self.logger.info('%s. Skipping...', e)
+                self.logger.info('Something went wrong. Skipping...')
                 continue
         self.logger.info('IDC bot scraped %d Udemy links.', len(udemy_urls))
         return udemy_urls
