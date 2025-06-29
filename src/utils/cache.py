@@ -22,8 +22,11 @@ class Cache:
         if file_path.exists():
             with file_path.open('r', encoding='utf-8') as f:
                 self.udemy_urls = set(json.load(f))
-        self.logger.info("Read %d Udemy links from cache.",
-                         len(self.udemy_urls))
+        if self.udemy_urls:
+            self.logger.info('Read %d Udemy links from JSON cache.',
+                             len(self.udemy_urls))
+        else:
+            self.logger.info('No Udemy links in JSON cache.')
 
     def write_json(self, data: set[str]) -> None:
         """Write output to JSON file in 'json' directory within 'data' directory."""

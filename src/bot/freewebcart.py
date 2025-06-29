@@ -34,7 +34,7 @@ class Freewebcart(Spider):
                 self.logger.info('%-*s ==> %s', max_len, url, udemy_url)
                 udemy_urls.add(udemy_url)
             except WebDriverException:
-                self.logger.info('Something went wrong. Skipping...')
+                self.logger.warning('Something went wrong. Skipping...')
                 continue
         self.logger.info('Freewebcart bot scraped %d Udemy links.',
                          len(udemy_urls))

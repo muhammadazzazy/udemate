@@ -33,7 +33,7 @@ class EasyLearning(Spider):
                 self.logger.info('%-*s ==> %s', max_len, url, udemy_url)
                 udemy_urls.add(udemy_url)
             except (RequestException, WebDriverException):
-                self.logger.info('Something went wrong. Skipping...')
+                self.logger.warning('Something went wrong. Skipping...')
                 continue
         self.logger.info('Easy Learning bot scraped %d Udemy links.',
                          len(udemy_urls))
