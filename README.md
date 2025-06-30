@@ -115,18 +115,18 @@ chromedriver --version
 
    ```env
     # Reddit config
-    CLIENT_ID="" # Required
-    CLIENT_SECRET="" # Required
-    REDDIT_USER_AGENT="" # Optional
-    REDDIT_PASSWORD="" # Required if 2FA is not enabled
-    REDDIT_USERNAME="" # Required if 2FA is not enabled
-    LIMIT=1000 # Optional. Default is shown.
+    CLIENT_ID="" # Required.
+    CLIENT_SECRET="" # Required.
+    REDDIT_USER_AGENT="" # Optional. Default is 'Udemate:v1.0.0 (by u/kemitche)'.
+    REDDIT_PASSWORD="" # Required if 2FA is not enabled.
+    REDDIT_USERNAME="" # Required if 2FA is not enabled.
+    LIMIT=1000 # Optional. Default is 500.
 
     # Browser config
-    BROWSER_USER_AGENT="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36" # Optional
-    PORT=9222 # Optional. Default is shown.
+    BROWSER_USER_AGENT="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36" # Optional.
+    PORT=9222 # Optional. Default is 9222.
     USER_DATA_DIR="/home/<username>/.config/BraveSoftware/Brave-Browser" # Replace <username> with your Linux username
-    PROFILE_DIR="Default" # Optional. Default is shown.
+    PROFILE_DIR="Default" # Optional. Default is 'Default'.
    ```
 
 4. Create a virtual environment
