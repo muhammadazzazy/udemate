@@ -14,15 +14,24 @@ class RedditClient:
     """Configure Reddit client for r/udemyfreebies subreddit,
     get subreddit posts, and extract hostnames."""
 
-    def __init__(self, refresh_token: str) -> None:
+    def __init__(self, refresh_token: str | None = None) -> None:
         self.config = Config()
-        self.refresh_token = refresh_token
-        self.reddit = praw.Reddit(
-            client_id=self.config.client_id,
-            client_secret=self.config.client_secret,
-            user_agent=self.config.user_agent,
-            refresh_token=refresh_token
-        )
+        if refresh_token:
+            self.refresh_token = refresh_token
+            self.reddit = praw.Reddit(
+                client_id=self.config.client_id,
+                client_secret=self.config.client_secret,
+                user_agent=self.config.user_agent,
+                refresh_token=refresh_token
+            )
+        else:
+            self.reddit = praw.Reddit(
+                client_id=self.config.client_id,
+                client_secret=self.config.client_secret,
+                password=self.config.password,
+                user_agent=self.config.user_agent,
+                username=self.config.username
+            )
         self.submissions: list[Submission] = []
 
     def populate_submissions(self) -> None:

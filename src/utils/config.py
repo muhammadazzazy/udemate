@@ -22,6 +22,8 @@ class Config:
     client_secret: str
     user_agent: str
     limit: int
+    password: str
+    username: str
 
     def __init__(self) -> None:
         self.client_id = os.environ.get('CLIENT_ID')
@@ -29,12 +31,5 @@ class Config:
         self.user_agent = os.environ.get(
             'REDDIT_USER_AGENT', DEFAULT_USER_AGENT)
         self.limit = int(os.environ.get('LIMIT', DEFAULT_LIMIT))
-
-    def __post_init__(self) -> None:
-        missing: list[str] = []
-        if not all(asdict(self).values()):
-            raise ValueError(
-                f'Missing environment variable(s): {', '.join(missing)}')
-        if asdict(self)['limit'] > MAX_LIMIT:
-            print(f"Max value for 'LIMIT' is {MAX_LIMIT}...")
-            self.limit = MAX_LIMIT
+        self.password = os.environ.get('REDDIT_PASSWORD')
+        self.username = os.environ.get('REDDIT_USERNAME')
