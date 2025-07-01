@@ -53,16 +53,11 @@ class Udemate:
             self.cache.read_json()
             if self.cache.udemy_urls:
                 self.unlock()
-            if not self.config.password:
+            if self.config.password:
+                reddit_client: RedditClient = RedditClient()
+            else:
                 refresh_token: str = get_refresh_token(self.config)
                 reddit_client: RedditClient = RedditClient(refresh_token)
-            else:
-                print(self.config.password)
-                print(self.config.username)
-                print(self.config.client_id)
-                print(self.config.client_secret)
-                print(self.config.user_agent)
-                reddit_client: RedditClient = RedditClient()
             reddit_client.populate_submissions()
             hostnames: set[str] = set(self.middleman_classes.keys())
             middleman_urls: dict[str, set[str]

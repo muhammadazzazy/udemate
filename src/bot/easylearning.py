@@ -26,11 +26,10 @@ class EasyLearning(Spider):
         self.logger.info('Processing %d intermediary links from Easy Learning...',
                          len(self.urls))
         udemy_urls: set[str] = set()
-        max_len: int = len(max(self.urls, key=len))
         for url in self.urls:
             try:
                 udemy_url: str = self.scrape(url)
-                self.logger.info('%-*s ==> %s', max_len, url, udemy_url)
+                self.logger.info('%s ==> %s', url, udemy_url)
                 udemy_urls.add(udemy_url)
             except (RequestException, WebDriverException):
                 self.logger.warning('Something went wrong. Skipping...')
