@@ -26,8 +26,8 @@ class Config:
     username: str
 
     def __init__(self) -> None:
-        self.client_id = os.environ.get('CLIENT_ID')
-        self.client_secret = os.environ.get('CLIENT_SECRET')
+        self.client_id = os.environ.get('REDDIT_CLIENT_ID')
+        self.client_secret = os.environ.get('REDDIT_CLIENT_SECRET')
         self.user_agent = os.environ.get(
             'REDDIT_USER_AGENT', DEFAULT_USER_AGENT)
         self.limit = int(os.environ.get('LIMIT', DEFAULT_LIMIT))
