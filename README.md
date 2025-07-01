@@ -81,7 +81,8 @@ Create a Reddit bot and get environment variables
 5. Set **description** to an appropriate description (e.g. repo description)
 6. Set **redirect uri** to `http://localhost:8080`
 
-📝 Note: On the first run, the script will provide you with a link that you need to click on to generate a Reddit refresh token and authorize access.
+
+📝 Note: It is preferable to use a Reddit account that doesn't have 2FA configured. If you have 2FA enabled for your Reddit account, the script will provide you with a link that you need to click on to generate a Reddit refresh token and authorize access.
 
 #### Download and Install ChromeDriver (Version 138.0.7204.49)
 
