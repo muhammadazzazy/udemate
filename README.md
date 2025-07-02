@@ -87,7 +87,7 @@ Create a Reddit bot and get environment variables
 #### Download and Install ChromeDriver (Version 138.0.7204.49)
 
 ```sh
-wget https://storage.googleapis.com/chrome-for-testing-public/138.0.7204.49/linux64/chrome-linux64.zip && unzip chrome-linux64.zip && cd chromedriver-linux64
+wget https://storage.googleapis.com/chrome-for-testing-public/138.0.7204.49/linux64/chromedriver-linux64.zip && unzip chromedriver-linux64.zip && cd chromedriver-linux64
 sudo mv chromedriver /usr/local/bin
 ```
 
