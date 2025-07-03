@@ -70,10 +70,6 @@ A collection of automation tools that read Reddit posts from [r/udemyfreebies](h
 
 - [Brave Browser](https://brave.com/linux/)
 
-### Tested Environment
-
-Udemate was tested on Ubuntu 24.04 LTS.
-
 #### Reddit Bot Setup
 
 Create a Reddit bot and get environment variables
@@ -104,6 +100,10 @@ Check your installed versions
 brave-browser --version
 chromedriver --version
 ```
+
+### Tested Environment
+
+Udemate was tested on Ubuntu 24.04 LTS.
 
 ### Installation
 
