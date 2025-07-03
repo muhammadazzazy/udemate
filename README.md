@@ -29,7 +29,7 @@
         <li><a href="#prerequisites">Prerequisites</a></li>
         <ul>
           <li><a href="#reddit-bot-setup">Reddit Bot Setup</a></li>
-          <li><a href="#download-and-install-chromedriver-version-13707151119">Download and Install ChromeDriver (Version 137.0.7151.119)</a></li>
+          <li><a href="#download-and-install-chromedriver-version-1380720449">Download and Install ChromeDriver (Version 138.0.7204.49)</a></li>
           <li><a href="#brave--chromedriver-version-match">Brave + ChromeDriver Version Match</a></li>
         </ul>
         <li><a href="#installation">Installation</a></li>
@@ -170,8 +170,8 @@ Udemate was tested on Ubuntu 24.04 LTS.
 
   - [x] Easy Learning
   - [x] Freewebcart
-  - [x] IDC
-  - [ ] Line51
+  - [ ] IDC
+  - [x] Line51
 
 - [x] Automate enrollment into Udemy courses
 - [x] Implement caching mechanism

@@ -7,6 +7,7 @@ import sys
 from bot.easylearning import EasyLearning
 from bot.freewebcart import Freewebcart
 # from bot.idownloadcoupon import IDownloadCoupon
+from bot.line51 import Line51
 from bot.udemy import Udemy
 from client.get_refresh_token import get_refresh_token
 from client.reddit import RedditClient
@@ -23,8 +24,10 @@ class Udemate:
         self.cache = Cache()
         self.browser = Browser()
         self.middleman_classes = {
+            'line51': Line51,
             'easylearn.ing': EasyLearning,
             'freewebcart': Freewebcart,
+
             # 'idownloadcoupon': IDownloadCoupon
         }
 
