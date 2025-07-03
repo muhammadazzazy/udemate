@@ -35,9 +35,10 @@ class Browser:
         """
         options = Options()
         options.binary_location = '/usr/bin/brave-browser'
+        options.add_argument('--disable-gpu')
         if headless:
             options.add_argument(f'user-agent={self.user_agent}')
-            options.add_argument('--headless')
+            options.add_argument('--headless=new')
             return webdriver.Chrome(options=options)
         options.add_experimental_option(
             'debuggerAddress', f'127.0.0.1:{self.port}')
@@ -53,4 +54,5 @@ class Browser:
                 return driver
         self.logger.warning('Launch tab not found — defaulting to last tab.')
         driver.switch_to.window(driver.window_handles[-1])
+        driver.get('https://google.com')
         return driver

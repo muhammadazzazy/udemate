@@ -62,13 +62,17 @@ A collection of automation tools that read Reddit posts from [r/udemyfreebies](h
 
 ### Prerequisites
 
-- [Python 3.12.7](https://www.python.org/downloads/release/python-3127/)
+- [Python 3.12+](https://www.python.org/downloads)
 
 - [ChromeDriver (Version 138.0.7204.49)](https://storage.googleapis.com/chrome-for-testing-public/137.0.7151.119/linux64/chromedriver-linux64.zip).
 
   📌 Follow this [guide](#download-and-install-chromedriver-version-138.0.7204.49) to download and install the appropriate version.
 
 - [Brave Browser](https://brave.com/linux/)
+
+### Tested Environment
+
+Udemate was tested on Ubuntu 24.04 LTS.
 
 #### Reddit Bot Setup
 
@@ -81,7 +85,6 @@ Create a Reddit bot and get environment variables
 5. Set **description** to an appropriate description (e.g. repo description)
 6. Set **redirect uri** to `http://localhost:8080`
 
-
 📝 Note: It is preferable to use a Reddit account that doesn't have 2FA configured. If you have 2FA enabled for your Reddit account, the script will provide you with a link that you need to click on to generate a Reddit refresh token and authorize access.
 
 #### Download and Install ChromeDriver (Version 138.0.7204.49)
@@ -93,7 +96,7 @@ sudo mv chromedriver /usr/local/bin
 
 #### Brave + ChromeDriver Version Match
 
-⚠️ The Brave Browser and ChromeDriver versions **must match** for automation to work correctly.
+⚠️ The Brave Browser and ChromeDriver major versions **must match** for automation to work correctly.
 
 Check your installed versions
 

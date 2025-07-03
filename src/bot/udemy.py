@@ -46,7 +46,7 @@ class Udemy:
         for udemy_url in self.urls:
             try:
                 self.logger.info('Visiting %s', udemy_url)
-                course_name: str = self.scrape(udemy_url)
+                course_name: str = self.enroll(udemy_url)
                 self.logger.info('Successfully enrolled into %s', course_name)
             except (AttributeError, WebDriverException):
                 self.logger.info('Enroll button not found! Skipping...')
