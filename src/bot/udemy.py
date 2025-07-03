@@ -39,6 +39,7 @@ class Udemy:
         enroll_button = next(
             (b for b in buttons if b.is_displayed() and b.is_enabled()), None)
         enroll_button.click()
+        self.confirm(wait)
         return course_name
 
     def run(self) -> None:

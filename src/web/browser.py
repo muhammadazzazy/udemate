@@ -1,8 +1,6 @@
 """Manage browser used for scraping links and automating course enrollment."""
 import getpass
 import os
-import subprocess
-import time
 from typing import Final
 
 from selenium import webdriver
@@ -52,7 +50,7 @@ class Browser:
                 self.logger.info(
                     'Switched to Brave Browser\'s launch tab.')
                 return driver
-        self.logger.warning('Launch tab not found — defaulting to last tab.')
+        self.logger.warning('Launch tab not found. Defaulting to last tab.')
         driver.switch_to.window(driver.window_handles[-1])
-        driver.get('https://google.com')
+        driver.get('https://udemy.com')
         return driver
