@@ -66,7 +66,10 @@ class Udemate:
             hostnames: set[str] = set(self.middleman_classes.keys())
             middleman_urls: dict[str, set[str]
                                  ] = reddit_client.get_middleman_urls(hostnames)
+            for middleman in self.middleman_classes:
+                self.cache.write_json(
+                    data=middleman_urls[middleman], filename=f'{middleman}.json')
             udemy_urls: set[str] = self.get_udemy_urls(middleman_urls)
-            self.cache.write_json(data=udemy_urls)
+            self.cache.write_json(data=udemy_urls, filename='udemy.json')
         except KeyboardInterrupt:
             sys.exit()

@@ -28,9 +28,9 @@ class Cache:
         else:
             self.logger.info('No Udemy links in JSON cache.')
 
-    def write_json(self, data: set[str]) -> None:
+    def write_json(self, *, filename: str, data: set[str]) -> None:
         """Write output to JSON file in 'json' directory within 'data' directory."""
-        file_path: Path = self.json_dir / 'udemy.json'
+        file_path: Path = self.json_dir / filename
         with file_path.open('w', encoding='utf-8') as f:
             json.dump(list(data), f,
                       ensure_ascii=False, indent=4)
