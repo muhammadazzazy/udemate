@@ -6,7 +6,7 @@ import sys
 
 from bot.easylearning import EasyLearning
 from bot.freewebcart import Freewebcart
-# from bot.idownloadcoupon import IDownloadCoupon
+from bot.idownloadcoupon import IDownloadCoupon
 from bot.line51 import Line51
 from bot.udemy import Udemy
 from client.get_refresh_token import get_refresh_token
@@ -24,11 +24,10 @@ class Udemate:
         self.cache = Cache()
         self.browser = Browser()
         self.middleman_classes = {
-            'line51': Line51,
+            'idownloadcoupon': IDownloadCoupon,
             'easylearn.ing': EasyLearning,
+            'line51': Line51,
             'freewebcart': Freewebcart,
-
-            # 'idownloadcoupon': IDownloadCoupon
         }
 
     def unlock(self) -> None:

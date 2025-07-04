@@ -1,5 +1,5 @@
 """Scrape Udemy links with coupons from Line51."""
-from selenium.common.exceptions import WebDriverException
+from selenium.common.exceptions import TimeoutException, WebDriverException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -32,8 +32,11 @@ class Line51(Spider):
                 udemy_url: str = self.scrape(url)
                 self.logger.info('%s ==> %s', url, udemy_url)
                 udemy_urls.add(udemy_url)
-            except WebDriverException:
-                self.logger.warning(f'Something went wrong. Skipping...')
+            except TimeoutException as e:
+                self.logger.error('Timeout while parsing %s: %s', url, e)
+                continue
+            except WebDriverException as e:
+                self.logger.error('WebDriver error for %s: %s', url, e)
                 continue
         self.logger.info('Line51 bot scraped %d Udemy links.',
                          len(udemy_urls))

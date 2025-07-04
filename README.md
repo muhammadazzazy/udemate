@@ -166,11 +166,11 @@ Udemate was tested on Ubuntu 24.04 LTS.
 - [x] Add requirements.txt
 - [x] Implement refresh token authentication
 - [x] Add functionality to generate JSON files of submissions grouped by hostname
-- [ ] Scrape intermediate links from the following middlemen:
+- [x] Scrape intermediate links from the following middlemen:
 
   - [x] Easy Learning
   - [x] Freewebcart
-  - [ ] IDC
+  - [x] IDC
   - [x] Line51
 
 - [x] Automate enrollment into Udemy courses
@@ -179,6 +179,7 @@ Udemate was tested on Ubuntu 24.04 LTS.
 - [x] Split driver into headless (for scraping) and non-headless (for enrollment)
 - [x] Add logging across modules
 - [x] Spoof User-Agent in browser when scraping intermediary websites
+- [ ] Support Reddit accounts without 2FA enabled
 
 See the [open issues](https://github.com/muhammadazzazy/udemate/issues) for a full list of proposed features (and known issues).
 
