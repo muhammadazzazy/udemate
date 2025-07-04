@@ -4,6 +4,8 @@ scrape middleman links, get new Udemy links with coupons, and write them back to
 """
 import sys
 
+from selenium.webdriver.chrome.webdriver import WebDriver
+
 from bot.easylearning import EasyLearning
 from bot.freewebcart import Freewebcart
 from bot.idownloadcoupon import IDownloadCoupon
@@ -24,15 +26,15 @@ class Udemate:
         self.cache = Cache()
         self.browser = Browser()
         self.middleman_classes = {
-            'idownloadcoupon': IDownloadCoupon,
             'easylearn.ing': EasyLearning,
+            'idownloadcoupon': IDownloadCoupon,
             'line51': Line51,
             'freewebcart': Freewebcart,
         }
 
     def unlock(self) -> None:
         """Unlock Udemy courses found in cache."""
-        udemy_driver = self.browser.setup(headless=False)
+        udemy_driver: WebDriver = self.browser.setup(headless=False)
         udemy: Udemy = Udemy(driver=udemy_driver,
                              urls=self.cache.udemy_urls)
         udemy.run()
@@ -41,7 +43,7 @@ class Udemate:
     def get_udemy_urls(self, middleman_urls: dict[str, set[str]]) -> set[str]:
         """Fetch collection of Udemy links with coupons using middleman bots."""
         udemy_urls: set[str] = set()
-        headless_driver = self.browser.setup(headless=True)
+        headless_driver: WebDriver = self.browser.setup(headless=True)
         for key, cls in self.middleman_classes.items():
             if key in middleman_urls:
                 bot = cls(driver=headless_driver, urls=middleman_urls[key])
