@@ -2,7 +2,7 @@
 import requests
 from requests.exceptions import RequestException
 
-from selenium.common.exceptions import WebDriverException
+from selenium.common.exceptions import TimeoutException, WebDriverException
 from selenium.webdriver.common.by import By
 
 from bot.spider import Spider
@@ -31,8 +31,14 @@ class EasyLearning(Spider):
                 udemy_url: str = self.scrape(url)
                 self.logger.info('%s ==> %s', url, udemy_url)
                 udemy_urls.add(udemy_url)
-            except (RequestException, WebDriverException):
-                self.logger.warning('Something went wrong. Skipping...')
+            except TimeoutException as e:
+                self.logger.error('Timeout while parsing %s: %s', url, e)
+                continue
+            except WebDriverException as e:
+                self.logger.error('WebDriver error for %s: %s', url, e)
+                continue
+            except RequestException as e:
+                self.logger.error('HTTP request failed for %s: %s', url, e)
                 continue
         self.logger.info('Easy Learning bot scraped %d Udemy links.',
                          len(udemy_urls))

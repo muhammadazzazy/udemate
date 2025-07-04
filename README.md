@@ -179,7 +179,7 @@ Udemate was tested on Ubuntu 24.04 LTS.
 - [x] Split driver into headless (for scraping) and non-headless (for enrollment)
 - [x] Add logging across modules
 - [x] Spoof User-Agent in browser when scraping intermediary websites
-- [ ] Support Reddit accounts without 2FA enabled
+- [x] Support Reddit accounts without 2FA enabled
 
 See the [open issues](https://github.com/muhammadazzazy/udemate/issues) for a full list of proposed features (and known issues).
 
