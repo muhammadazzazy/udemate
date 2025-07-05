@@ -36,7 +36,7 @@ class Udemate:
         """Unlock Udemy courses found in cache."""
         udemy_driver: WebDriver = self.browser.setup(headless=False)
         udemy: Udemy = Udemy(driver=udemy_driver,
-                             urls=self.cache.udemy_urls)
+                             urls=self.cache.urls['udemy'])
         udemy.run()
         udemy_driver.quit()
 
@@ -51,12 +51,19 @@ class Udemate:
         headless_driver.quit()
         return udemy_urls
 
-    def run(self) -> None:
+    def run(self, args) -> None:
         """Coordinate program execution."""
         try:
-            self.cache.read_json()
-            if self.cache.udemy_urls:
+            self.cache.read_json('udemy.json')
+
+            for middleman in self.middleman_classes:
+                self.cache.read_json(f'{middleman}.json')
+
+            if args.mode in ('hybrid', 'nonheadless'):
                 self.unlock()
+            if args.mode == 'nonheadless':
+                return
+
             if self.config.password:
                 reddit_client: RedditClient = RedditClient()
             else:

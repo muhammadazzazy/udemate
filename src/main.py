@@ -3,6 +3,7 @@
 """
 Unlock Udemy courses based on links posted on various middlemen websites.
 """
+from argparse import ArgumentParser
 from logging import Logger
 
 from cli.udemate import Udemate
@@ -13,10 +14,15 @@ def main() -> None:
     """
     Instantiate and run CLI controller.
     """
+    parser: ArgumentParser = ArgumentParser()
+    parser.add_argument("--mode",
+                        choices=["headless", "nonheadless", "hybrid"],
+                        default="headless")
+    args = parser.parse_args()
     logger: Logger = setup_logging()
     controller: Udemate = Udemate()
     logger.info('Starting Udemate...')
-    controller.run()
+    controller.run(args)
 
 
 if __name__ == '__main__':
