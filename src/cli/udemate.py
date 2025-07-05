@@ -61,7 +61,7 @@ class Udemate:
 
             if args.mode in ('hybrid', 'nonheadless'):
                 self.unlock()
-            if args.mode == 'nonheadless':
+            if args.mode == 'non-headless':
                 return
 
             if self.config.password:
