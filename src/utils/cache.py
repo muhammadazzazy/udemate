@@ -22,11 +22,12 @@ class Cache:
         if file_path.exists():
             with file_path.open('r', encoding='utf-8') as f:
                 self.urls[filename[:-5]] = set(json.load(f))
-        if self.urls[filename[:-5]]:
-            self.logger.info('Read %d Udemy links from JSON cache.',
-                             len(self.urls[filename[:-5]]))
+            if self.urls[filename[:-5]]:
+                self.logger.info('Read %d %s links from JSON cache.',
+                                 len(self.urls[filename[:-5]]), filename[:-5].title())
         else:
-            self.logger.info('No Udemy links in JSON cache.')
+            self.logger.info('No %s links in JSON cache.',
+                             filename[:-5].title())
 
     def write_json(self, *, filename: str, data: set[str]) -> None:
         """Write output to JSON file in 'json' directory within 'data' directory."""

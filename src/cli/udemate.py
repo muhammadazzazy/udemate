@@ -54,15 +54,15 @@ class Udemate:
     def run(self, args) -> None:
         """Coordinate program execution."""
         try:
-            self.cache.read_json('udemy.json')
+            if args.mode in ('hybrid', 'nonheadless'):
+                self.cache.read_json('udemy.json')
+                self.unlock()
+
+            if args.mode == 'non-headless':
+                return
 
             for middleman in self.middleman_classes:
                 self.cache.read_json(f'{middleman}.json')
-
-            if args.mode in ('hybrid', 'nonheadless'):
-                self.unlock()
-            if args.mode == 'non-headless':
-                return
 
             if self.config.password:
                 reddit_client: RedditClient = RedditClient()
