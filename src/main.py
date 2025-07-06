@@ -16,8 +16,8 @@ def main() -> None:
     """
     parser: ArgumentParser = ArgumentParser()
     parser.add_argument("--mode",
-                        choices=["headless", "non-headless", "hybrid"],
-                        default="headless")
+                        choices=["headless", "gui", "hybrid"],
+                        default="hybrid")
     args = parser.parse_args()
     logger: Logger = setup_logging()
     controller: Udemate = Udemate()

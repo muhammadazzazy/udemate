@@ -58,10 +58,10 @@ class Udemate:
     def run(self, args) -> None:
         """Coordinate program execution."""
         try:
-            if args.mode in ('hybrid', 'nonheadless'):
+            if args.mode in ('hybrid', 'gui'):
                 self.cache.read_json('udemy.json')
                 self.unlock()
-            if args.mode == 'non-headless':
+            if args.mode == 'gui':
                 return
             for middleman in self.middleman_classes:
                 self.cache.read_json(f'{middleman}.json')
