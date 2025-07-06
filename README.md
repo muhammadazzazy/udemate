@@ -191,6 +191,7 @@ Udemate was tested on Ubuntu 24.04 LTS.
 - [x] Spoof User-Agent in browser when scraping intermediary websites
 - [x] Support Reddit accounts without 2FA enabled
 - [x] Add argument parsing for different modes (headless, non-headless, hybrid)
+- [ ] Provide a docker image for headless mode to facilitate deployment
 
 See the [open issues](https://github.com/muhammadazzazy/udemate/issues) for a full list of proposed features (and known issues).
 
