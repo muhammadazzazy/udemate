@@ -15,6 +15,7 @@ from client.get_refresh_token import get_refresh_token
 from client.reddit import RedditClient
 from utils.cache import Cache
 from utils.config import Config
+from utils.logger import setup_logging
 from web.browser import Browser
 
 
@@ -25,6 +26,7 @@ class Udemate:
         self.config = Config()
         self.cache = Cache()
         self.browser = Browser()
+        self.logger = setup_logging()
         self.middleman_classes = {
             'easylearn.ing': EasyLearning,
             'idownloadcoupon': IDownloadCoupon,
@@ -48,6 +50,8 @@ class Udemate:
             if key in middleman_urls:
                 bot = cls(driver=headless_driver, urls=middleman_urls[key])
                 udemy_urls.update(bot.run())
+        self.logger.info('Spiders scraped a total of %d Udemy links.',
+                         len(udemy_urls))
         headless_driver.quit()
         return udemy_urls
 
@@ -57,13 +61,10 @@ class Udemate:
             if args.mode in ('hybrid', 'nonheadless'):
                 self.cache.read_json('udemy.json')
                 self.unlock()
-
             if args.mode == 'non-headless':
                 return
-
             for middleman in self.middleman_classes:
                 self.cache.read_json(f'{middleman}.json')
-
             if self.config.password:
                 reddit_client: RedditClient = RedditClient()
             else:

@@ -36,3 +36,9 @@ class Cache:
             json.dump(list(data), f,
                       ensure_ascii=False, indent=4)
             self.logger.info('Successfully written data to %s.', file_path)
+
+    def delete_json(self, *, filename: str) -> None:
+        """Clear JSON file in 'json' directory within 'data' directory"""
+        file_path: Path = self.json_dir / filename
+        file_path.unlink(missing_ok=True)
+        self.logger.info('Cleared cache for %s', filename[:-5].title())
