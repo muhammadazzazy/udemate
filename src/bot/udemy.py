@@ -16,8 +16,9 @@ class Udemy:
         self.urls = urls
         self.logger = setup_logging()
 
-    def confirm(self, wait) -> None:
+    def confirm(self) -> None:
         """Scan for final 'Enroll now' button and click on it."""
+        wait = WebDriverWait(self.driver, 30)
         confirm_button = wait.until(EC.element_to_be_clickable((
             By.XPATH,
             '//*[@id="udemy"]/div[1]/div[2]/div/div/div/aside/div/div/div[2]/div[2]/button[1]'
@@ -39,7 +40,7 @@ class Udemy:
         enroll_button = next(
             (b for b in buttons if b.is_displayed() and b.is_enabled()), None)
         enroll_button.click()
-        self.confirm(wait)
+        self.confirm()
         return course_name
 
     def run(self) -> None:
