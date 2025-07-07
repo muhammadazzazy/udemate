@@ -27,57 +27,70 @@ class Udemate:
         self.cache = Cache()
         self.browser = Browser()
         self.logger = setup_logging()
-        self.middleman_classes = {
-            'easylearn.ing': EasyLearning,
+        self.sld_class = {
+            'easylearn': EasyLearning,
             'idownloadcoupon': IDownloadCoupon,
             'line51': Line51,
             'freewebcart': Freewebcart,
         }
+        self.sld_brand = {
+            'easylearn': 'Easy Learning',
+            'idownloadcoupon': 'iDC',
+            'line51': 'Line 51',
+            'freewebcart': 'Freewebcart',
+        }
 
-    def unlock(self) -> None:
-        """Unlock Udemy courses found in cache."""
-        udemy_driver: WebDriver = self.browser.setup(headless=False)
-        udemy: Udemy = Udemy(driver=udemy_driver,
-                             urls=self.cache.urls['udemy'])
-        udemy.run()
-        udemy_driver.quit()
+    def setup_reddit_client(self) -> RedditClient:
+        """Return Reddit client for r/udemyfreebies."""
+        if self.config.password:
+            reddit_client: RedditClient = RedditClient()
+        else:
+            refresh_token: str = get_refresh_token(self.config)
+            reddit_client: RedditClient = RedditClient(refresh_token)
+        return reddit_client
 
-    def get_udemy_urls(self, middleman_urls: dict[str, set[str]]) -> set[str]:
+    def collect_middleman_links(self) -> dict[str, set[str]]:
+        """Collect middleman links from Reddit."""
+        reddit_client: RedditClient = self.setup_reddit_client()
+        reddit_client.populate_submissions()
+        hostnames: set[str] = set(self.sld_class.keys())
+        middleman_urls: dict[str, set[str]
+                             ] = reddit_client.get_middleman_urls(hostnames)
+        for sld in self.sld_class:
+            self.cache.write_json(data=middleman_urls[sld],
+                                  filename=f'{sld}.json')
+        return middleman_urls
+
+    def scrape(self) -> None:
         """Fetch collection of Udemy links with coupons using middleman bots."""
+        middleman_urls: dict[str, set[str]] = self.collect_middleman_links()
         udemy_urls: set[str] = set()
         headless_driver: WebDriver = self.browser.setup(headless=True)
-        for key, cls in self.middleman_classes.items():
+        for key, cls in self.sld_class.items():
             if key in middleman_urls:
                 bot = cls(driver=headless_driver, urls=middleman_urls[key])
                 udemy_urls.update(bot.run())
         self.logger.info('Spiders scraped a total of %d Udemy links.',
                          len(udemy_urls))
         headless_driver.quit()
-        return udemy_urls
+        self.cache.write_json(data=udemy_urls, filename='udemy.json')
 
-    def run(self, args) -> None:
-        """Coordinate program execution."""
-        try:
-            if args.mode in ('hybrid', 'gui'):
-                self.cache.read_json('udemy.json')
-                self.unlock()
-            if args.mode == 'gui':
-                return
-            for middleman in self.middleman_classes:
-                self.cache.read_json(f'{middleman}.json')
-            if self.config.password:
-                reddit_client: RedditClient = RedditClient()
-            else:
-                refresh_token: str = get_refresh_token(self.config)
-                reddit_client: RedditClient = RedditClient(refresh_token)
-            reddit_client.populate_submissions()
-            hostnames: set[str] = set(self.middleman_classes.keys())
-            middleman_urls: dict[str, set[str]
-                                 ] = reddit_client.get_middleman_urls(hostnames)
-            for middleman in self.middleman_classes:
-                self.cache.write_json(
-                    data=middleman_urls[middleman], filename=f'{middleman}.json')
-            udemy_urls: set[str] = self.get_udemy_urls(middleman_urls)
-            self.cache.write_json(data=udemy_urls, filename='udemy.json')
-        except KeyboardInterrupt:
-            sys.exit()
+    def autoenroll(self) -> None:
+        """
+        Read Udemy links from cache, automate enrollment into free Udemy courses, 
+        and clear cache.
+        """
+        filename: str = 'udemy.json'
+        exists: bool = self.cache.read_json(filename=filename,
+                                            brand_name=filename[:-5].title())
+        if not exists:
+            self.logger.info('Exiting...')
+            return
+        udemy_driver: WebDriver = self.browser.setup(headless=False)
+        udemy: Udemy = Udemy(driver=udemy_driver,
+                             urls=self.cache.urls['udemy'])
+        udemy.run()
+        udemy_driver.quit()
+        self.logger.info('Clearing Udemy cache...')
+        self.cache.delete_json(filename=filename,
+                               brand_name=filename[:-5].title())

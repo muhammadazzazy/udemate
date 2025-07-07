@@ -11,18 +11,19 @@ from utils.logger import setup_logging
 
 
 def main() -> None:
-    """
-    Instantiate and run CLI controller.
-    """
+    """Parse command-line arguments for mode of automation and run Udemate."""
     parser: ArgumentParser = ArgumentParser()
     parser.add_argument("--mode",
                         choices=["headless", "gui", "hybrid"],
                         default="hybrid")
     args = parser.parse_args()
     logger: Logger = setup_logging()
-    controller: Udemate = Udemate()
+    udemate: Udemate = Udemate()
     logger.info('Starting Udemate...')
-    controller.run(args)
+    if args.mode in ('headless', 'hybrid'):
+        udemate.scrape()
+    if args.mode in ('hybrid', 'gui'):
+        udemate.autoenroll()
 
 
 if __name__ == '__main__':
