@@ -163,7 +163,8 @@ Udemate was tested on Ubuntu 24.04 LTS.
 
 7. Run the script
    ```sh
-    python3 src/main.py --mode [headless | gui | hybrid]
+    python3 src/main.py [--mode {headless|gui|hybrid}]
+    # Default: --mode hybrid
    ```
 
 <p align="right">(<a href="#udemate">back to top</a>)</p>
