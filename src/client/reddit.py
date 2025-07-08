@@ -1,18 +1,15 @@
 """Configure Reddit PRAW for r/udemyfreebies, fetch posts on subreddit, and extract hostnames."""
-from typing import Final
-
 import praw
+from prawcore.exceptions import RequestException
 from praw.models.reddit.submission import Submission
 
 from utils.config import Config
-
-
-SUBREDDIT_NAME: Final[str] = 'udemyfreebies'
+from utils.logger import setup_logging
 
 
 class RedditClient:
     """Configure Reddit client for r/udemyfreebies subreddit,
-    get subreddit posts, and extract hostnames."""
+    get subreddit posts, and map hostnames to submission links."""
 
     def __init__(self, refresh_token: str | None = None) -> None:
         self.config = Config()
@@ -33,12 +30,16 @@ class RedditClient:
                 username=self.config.username
             )
         self.submissions: list[Submission] = []
+        self.logger = setup_logging()
 
-    def populate_submissions(self) -> None:
-        """Return list of Reddit submissions."""
-        subreddit = self.reddit.subreddit(SUBREDDIT_NAME)
-        for submission in subreddit.new(limit=self.config.limit):
-            self.submissions.append(submission)
+    def populate_submissions(self, subreddit: str = 'udemyfreebies') -> None:
+        """Fill the list of Reddit posts."""
+        try:
+            subreddit = self.reddit.subreddit(subreddit)
+            for submission in subreddit.new(limit=self.config.limit):
+                self.submissions.append(submission)
+        except RequestException as e:
+            self.logger.error('RequestException: %s', e)
 
     def get_middleman_urls(self, hostnames: set[str]) -> dict[str, set[str]]:
         """Return mapping between hostnames and submission links."""

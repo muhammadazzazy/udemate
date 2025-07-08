@@ -3,6 +3,7 @@ from selenium.common.exceptions import TimeoutException, WebDriverException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from urllib3.exceptions import ReadTimeoutError
 
 from bot.spider import Spider
 
@@ -37,6 +38,9 @@ class Line51(Spider):
                 continue
             except WebDriverException as e:
                 self.logger.error('WebDriver error for %s: %s', url, e)
+                continue
+            except ReadTimeoutError as e:
+                self.logger.error('ReadTimeoutError error for %s: %s', url, e)
                 continue
         self.logger.info('Line51 bot scraped %d Udemy links.',
                          len(udemy_urls))

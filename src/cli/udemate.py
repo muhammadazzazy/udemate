@@ -2,8 +2,6 @@
 Parse Udemy links with coupons from cache, automate course enrollment,
 scrape middleman links, get new Udemy links with coupons, and write them back to cache.
 """
-import sys
-
 from selenium.webdriver.chrome.webdriver import WebDriver
 
 from bot.easylearning import EasyLearning

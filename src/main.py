@@ -1,8 +1,6 @@
 #!/usr/bin/env python
 
-"""
-Unlock Udemy courses based on links posted on various middlemen websites.
-"""
+"""Autoenroll into free Udemy courses based on links posted on various middlemen websites."""
 from argparse import ArgumentParser
 from logging import Logger
 
@@ -11,7 +9,7 @@ from utils.logger import setup_logging
 
 
 def main() -> None:
-    """Parse command-line arguments for mode of automation and run Udemate."""
+    """Parse command-line arguments for mode of automation and run Udemate accordingly."""
     parser: ArgumentParser = ArgumentParser()
     parser.add_argument("--mode",
                         choices=["headless", "gui", "hybrid"],
@@ -19,7 +17,7 @@ def main() -> None:
     args = parser.parse_args()
     logger: Logger = setup_logging()
     udemate: Udemate = Udemate()
-    logger.info('Starting Udemate...')
+    logger.info('Starting Udemate in %s mode...', args.mode)
     if args.mode in ('headless', 'hybrid'):
         udemate.scrape()
     if args.mode in ('hybrid', 'gui'):
