@@ -20,11 +20,12 @@ class Browser:
     """Manage browser configuration and expose Selenium WebDriver."""
 
     def __init__(self) -> None:
-        self.port = os.environ.get('PORT', DEFAULT_PORT)
-        self.user_data_dir = os.environ.get(
-            'USER_DATA_DIR', DEFAULT_USER_DATA_DIR)
-        self.profile_dir = os.environ.get('PROFILE_DIR', DEFAULT_PROFILE_DIR)
-        self.user_agent = os.environ.get('BROWSER_USER_AGENT')
+        self.port = os.environ.get('PORT', DEFAULT_PORT).strip('"')
+        self.user_data_dir = os.environ.get('USER_DATA_DIR',
+                                            DEFAULT_USER_DATA_DIR).strip('"')
+        self.profile_dir = os.environ.get('PROFILE_DIR',
+                                          DEFAULT_PROFILE_DIR).strip('"')
+        self.user_agent = os.environ.get('BROWSER_USER_AGENT').strip('"')
         self.logger = setup_logging()
 
     def setup(self, headless: bool) -> WebDriver:

@@ -30,6 +30,6 @@ class Config:
         self.client_secret = os.environ.get('REDDIT_CLIENT_SECRET').strip('"')
         self.user_agent = os.environ.get(
             'REDDIT_USER_AGENT', DEFAULT_USER_AGENT).strip('"')
-        self.limit = int(os.environ.get('LIMIT', DEFAULT_LIMIT))
+        self.limit = int(os.environ.get('LIMIT', DEFAULT_LIMIT).strip('"'))
         self.password = os.environ.get('REDDIT_PASSWORD').strip('"')
         self.username = os.environ.get('REDDIT_USERNAME').strip('"')
