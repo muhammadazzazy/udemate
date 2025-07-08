@@ -1,6 +1,7 @@
 """Manage browser used for scraping links and automating course enrollment."""
 import getpass
 import os
+import tempfile
 from typing import Final
 
 from selenium import webdriver
@@ -35,6 +36,7 @@ class Browser:
         options.binary_location = '/usr/bin/brave-browser'
         options.add_argument('--disable-gpu')
         if headless:
+            options.add_argument('--no-sandbox')
             options.add_argument(f'user-agent={self.user_agent}')
             options.add_argument('--headless=new')
             return webdriver.Chrome(options=options)

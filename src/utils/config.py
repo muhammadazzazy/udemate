@@ -26,10 +26,10 @@ class Config:
     username: str
 
     def __init__(self) -> None:
-        self.client_id = os.environ.get('REDDIT_CLIENT_ID')
-        self.client_secret = os.environ.get('REDDIT_CLIENT_SECRET')
+        self.client_id = os.environ.get('REDDIT_CLIENT_ID').strip('"')
+        self.client_secret = os.environ.get('REDDIT_CLIENT_SECRET').strip('"')
         self.user_agent = os.environ.get(
-            'REDDIT_USER_AGENT', DEFAULT_USER_AGENT)
+            'REDDIT_USER_AGENT', DEFAULT_USER_AGENT).strip('"')
         self.limit = int(os.environ.get('LIMIT', DEFAULT_LIMIT))
-        self.password = os.environ.get('REDDIT_PASSWORD')
-        self.username = os.environ.get('REDDIT_USERNAME')
+        self.password = os.environ.get('REDDIT_PASSWORD').strip('"')
+        self.username = os.environ.get('REDDIT_USERNAME').strip('"')
