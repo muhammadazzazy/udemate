@@ -8,6 +8,7 @@ from bot.easylearning import EasyLearning
 from bot.freewebcart import Freewebcart
 from bot.idownloadcoupon import IDownloadCoupon
 from bot.line51 import Line51
+from bot.spider_meta import SPIDERS
 from bot.udemy import Udemy
 from client.get_refresh_token import get_refresh_token
 from client.reddit import RedditClient
@@ -25,18 +26,6 @@ class Udemate:
         self.cache = Cache()
         self.browser = Browser()
         self.logger = setup_logging()
-        self.sld_class = {
-            'line51': Line51,
-            'easylearn': EasyLearning,
-            'idownloadcoupon': IDownloadCoupon,
-            'freewebcart': Freewebcart,
-        }
-        self.sld_brand = {
-            'line51': 'Line 51',
-            'easylearn': 'Easy Learning',
-            'idownloadcoupon': 'iDC',
-            'freewebcart': 'Freewebcart',
-        }
 
     def setup_reddit_client(self) -> RedditClient:
         """Return Reddit client for r/udemyfreebies."""
@@ -51,10 +40,10 @@ class Udemate:
         """Collect middleman links from Reddit."""
         reddit_client: RedditClient = self.setup_reddit_client()
         reddit_client.populate_submissions()
-        hostnames: set[str] = set(self.sld_class.keys())
+        hostnames: set[str] = set(SPIDERS.keys())
         middleman_urls: dict[str, set[str]
                              ] = reddit_client.get_middleman_urls(hostnames)
-        for sld in self.sld_class:
+        for sld in SPIDERS:
             self.cache.write_json(data=middleman_urls[sld],
                                   filename=f'{sld}.json')
         return middleman_urls
@@ -64,10 +53,11 @@ class Udemate:
         middleman_urls: dict[str, set[str]] = self.collect_middleman_links()
         udemy_urls: set[str] = set()
         headless_driver: WebDriver = self.browser.setup(headless=True)
-        for key, cls in self.sld_class.items():
+        for key, cls in SPIDERS.items():
+            spider = cls.spider_cls(driver=headless_driver,
+                                    urls=middleman_urls[key])
             if key in middleman_urls:
-                bot = cls(driver=headless_driver, urls=middleman_urls[key])
-                udemy_urls.update(bot.run())
+                udemy_urls.update(spider.run())
         self.logger.info('Spiders scraped a total of %d Udemy links.',
                          len(udemy_urls))
         headless_driver.quit()
