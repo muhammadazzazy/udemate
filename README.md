@@ -1,5 +1,31 @@
 # Udemate
 
+<!-- PROJECT LOGO -->
+<br />
+<div align="center">
+  <a href="https://github.com/muhammadazzazy/udemate">
+    <img src="./assets/images/udemate-logo.png" alt="Udemate Logo" width="80" height="80" >
+  </a>
+</div>
+
+  <h3 align="center">Udemate</h3>
+
+  <p align="center">
+    A set of automation tools for automating enrollment into free Udemy courses.
+    <br />
+    <a href="https://github.com/muhammadazzazy/udemate"><strong>Explore the docs »</strong></a>
+    <br />
+    <br />
+    <a href="https://github.com/muhammadazzazy/udemate">View Demo</a>
+    &middot;
+    <a href="https://github.com/muhammadazzazy/udemate/issues/new?labels=bug&template=bug-report---.md">Report Bug</a>
+    &middot;
+    <a href="https://github.com/muhammadazzazy/udemate/issues/new?labels=enhancement&template=feature-request---.md">Request Feature</a>
+  </p>
+</div>
+
+<!-- PROJECT LOGO -->
+
 > **Disclaimer:** This software is not affiliated with, endorsed by, or sponsored by Udemy, Inc. "Udemy" is a registered trademark of Udemy, Inc. All other trademarks are the property of their respective owners.
 
 <!-- PROJECT SHIELDS -->
@@ -28,11 +54,19 @@
       <ul>
         <li><a href="#prerequisites">Prerequisites</a></li>
         <ul>
+          <li><a href="#option-1-run-from-source-recommended-for-full-automation">Option 1: Run from Source (Recommended for Full Automation)</a></li>
+          <ul>
+            <li><a href="#download-and-install-chromedriver-version-1380720449">Download and Install ChromeDriver (Version 138.0.7204.49)</a></li>
+            <li><a href="#brave--chromedriver-version-match">Brave + ChromeDriver Version Match</a></li>
+          </ul>
+          <li><a href="#option-2-run-in-docker-headless-mode-only">Option 2: Run in Docker (Headless Mode Only)</a></li>
           <li><a href="#reddit-bot-setup">Reddit Bot Setup</a></li>
-          <li><a href="#download-and-install-chromedriver-version-1380720449">Download and Install ChromeDriver (Version 138.0.7204.49)</a></li>
-          <li><a href="#brave--chromedriver-version-match">Brave + ChromeDriver Version Match</a></li>
         </ul>
         <li><a href="#installation">Installation</a></li>
+        <ul>
+          <li><a href="#option-1-run-from-source">Option 1: Run from Source</a></li>
+          <li><a href="#option-2-run-in-docker">Option 2: Run in Docker</li></a>
+        </ul>
       </ul>
     </li>
     <li><a href="#roadmap">Roadmap</a></li>
@@ -62,6 +96,8 @@ A collection of automation tools that read Reddit posts from [r/udemyfreebies](h
 
 ### Prerequisites
 
+#### Option 1: Run from Source (Recommended for Full Automation)
+
 - [Python 3.12+](https://www.python.org/downloads)
 
 - [ChromeDriver (Version 138.0.7204.49)](https://storage.googleapis.com/chrome-for-testing-public/137.0.7151.119/linux64/chromedriver-linux64.zip).
@@ -69,6 +105,31 @@ A collection of automation tools that read Reddit posts from [r/udemyfreebies](h
   📌 Follow this [guide](#download-and-install-chromedriver-version-138.0.7204.49) to download and install the appropriate version.
 
 - [Brave Browser](https://brave.com/linux/)
+
+##### Download and Install ChromeDriver (Version 138.0.7204.49)
+
+```sh
+wget https://storage.googleapis.com/chrome-for-testing-public/138.0.7204.49/linux64/chromedriver-linux64.zip && unzip chromedriver-linux64.zip && cd chromedriver-linux64
+sudo mv chromedriver /usr/local/bin
+```
+
+##### Brave + ChromeDriver Version Match
+
+⚠️ The Brave Browser and ChromeDriver major versions **must match** for automation to work correctly.
+
+Check your installed versions
+
+```sh
+brave-browser --version
+chromedriver --version
+```
+
+#### Option 2: Run in Docker (Headless Mode Only)
+
+- [Docker](https://docs.docker.com/get-docker/)
+- [Docker Buildx](https://github.com/docker/buildx)
+
+> Use this option only if you intend to run in headless mode. Non-headless and hybrid modes require prerequisites mentioned in [Option 1](#option-1-run-from-source-recommended-for-full-automation).
 
 #### Reddit Bot Setup
 
@@ -82,24 +143,6 @@ Create a Reddit bot and get environment variables
 6. Set **redirect uri** to `http://localhost:8080`
 
 📝 Note: It is preferable to use a Reddit account that doesn't have 2FA configured. If you have 2FA enabled for your Reddit account, the script will provide you with a link that you need to click on to generate a Reddit refresh token and authorize access.
-
-#### Download and Install ChromeDriver (Version 138.0.7204.49)
-
-```sh
-wget https://storage.googleapis.com/chrome-for-testing-public/138.0.7204.49/linux64/chromedriver-linux64.zip && unzip chromedriver-linux64.zip && cd chromedriver-linux64
-sudo mv chromedriver /usr/local/bin
-```
-
-#### Brave + ChromeDriver Version Match
-
-⚠️ The Brave Browser and ChromeDriver major versions **must match** for automation to work correctly.
-
-Check your installed versions
-
-```sh
-brave-browser --version
-chromedriver --version
-```
 
 ### Tested Environment
 
@@ -143,29 +186,45 @@ Udemate was tested on Ubuntu 24.04 LTS.
     PROFILE_DIR="Default"
    ```
 
-4. Create a virtual environment
+#### Option 1: Run from Source
 
-   ```sh
-     python3 -m venv .venv
-   ```
+1. Create a virtual environment
 
-5. Install dependencies
+```sh
+  python3 -m venv .venv
+```
+
+2. Install dependencies
 
    ```sh
      pip install -r requirements.txt
    ```
 
-6. Run `launch_brave.sh` script to start Brave Browser with debugging and default user profile
+3. Run `launch_brave.sh` script to start Brave Browser with debugging and default user profile
 
    ```sh
     ./src/web/launch_brave.sh
    ```
 
-7. Run the script
+4. Run the script
    ```sh
     python3 src/main.py [--mode {headless|gui|hybrid}]
     # Default: --mode hybrid
    ```
+
+#### Option 2: Run in Docker
+
+1. Build the Docker image
+
+```sh
+docker build -f docker/Dockerfile -t udemate .
+```
+
+2. Run the docker image
+
+```sh
+docker run --rm --env-file .env udemate
+```
 
 <p align="right">(<a href="#udemate">back to top</a>)</p>
 
@@ -192,7 +251,7 @@ Udemate was tested on Ubuntu 24.04 LTS.
 - [x] Spoof User-Agent in browser when scraping intermediary websites
 - [x] Support Reddit accounts without 2FA enabled
 - [x] Add argument parsing for different modes (headless, non-headless, hybrid)
-- [ ] Provide a docker image for headless mode to facilitate deployment
+- [x] Provide a docker image for headless mode to facilitate deployment
 
 See the [open issues](https://github.com/muhammadazzazy/udemate/issues) for a full list of proposed features (and known issues).
 
