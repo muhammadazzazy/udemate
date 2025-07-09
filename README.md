@@ -223,7 +223,7 @@ Udemate was tested on Ubuntu 24.04 LTS.
 2. Run the docker image
 
    ```sh
-    docker run --rm --env-file .env udemate
+    docker run --rm --env-file .env -v "$(pwd):/udemate" udemate
    ```
 
 <p align="right">(<a href="#udemate">back to top</a>)</p>

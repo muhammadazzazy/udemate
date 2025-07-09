@@ -4,10 +4,6 @@ scrape middleman links, get new Udemy links with coupons, and write them back to
 """
 from selenium.webdriver.chrome.webdriver import WebDriver
 
-from bot.easylearning import EasyLearning
-from bot.freewebcart import Freewebcart
-from bot.idownloadcoupon import IDownloadCoupon
-from bot.line51 import Line51
 from bot.spider_meta import SPIDERS
 from bot.udemy import Udemy
 from client.get_refresh_token import get_refresh_token

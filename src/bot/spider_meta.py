@@ -17,7 +17,7 @@ class SpiderMeta:
 
 SPIDERS: Final[dict[str, Type]] = {
     'easylearn': SpiderMeta(sld='easylearn', brand='Easy Learning', spider_cls=EasyLearning),
-    'freewebcart': SpiderMeta(sld='freewebcart', brand='Freewebcart', spider_cls=Freewebcart),
+    # 'freewebcart': SpiderMeta(sld='freewebcart', brand='Freewebcart', spider_cls=Freewebcart),
     'idownloadcoupon': SpiderMeta(sld='idownloadcoupon', brand='iDC', spider_cls=IDownloadCoupon),
     'line51': SpiderMeta(sld='line51', brand='Line 51', spider_cls=Line51),
 }
