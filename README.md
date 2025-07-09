@@ -81,7 +81,7 @@
 
 ## About The Project
 
-A collection of automation tools that read Reddit posts from [r/udemyfreebies](https://www.reddit.com/r/udemyfreeebies/), extract course links from middleman websites, convert them into direct Udemy links with coupons, and automate the enrollment process into free courses.
+An automation tool that reads Reddit posts from [r/udemyfreebies](https://www.reddit.com/r/udemyfreeebies/), extracts course links from middleman websites, converts them into direct Udemy links with coupons, and automates the enrollment process into free courses.
 
 ### Built With
 
