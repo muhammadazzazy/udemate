@@ -102,7 +102,7 @@ A collection of automation tools that read Reddit posts from [r/udemyfreebies](h
 
 - [ChromeDriver (Version 138.0.7204.49)](https://storage.googleapis.com/chrome-for-testing-public/137.0.7151.119/linux64/chromedriver-linux64.zip).
 
-  📌 Follow this [guide](#download-and-install-chromedriver-version-138.0.7204.49) to download and install the appropriate version.
+  📌 Follow this [guide](#download-and-install-chromedriver-version-1380720449) to download and install the appropriate version.
 
 - [Brave Browser](https://brave.com/linux/)
 
