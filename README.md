@@ -4,14 +4,14 @@
 <br />
 <div align="center">
   <a href="https://github.com/muhammadazzazy/udemate">
-    <img src="./assets/images/udemate-logo.png" alt="Udemate Logo" width="80" height="80" >
+    <img src="./assets/images/udemate-logo.png" alt="Udemate Logo" width="250" height="250" >
   </a>
 </div>
 
   <h3 align="center">Udemate</h3>
 
   <p align="center">
-    A set of automation tools for automating enrollment into free Udemy courses.
+    A tool for automating enrollment into free Udemy courses.
     <br />
     <a href="https://github.com/muhammadazzazy/udemate"><strong>Explore the docs »</strong></a>
     <br />

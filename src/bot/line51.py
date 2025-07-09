@@ -17,7 +17,7 @@ class Line51(Spider):
         wait = WebDriverWait(self.driver, 30)
         link = wait.until(
             EC.visibility_of_element_located(
-                (By.XPATH, '//a[contains(text(), "View on ")]'))
+                (By.XPATH, '//a[contains(text(), "Get Discount Now")]'))
         )
         udemy_url: str = link.get_attribute('href')
         return udemy_url

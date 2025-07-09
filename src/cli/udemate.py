@@ -26,15 +26,15 @@ class Udemate:
         self.browser = Browser()
         self.logger = setup_logging()
         self.sld_class = {
+            'line51': Line51,
             'easylearn': EasyLearning,
             'idownloadcoupon': IDownloadCoupon,
-            'line51': Line51,
             'freewebcart': Freewebcart,
         }
         self.sld_brand = {
+            'line51': 'Line 51',
             'easylearn': 'Easy Learning',
             'idownloadcoupon': 'iDC',
-            'line51': 'Line 51',
             'freewebcart': 'Freewebcart',
         }
 
