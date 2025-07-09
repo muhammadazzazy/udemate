@@ -162,9 +162,9 @@ Udemate was tested on Ubuntu 24.04 LTS.
 
    ```env
     # Reddit config
-    # Required.
+    # Required if 2FA is enabled.
     REDDIT_CLIENT_ID=""
-    # Required.
+    # Required if 2FA is enabled.
     REDDIT_CLIENT_SECRET=""
     # Optional. Default is 'script:Udemate:v1.0 (by u/kemitche)'.
     REDDIT_USER_AGENT=""
@@ -190,9 +190,9 @@ Udemate was tested on Ubuntu 24.04 LTS.
 
 1. Create a virtual environment
 
-```sh
-  python3 -m venv .venv
-```
+   ```sh
+     python3 -m venv .venv
+   ```
 
 2. Install dependencies
 
@@ -216,15 +216,15 @@ Udemate was tested on Ubuntu 24.04 LTS.
 
 1. Build the Docker image
 
-```sh
-docker build -f docker/Dockerfile -t udemate .
-```
+   ```sh
+    docker build -f docker/Dockerfile -t udemate .
+   ```
 
 2. Run the docker image
 
-```sh
-docker run --rm --env-file .env udemate
-```
+   ```sh
+    docker run --rm --env-file .env udemate
+   ```
 
 <p align="right">(<a href="#udemate">back to top</a>)</p>
 
