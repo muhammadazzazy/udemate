@@ -1,8 +1,9 @@
+"""Contain metadata for spiders of middleman websites."""
 from dataclasses import dataclass
 from typing import Final, Type
 
 from bot.easylearning import EasyLearning
-from bot.freewebcart import Freewebcart
+# from bot.freewebcart import Freewebcart
 from bot.idownloadcoupon import IDownloadCoupon
 from bot.line51 import Line51
 
