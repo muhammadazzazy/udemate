@@ -84,7 +84,10 @@ class Udemy:
                 self.logger.info('%s is paid. Skipping...', course_name)
             elif self.enroll():
                 self.logger.info('Enrolling into %s', course_name)
-                self.confirm()
-                self.logger.info('Successfully enrolled into %s.', course_name)
+                if self.confirm():
+                    self.logger.info('Successfully enrolled into %s.',
+                                     course_name)
+                else:
+                    self.logger.info('Failed to enroll into %s', course_name)
             else:
                 self.logger.info('Something went wrong for %s', course_name)
