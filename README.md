@@ -240,7 +240,7 @@ Udemate was tested on Ubuntu 24.04 LTS.
 
   - [x] Easy Learning
   - [x] Freewebcart
-  - [x] IDC
+  - [x] iDC
   - [x] Line51
 
 - [x] Automate enrollment into Udemy courses
@@ -252,6 +252,7 @@ Udemate was tested on Ubuntu 24.04 LTS.
 - [x] Support Reddit accounts without 2FA enabled
 - [x] Add argument parsing for different modes (headless, non-headless, hybrid)
 - [x] Provide a docker image for headless mode to facilitate deployment
+- [x] Improve performance of Udemy bot by skipping owned and paid courses
 
 See the [open issues](https://github.com/muhammadazzazy/udemate/issues) for a full list of proposed features (and known issues).
 
