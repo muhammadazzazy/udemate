@@ -188,25 +188,25 @@ Udemate was tested on Ubuntu 24.04 LTS.
 
 #### Option 1: Run from Source
 
-1. Create a virtual environment
+4. Create a virtual environment
 
    ```sh
      python3 -m venv .venv
    ```
 
-2. Install dependencies
+5. Install dependencies
 
    ```sh
      pip install -r requirements.txt
    ```
 
-3. Run `launch_brave.sh` script to start Brave Browser with debugging and default user profile
+6. Run `launch_brave.sh` script to start Brave Browser with debugging and default user profile
 
    ```sh
     ./src/web/launch_brave.sh
    ```
 
-4. Run the script
+7. Run the script
    ```sh
     python3 src/main.py [--mode {headless|gui|hybrid}]
     # Default: --mode hybrid
@@ -214,13 +214,13 @@ Udemate was tested on Ubuntu 24.04 LTS.
 
 #### Option 2: Run in Docker
 
-1. Build the Docker image
+4. Build the Docker image
 
    ```sh
     docker build -f docker/Dockerfile -t udemate .
    ```
 
-2. Run the docker image
+5. Run the docker image
 
    ```sh
     docker run --rm --env-file .env -v "$(pwd):/udemate" udemate
