@@ -1,4 +1,6 @@
 """Automatically enroll into free Udemy courses."""
+import time
+
 from selenium.common.exceptions import WebDriverException
 from selenium.webdriver.chrome.webdriver import WebDriver
 from selenium.webdriver.common.by import By
@@ -18,38 +20,71 @@ class Udemy:
 
     def confirm(self) -> None:
         """Scan for final 'Enroll now' button and click on it."""
-        wait = WebDriverWait(self.driver, 30)
-        confirm_button = wait.until(EC.element_to_be_clickable((
-            By.XPATH,
-            '//*[@id="udemy"]/div[1]/div[2]/div/div/div/aside/div/div/div[2]/div[2]/button[1]'
-        )))
-        confirm_button.click()
+        try:
+            wait = WebDriverWait(self.driver, 30)
+            confirm_button = wait.until(EC.element_to_be_clickable((
+                By.XPATH,
+                '//*[@id="udemy"]/div[1]/div[2]/div/div/div/aside/div/div/div[2]/div[2]/button[1]'
+            )))
+            while 'cart/success/' not in self.driver.current_url:
+                confirm_button.click()
+                time.sleep(1)
+            return True
+        except WebDriverException:
+            return False
 
-    def enroll(self, url: str) -> str:
-        """
-        Return name of course.
-        Scan for first 'Enroll now' button and click on it.
-        """
-        self.driver.get(url)
-        course_name: str = self.driver.title.removesuffix(' | Udemy')
-        wait = WebDriverWait(self.driver, 30)
-        buttons = wait.until(lambda d: d.find_elements(
-            By.XPATH,
-            "//button[@data-purpose='buy-this-course-button' and contains(., 'Enroll')]",
-        ))
-        enroll_button = next(
-            (b for b in buttons if b.is_displayed() and b.is_enabled()), None)
-        enroll_button.click()
-        self.confirm()
-        return course_name
+    def is_owned(self) -> bool:
+        """Return a flag indicating whether a course is owned."""
+        try:
+            wait = WebDriverWait(self.driver, 5)
+            _buttons = wait.until(lambda d: d.find_elements(
+                By.XPATH,
+                "//button[@data-purpose='buy-this-course-button' and contains(., 'Go to course')]",
+            ))
+            return True
+        except WebDriverException:
+            return False
+
+    def is_paid(self) -> bool:
+        """Return a flag whether course is paid."""
+        try:
+            wait = WebDriverWait(self.driver, 5)
+            _buttons = wait.until(lambda d: d.find_elements(
+                By.XPATH,
+                "//button[@data-purpose='buy-this-course-button' and contains(., 'Buy')]",
+            ))
+            return True
+        except WebDriverException:
+            return False
+
+    def enroll(self) -> bool:
+        """Scan for first 'Enroll now' button and click on it."""
+        try:
+            wait = WebDriverWait(self.driver, 5)
+            buttons = wait.until(lambda d: d.find_elements(
+                By.XPATH,
+                "//button[@data-purpose='buy-this-course-button' and contains(., 'Enroll')]",
+            ))
+            enroll_button = next(
+                (b for b in buttons if b.is_displayed() and b.is_enabled()), None)
+            enroll_button.click()
+            return True
+        except WebDriverException:
+            return False
 
     def run(self) -> None:
         """Orchestrate automatic enrollment into Udemy courses."""
         for udemy_url in self.urls:
-            try:
-                self.logger.info('Visiting %s', udemy_url)
-                course_name: str = self.enroll(udemy_url)
-                self.logger.info('Successfully enrolled into %s', course_name)
-            except (AttributeError, WebDriverException):
-                self.logger.info('Enroll button not found! Skipping...')
-                continue
+            self.logger.info('Visiting %s', udemy_url)
+            self.driver.get(udemy_url)
+            course_name: str = self.driver.title.removesuffix(' | Udemy')
+            if self.is_owned():
+                self.logger.info('%s is owned. Skipping...', course_name)
+            elif self.is_paid():
+                self.logger.info('%s is paid. Skipping...', course_name)
+            elif self.enroll():
+                self.logger.info('Enrolling into %s', course_name)
+                self.confirm()
+                self.logger.info('Successfully enrolled into %s.', course_name)
+            else:
+                self.logger.info('Something went wrong for %s', course_name)
