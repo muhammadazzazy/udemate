@@ -52,3 +52,10 @@ COPY . .
 
 CMD ["python3", "src/main.py", "--mode", "headless"]
 
+ARG USER_ID
+ARG GROUP_ID
+
+RUN addgroup --gid $GROUP_ID usergroup && \
+    adduser --disabled-password --gecos '' --uid $USER_ID --gid $GROUP_ID user
+
+USER user
