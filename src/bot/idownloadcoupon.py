@@ -56,5 +56,5 @@ class IDownloadCoupon(Spider):
             except ReadTimeoutError as e:
                 self.logger.error('ReadTimeoutError error for %s: %s', url, e)
                 continue
-        self.logger.info('iDC bot scraped %d Udemy links.', len(udemy_urls))
+        self.logger.info('iDC spider scraped %d Udemy links.', len(udemy_urls))
         return udemy_urls

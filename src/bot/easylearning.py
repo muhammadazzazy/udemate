@@ -44,6 +44,6 @@ class EasyLearning(Spider):
             except ReadTimeoutError as e:
                 self.logger.error('ReadTimeoutError error for %s: %s', url, e)
                 continue
-        self.logger.info('Easy Learning bot scraped %d Udemy links.',
+        self.logger.info('Easy Learning spider scraped %d Udemy links.',
                          len(udemy_urls))
         return udemy_urls

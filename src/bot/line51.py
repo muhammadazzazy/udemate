@@ -42,6 +42,6 @@ class Line51(Spider):
             except ReadTimeoutError as e:
                 self.logger.error('ReadTimeoutError error for %s: %s', url, e)
                 continue
-        self.logger.info('Line51 bot scraped %d Udemy links.',
+        self.logger.info('Line51 spider scraped %d Udemy links.',
                          len(udemy_urls))
         return udemy_urls

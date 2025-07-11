@@ -16,9 +16,9 @@ class Freewebcart(Spider):
         wait = WebDriverWait(self.driver, 30)
         link = wait.until(
             EC.visibility_of_element_located(
-                (By.XPATH, '//a[contains(text(), "🎁 Get 100% OFF Coupon")]'))
+                (By.XPATH, "//a[contains(text(), 'Get 100% OFF Coupon')]"))
         )
-        udemy_url: str = link.get_attribute("href")
+        udemy_url: str = link.get_attribute('href')
         return udemy_url
 
     def run(self) -> set[str]:
@@ -41,6 +41,6 @@ class Freewebcart(Spider):
             except ReadTimeoutError as e:
                 self.logger.error('ReadTimeoutError error for %s: %s', url, e)
                 continue
-        self.logger.info('Freewebcart bot scraped %d Udemy links.',
+        self.logger.info('Freewebcart spider scraped %d Udemy links.',
                          len(udemy_urls))
         return udemy_urls

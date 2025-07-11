@@ -239,7 +239,7 @@ Udemate was tested on Ubuntu 24.04 LTS.
 - [x] Scrape intermediate links from the following middlemen:
 
   - [x] Easy Learning
-  - [x] Freewebcart
+  - [ ] Freewebcart
   - [x] iDC
   - [x] Line51
 
