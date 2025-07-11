@@ -24,7 +24,7 @@ class Line51(Spider):
 
     def run(self) -> None:
         """Return set of Udemy links extracted from Line51."""
-        self.logger.info('Line51 bot starting...')
+        self.logger.info('Line51 spider starting...')
         self.logger.info('Processing %d links from Line51...',
                          len(self.urls))
         udemy_urls: set[str] = set()

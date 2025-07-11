@@ -35,7 +35,7 @@ class IDownloadCoupon(Spider):
 
     def run(self) -> set[str]:
         """Return set of Udemy links extracted from iDC."""
-        self.logger.info('iDC bot starting...')
+        self.logger.info('iDC spider starting...')
         self.logger.info('Processing %d links from iDC...',
                          len(self.urls))
         udemy_urls: set[str] = set()

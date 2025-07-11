@@ -23,7 +23,7 @@ class Freewebcart(Spider):
 
     def run(self) -> set[str]:
         """Return set of Udemy links extracted from Freewebcart."""
-        self.logger.info('Freewebcart bot starting...')
+        self.logger.info('Freewebcart spider starting...')
         self.logger.info('Processing %d links from Freewebcart...',
                          len(self.urls))
         udemy_urls: set[str] = set()

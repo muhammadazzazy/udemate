@@ -23,7 +23,7 @@ class EasyLearning(Spider):
 
     def run(self) -> set[str]:
         """Return set of Udemy links extracted from Easylearning."""
-        self.logger.info('Easy Learning bot starting...')
+        self.logger.info('Easy Learning spider starting...')
         self.logger.info('Processing %d intermediary links from Easy Learning...',
                          len(self.urls))
         udemy_urls: set[str] = set()

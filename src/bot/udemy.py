@@ -74,6 +74,7 @@ class Udemy:
 
     def run(self) -> None:
         """Orchestrate automatic enrollment into Udemy courses."""
+        self.logger.info('Udemy bot starting...')
         for udemy_url in self.urls:
             self.logger.info('Visiting %s', udemy_url)
             self.driver.get(udemy_url)
