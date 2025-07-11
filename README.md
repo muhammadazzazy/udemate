@@ -217,7 +217,7 @@ Udemate was tested on Ubuntu 24.04 LTS.
 4. Build the Docker image
 
    ```sh
-    docker build --build-arg USER_ID=$(id -u) --build-arg GROUP_ID=$(id -g) -t udemate . -f docker/Dockerfile
+    docker build --build-arg USER_ID=$(id -u) --build-arg GROUP_ID=$(id -g) -f docker/Dockerfile -t udemate .
    ```
 
 5. Run the docker image
