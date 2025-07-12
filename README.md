@@ -100,11 +100,19 @@ An automation tool that reads Reddit posts from [r/udemyfreebies](https://www.re
 
 - [Python 3.12+](https://www.python.org/downloads)
 
+- [python3.12-venv](#download-and-install-python312-venv)
+
 - [ChromeDriver (Version 138.0.7204.49)](https://storage.googleapis.com/chrome-for-testing-public/137.0.7151.119/linux64/chromedriver-linux64.zip).
 
   📌 Follow this [guide](#download-and-install-chromedriver-version-1380720449) to download and install the appropriate version.
 
 - [Brave Browser](https://brave.com/linux/)
+
+#### Download and Install python3.12-venv
+
+```sh
+sudo apt-get install python3.12-venv
+```
 
 ##### Download and Install ChromeDriver (Version 138.0.7204.49)
 
@@ -162,9 +170,9 @@ Udemate was tested on Ubuntu 24.04 LTS.
 
    ```env
     # Reddit config
-    # Required if 2FA is enabled.
+    # Required.
     REDDIT_CLIENT_ID=""
-    # Required if 2FA is enabled.
+    # Required.
     REDDIT_CLIENT_SECRET=""
     # Optional. Default is 'script:Udemate:v1.0 (by u/kemitche)'.
     REDDIT_USER_AGENT=""
@@ -176,11 +184,11 @@ Udemate was tested on Ubuntu 24.04 LTS.
     LIMIT=1000
 
     # Browser config
-    # Optional.
+    # Required for spoofing User-Agent.
     BROWSER_USER_AGENT="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"
     # Optional. Default is 9222.
     PORT=9222
-    # Replace <username> with your Linux username.
+    # Optional. Replace <username> with your Linux username.
     USER_DATA_DIR="/home/<username>/.config/BraveSoftware/Brave-Browser"
     # Optional. Default is 'Default'.
     PROFILE_DIR="Default"
@@ -191,7 +199,7 @@ Udemate was tested on Ubuntu 24.04 LTS.
 4. Create a virtual environment
 
    ```sh
-     python3 -m venv .venv
+     python3.12 -m venv .venv
    ```
 
 5. Install dependencies
