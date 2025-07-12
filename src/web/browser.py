@@ -1,7 +1,6 @@
 """Manage browser used for scraping links and automating course enrollment."""
 import getpass
 import os
-import tempfile
 from typing import Final
 
 from selenium import webdriver
@@ -25,8 +24,21 @@ class Browser:
                                             DEFAULT_USER_DATA_DIR).strip('"')
         self.profile_dir = os.environ.get('PROFILE_DIR',
                                           DEFAULT_PROFILE_DIR).strip('"')
-        self.user_agent = os.environ.get('BROWSER_USER_AGENT').strip('"')
+        self.user_agent = os.environ.get('BROWSER_USER_AGENT', '').strip('"')
         self.logger = setup_logging()
+
+    def switch_tab(self, driver: WebDriver) -> None:
+        """Switch to newtab if open; otherwise switch to last opened tab."""
+        tabs = driver.window_handles
+        target_url: str = 'chrome://newtab/'
+        for tab in tabs:
+            driver.switch_to.window(tab)
+            current_url: str = driver.current_url
+            if current_url == target_url:
+                self.logger.info("Switched to Brave Browser's launch tab.")
+                return
+        self.logger.warning('Launch tab not found. Defaulting to last tab.')
+        driver.switch_to.window(driver.window_handles[-1])
 
     def setup(self, headless: bool) -> WebDriver:
         """
@@ -44,16 +56,5 @@ class Browser:
         options.add_experimental_option(
             'debuggerAddress', f'127.0.0.1:{self.port}')
         driver: WebDriver = webdriver.Chrome(options=options)
-        tabs = driver.window_handles
-        target_url: str = 'chrome://newtab/'
-        for tab in tabs:
-            driver.switch_to.window(tab)
-            current_url: str = driver.current_url
-            if current_url == target_url:
-                self.logger.info(
-                    'Switched to Brave Browser\'s launch tab.')
-                return driver
-        self.logger.warning('Launch tab not found. Defaulting to last tab.')
-        driver.switch_to.window(driver.window_handles[-1])
-        driver.get('https://udemy.com')
+        self.switch_tab(driver)
         return driver
