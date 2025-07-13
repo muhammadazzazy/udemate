@@ -16,18 +16,18 @@ class RedditClient:
         if refresh_token:
             self.refresh_token = refresh_token
             self.reddit = praw.Reddit(
-                client_id=self.config.client_id,
-                client_secret=self.config.client_secret,
-                user_agent=self.config.user_agent,
+                client_id=self.config.REDDIT_CLIENT_ID,
+                client_secret=self.config.REDDIT_CLIENT_SECRET,
+                user_agent=self.config.REDDIT_USER_AGENT,
                 refresh_token=refresh_token
             )
         else:
             self.reddit = praw.Reddit(
-                client_id=self.config.client_id,
-                client_secret=self.config.client_secret,
-                password=self.config.password,
-                user_agent=self.config.user_agent,
-                username=self.config.username
+                client_id=self.config.REDDIT_CLIENT_ID,
+                client_secret=self.config.REDDIT_CLIENT_SECRET,
+                password=self.config.REDDIT_PASSWORD,
+                user_agent=self.config.REDDIT_USER_AGENT,
+                username=self.config.REDDIT_USERNAME
             )
         self.submissions: list[Submission] = []
         self.logger = setup_logging()
@@ -36,7 +36,7 @@ class RedditClient:
         """Fill the list of Reddit posts."""
         try:
             subreddit = self.reddit.subreddit(subreddit)
-            for submission in subreddit.new(limit=self.config.limit):
+            for submission in subreddit.new(limit=self.config.REDDIT_LIMIT):
                 self.submissions.append(submission)
         except RequestException as e:
             self.logger.error('RequestException: %s', e)

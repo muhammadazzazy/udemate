@@ -1,35 +1,53 @@
 """Configure Udemate based on environment variables in .env file."""
-import os
-from dataclasses import asdict, dataclass
-from datetime import datetime
+import getpass
 from typing import Final
+from datetime import datetime
 
-from dotenv import load_dotenv
+from pydantic import Field
+from pydantic_settings import BaseSettings, SettingsConfigDict
+
 
 DEFAULT_USER_AGENT: Final[str] = 'Udemate:v1.0.0 (by u/kemitche)'
-
 DEFAULT_LIMIT: Final[int] = 500
+MIN_LIMIT: Final[int] = 1
 MAX_LIMIT: Final[int] = 1000
 
+DEFAULT_PROFILE_DIR: Final[str] = 'Default'
+DEFAULT_PORT: Final[int] = 9222
+USER: Final[str] = getpass.getuser()
+DEFAULT_USER_DATA_DIR: Final[str] = f'/home/{USER}/.config/BraveSoftware/Brave-Browser'
+
 FORMATTED_DATE: Final[str] = datetime.today().strftime('%Y%m%d')
-load_dotenv()
 
 
-@dataclass
-class Config:
+class Config(BaseSettings):
     """Encapsulate and validate configuration attributes loaded from .env."""
-    client_id: str
-    client_secret: str
-    user_agent: str
-    limit: int
-    password: str
-    username: str
-
-    def __init__(self) -> None:
-        self.client_id = os.environ.get('REDDIT_CLIENT_ID').strip('"')
-        self.client_secret = os.environ.get('REDDIT_CLIENT_SECRET').strip('"')
-        self.user_agent = os.environ.get(
-            'REDDIT_USER_AGENT', DEFAULT_USER_AGENT).strip('"')
-        self.limit = int(os.environ.get('LIMIT', DEFAULT_LIMIT).strip('"'))
-        self.password = os.environ.get('REDDIT_PASSWORD').strip('"')
-        self.username = os.environ.get('REDDIT_USERNAME').strip('"')
+    model_config = SettingsConfigDict(env_file='.env',
+                                      #   env_file_encoding='utf-8',
+                                      case_sensitive=True)
+    REDDIT_CLIENT_ID: str = Field(description='Reddit script client ID')
+    REDDIT_CLIENT_SECRET: str = Field(
+        description='Reddit script client secret')
+    REDDIT_USER_AGENT: str = Field(
+        default=DEFAULT_USER_AGENT, description='Reddit script user agent')
+    REDDIT_LIMIT: int = Field(DEFAULT_LIMIT,
+                              le=MAX_LIMIT,
+                              ge=MIN_LIMIT,
+                              description='Maximum number of posts parsed by Reddit script')
+    REDDIT_PASSWORD: str = Field(
+        description='Password of Reddit account')
+    REDDIT_USERNAME: str = Field(
+        description='Username of Reddit account')
+    BROWSER_USER_AGENT: str = Field(description='')
+    PORT: int = Field(
+        default=DEFAULT_PORT,
+        description='Port number used for debugger address of Brave Browser in nonheadless mode.'
+    )
+    USER_DATA_DIR: str = Field(
+        default=DEFAULT_USER_DATA_DIR,
+        description='User data directory associated with Brave Browser'
+    )
+    PROFILE_DIR: str = Field(
+        default=DEFAULT_PROFILE_DIR,
+        description='Profile directory of Brave Browser based on launch_brave.sh script'
+    )

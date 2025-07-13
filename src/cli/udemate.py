@@ -25,7 +25,7 @@ class Udemate:
 
     def setup_reddit_client(self) -> RedditClient:
         """Return Reddit client for r/udemyfreebies."""
-        if self.config.password:
+        if self.config.REDDIT_PASSWORD:
             reddit_client: RedditClient = RedditClient()
         else:
             refresh_token: str = get_refresh_token(self.config)
