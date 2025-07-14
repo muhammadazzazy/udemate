@@ -240,11 +240,12 @@ Udemate was tested on Ubuntu 24.04 LTS.
 - [x] Add requirements.txt
 - [x] Implement refresh token authentication
 - [x] Add functionality to generate JSON files of submissions grouped by hostname
-- [x] Scrape intermediate links from the following middlemen:
+- [ ] Scrape intermediate links from the following middlemen:
 
   - [x] Easy Learning
   - [ ] Freewebcart
   - [x] iDC
+  - [ ] Invent High
   - [x] Line51
 
 - [x] Automate enrollment into Udemy courses
