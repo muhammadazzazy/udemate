@@ -1,6 +1,4 @@
 """Automatically enroll into free Udemy courses."""
-import time
-
 from selenium.common.exceptions import WebDriverException
 from selenium.webdriver.chrome.webdriver import WebDriver
 from selenium.webdriver.common.by import By
@@ -26,9 +24,7 @@ class Udemy:
                 By.XPATH,
                 '//*[@id="udemy"]/div[1]/div[2]/div/div/div/aside/div/div/div[2]/div[2]/button[1]'
             )))
-            while 'cart/success/' not in self.driver.current_url:
-                confirm_button.click()
-                time.sleep(1)
+            confirm_button.click()
             return True
         except WebDriverException:
             return False
@@ -91,4 +87,5 @@ class Udemy:
                 else:
                     self.logger.info('Failed to enroll into %s', course_name)
             else:
-                self.logger.info('Something went wrong for %s', course_name)
+                # "Unavailable" means private or does not exist.
+                self.logger.info('Course is unavailable. Skipping...')
