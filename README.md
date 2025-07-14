@@ -245,7 +245,7 @@ Udemate was tested on Ubuntu 24.04 LTS.
   - [x] Easy Learning
   - [ ] Freewebcart
   - [x] iDC
-  - [ ] Invent High
+  - [x] Invent High
   - [x] Line51
 
 - [x] Automate enrollment into Udemy courses

@@ -37,6 +37,8 @@ class RedditClient:
         try:
             subreddit = self.reddit.subreddit(subreddit)
             for submission in subreddit.new(limit=self.config.REDDIT_LIMIT):
+                self.logger.info('Adding Reddit post with URL: %s',
+                                 submission.url)
                 self.submissions.append(submission)
         except RequestException as e:
             self.logger.error('RequestException: %s', e)
