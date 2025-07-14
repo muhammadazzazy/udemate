@@ -23,7 +23,7 @@ FORMATTED_DATE: Final[str] = datetime.today().strftime('%Y%m%d')
 class Config(BaseSettings):
     """Encapsulate and validate configuration attributes loaded from .env."""
     model_config = SettingsConfigDict(env_file='.env',
-                                      #   env_file_encoding='utf-8',
+                                      env_file_encoding='utf-8',
                                       case_sensitive=True)
     REDDIT_CLIENT_ID: str = Field(description='Reddit script client ID')
     REDDIT_CLIENT_SECRET: str = Field(
@@ -39,15 +39,15 @@ class Config(BaseSettings):
     REDDIT_USERNAME: str = Field(
         description='Username of Reddit account')
     BROWSER_USER_AGENT: str = Field(description='')
-    PORT: int = Field(
+    BROWSER_PORT: int = Field(
         default=DEFAULT_PORT,
         description='Port number used for debugger address of Brave Browser in nonheadless mode.'
     )
-    USER_DATA_DIR: str = Field(
+    BROWSER_USER_DATA_DIR: str = Field(
         default=DEFAULT_USER_DATA_DIR,
         description='User data directory associated with Brave Browser'
     )
-    PROFILE_DIR: str = Field(
+    BROWSER_PROFILE_DIR: str = Field(
         default=DEFAULT_PROFILE_DIR,
         description='Profile directory of Brave Browser based on launch_brave.sh script'
     )

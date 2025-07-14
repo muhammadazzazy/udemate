@@ -181,17 +181,13 @@ Udemate was tested on Ubuntu 24.04 LTS.
     # Required if 2FA is not enabled.
     REDDIT_USERNAME=""
     # Optional. Default is 500.
-    LIMIT=1000
+    REDDIT_LIMIT=1000
 
     # Browser config
     # Required for spoofing User-Agent.
     BROWSER_USER_AGENT="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"
     # Optional. Default is 9222.
-    PORT=9222
-    # Optional. Replace <username> with your Linux username.
-    USER_DATA_DIR="/home/<username>/.config/BraveSoftware/Brave-Browser"
-    # Optional. Default is 'Default'.
-    PROFILE_DIR="Default"
+    BROWSER_PORT=9222
    ```
 
 #### Option 1: Run from Source

@@ -42,7 +42,7 @@ class Browser:
             options.add_argument('--headless=new')
             return webdriver.Chrome(options=options)
         options.add_experimental_option(
-            'debuggerAddress', f'127.0.0.1:{self.config.PORT}')
+            'debuggerAddress', f'127.0.0.1:{self.config.BROWSER_PORT}')
         driver: WebDriver = webdriver.Chrome(options=options)
         self.switch_tab(driver)
         return driver
