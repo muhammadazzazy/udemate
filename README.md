@@ -247,6 +247,7 @@ Udemate was tested on Ubuntu 24.04 LTS.
   - [x] iDC
   - [x] Invent High
   - [x] Line51
+  - [x] WebHelperApp
 
 - [x] Automate enrollment into Udemy courses
 - [x] Implement caching mechanism for middleman and Udemy links
