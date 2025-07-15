@@ -1,6 +1,4 @@
 """Automatically enroll into free Udemy courses."""
-import time
-
 from selenium.common.exceptions import WebDriverException
 from selenium.webdriver.chrome.webdriver import WebDriver
 from selenium.webdriver.common.by import By

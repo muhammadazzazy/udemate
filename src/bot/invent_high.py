@@ -22,9 +22,9 @@ class InventHigh(Spider):
         return udemy_url
 
     def run(self) -> None:
-        """Return set of Udemy links extracted from Line51."""
+        """Return set of Udemy links extracted from Invent High."""
         self.logger.info('Invent High spider starting...')
-        self.logger.info('Processing %d links from Line51...',
+        self.logger.info('Processing %d links from Invent High...',
                          len(self.urls))
         udemy_urls: set[str] = set()
         for url in self.urls:
