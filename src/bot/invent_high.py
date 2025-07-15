@@ -1,6 +1,7 @@
 """Scrape Udemy links with coupons from Invent High."""
 import requests
 
+from requests import RequestException
 from selenium.common.exceptions import TimeoutException, WebDriverException
 from selenium.webdriver.common.by import By
 from urllib3.exceptions import ReadTimeoutError
@@ -37,11 +38,11 @@ class InventHigh(Spider):
             except WebDriverException as e:
                 self.logger.error('WebDriver error for %s: %s', url, e)
                 continue
+            except RequestException as e:
+                self.logger.error('HTTP request failed for %s: %s', url, e)
+                continue
             except ReadTimeoutError as e:
                 self.logger.error('ReadTimeoutError error for %s: %s', url, e)
-                continue
-            except requests.exceptions.ConnectionError as e:
-                self.logger.error('ConnectionError for %s: %s', url, e)
                 continue
         self.logger.info('Invent High spider scraped %d Udemy links.',
                          len(udemy_urls))
