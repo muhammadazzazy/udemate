@@ -1,4 +1,6 @@
 """Automatically enroll into free Udemy courses."""
+import time
+
 from selenium.common.exceptions import WebDriverException
 from selenium.webdriver.chrome.webdriver import WebDriver
 from selenium.webdriver.common.by import By
@@ -47,7 +49,7 @@ class Udemy:
             wait = WebDriverWait(self.driver, 5)
             _buttons = wait.until(lambda d: d.find_elements(
                 By.XPATH,
-                "//button[@data-purpose='buy-this-course-button' and contains(., 'Buy')]",
+                "//button[@data-purpose='buy-this-course-button' and contains(., 'Buy now')]",
             ))
             return True
         except WebDriverException:
@@ -59,7 +61,7 @@ class Udemy:
             wait = WebDriverWait(self.driver, 5)
             buttons = wait.until(lambda d: d.find_elements(
                 By.XPATH,
-                "//button[@data-purpose='buy-this-course-button' and contains(., 'Enroll')]",
+                "//button[@data-purpose='buy-this-course-button' and contains(., 'Enroll now')]",
             ))
             enroll_button = next(
                 (b for b in buttons if b.is_displayed() and b.is_enabled()), None)

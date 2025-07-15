@@ -22,7 +22,7 @@ class InventHigh(Spider):
 
     def run(self) -> None:
         """Return set of Udemy links extracted from Line51."""
-        self.logger.info('Line51 spider starting...')
+        self.logger.info('Invent High spider starting...')
         self.logger.info('Processing %d links from Line51...',
                          len(self.urls))
         udemy_urls: set[str] = set()
@@ -40,6 +40,9 @@ class InventHigh(Spider):
             except ReadTimeoutError as e:
                 self.logger.error('ReadTimeoutError error for %s: %s', url, e)
                 continue
-        self.logger.info('Line51 spider scraped %d Udemy links.',
+            except requests.exceptions.ConnectionError as e:
+                self.logger.error('ConnectionError for %s: %s', url, e)
+                continue
+        self.logger.info('Invent High spider scraped %d Udemy links.',
                          len(udemy_urls))
         return udemy_urls
