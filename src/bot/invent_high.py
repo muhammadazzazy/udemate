@@ -17,7 +17,7 @@ class InventHigh(Spider):
         self.driver.get(url)
         link = self.driver.find_element(By.ID, 'couponval')
         url: str = link.get_attribute('href')
-        response = requests.get(url, timeout=20)
+        response = requests.get(url, timeout=30)
         udemy_url: str = response.url
         return udemy_url
 
