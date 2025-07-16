@@ -1,4 +1,5 @@
 """Automatically enroll into free Udemy courses."""
+import time
 from selenium.common.exceptions import WebDriverException
 from selenium.webdriver.chrome.webdriver import WebDriver
 from selenium.webdriver.common.by import By
@@ -15,19 +16,25 @@ class Udemy:
         self.driver = driver
         self.urls = urls
         self.logger = setup_logging()
+        self.pattern = 'cart/success'
 
-    def confirm(self) -> None:
+    def confirm(self) -> bool:
         """Scan for final 'Enroll now' button and click on it."""
         try:
+            flag: bool = False
             wait = WebDriverWait(self.driver, 30)
             confirm_button = wait.until(EC.element_to_be_clickable((
                 By.XPATH,
                 '//*[@id="udemy"]/div[1]/div[2]/div/div/div/aside/div/div/div[2]/div[2]/button[1]'
             )))
             confirm_button.click()
-            return True
-        except WebDriverException:
-            return False
+            time.sleep(3)
+            if self.pattern in self.driver.current_url:
+                flag = True
+            return flag
+        except WebDriverException as e:
+            self.logger.error('Webdriver error: %s', e)
+            return flag
 
     def is_owned(self) -> bool:
         """Return a flag indicating whether a course is owned."""
