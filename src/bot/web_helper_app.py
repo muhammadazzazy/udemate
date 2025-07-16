@@ -1,7 +1,7 @@
 """Scrape Udemy links with coupons from WebHelperApp."""
 from selenium.common.exceptions import TimeoutException, WebDriverException
 from selenium.webdriver.common.by import By
-from urllib3.exceptions import ReadTimeoutError
+from urllib3.exceptions import ProtocolError, ReadTimeoutError
 
 from bot.spider import Spider
 
@@ -34,8 +34,11 @@ class WebHelperApp(Spider):
             except WebDriverException as e:
                 self.logger.error('WebDriver error for %s: %s', url, e)
                 continue
+            except ProtocolError as e:
+                self.logger.error('Protocol error for %s: %s', url, e)
+                continue
             except ReadTimeoutError as e:
-                self.logger.error('ReadTimeoutError error for %s: %s', url, e)
+                self.logger.error('Read timeout error for %s: %s', url, e)
                 continue
         self.logger.info('WebHelperApp spider scraped %d Udemy links.',
                          len(udemy_urls))

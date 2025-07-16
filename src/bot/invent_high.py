@@ -4,7 +4,7 @@ import requests
 from requests import RequestException
 from selenium.common.exceptions import TimeoutException, WebDriverException
 from selenium.webdriver.common.by import By
-from urllib3.exceptions import ReadTimeoutError
+from urllib3.exceptions import ProtocolError, ReadTimeoutError
 
 from bot.spider import Spider
 
@@ -41,8 +41,11 @@ class InventHigh(Spider):
             except RequestException as e:
                 self.logger.error('HTTP request failed for %s: %s', url, e)
                 continue
+            except ProtocolError as e:
+                self.logger.error('Protocol error for %s: %s', url, e)
+                continue
             except ReadTimeoutError as e:
-                self.logger.error('ReadTimeoutError error for %s: %s', url, e)
+                self.logger.error('Read timeout error for %s: %s', url, e)
                 continue
         self.logger.info('Invent High spider scraped %d Udemy links.',
                          len(udemy_urls))

@@ -3,7 +3,7 @@ from selenium.common.exceptions import TimeoutException, WebDriverException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from urllib3.exceptions import ReadTimeoutError
+from urllib3.exceptions import ProtocolError, ReadTimeoutError
 
 from bot.spider import Spider
 
@@ -37,10 +37,13 @@ class Line51(Spider):
                 self.logger.error('Timeout while parsing %s: %s', url, e)
                 continue
             except WebDriverException as e:
-                self.logger.error('WebDriver error for %s: %s', url, e)
+                self.logger.error('WebDriver for %s: %s', url, e)
+                continue
+            except ProtocolError as e:
+                self.logger.error('Protocol error for %s: %s', url, e)
                 continue
             except ReadTimeoutError as e:
-                self.logger.error('ReadTimeoutError error for %s: %s', url, e)
+                self.logger.error('Read timeout error for %s: %s', url, e)
                 continue
         self.logger.info('Line51 spider scraped %d Udemy links.',
                          len(udemy_urls))
