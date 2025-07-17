@@ -56,16 +56,16 @@ class InventHigh(Spider):
                 self.logger.info('%s ==> %s', url, udemy_url)
                 udemy_urls.add(udemy_url)
             except WebDriverException as e:
-                self.logger.error('WebDriver error for %s: %s', url, e)
+                self.logger.error('Webdriver error for %s: %r', url, e)
                 continue
             except RequestException as e:
-                self.logger.error('HTTP request failed for %s: %s', url, e)
+                self.logger.error('HTTP request failed for %s: %r', url, e)
                 continue
             except ProtocolError as e:
-                self.logger.error('Protocol error for %s: %s', url, e)
+                self.logger.error('Protocol error for %s: %r', url, e)
                 continue
             except ReadTimeoutError as e:
-                self.logger.error('Read timeout error for %s: %s', url, e)
+                self.logger.error('Read timeout error for %s: %r', url, e)
                 continue
         self.logger.info('Invent High spider scraped %d Udemy links.',
                          len(udemy_urls))

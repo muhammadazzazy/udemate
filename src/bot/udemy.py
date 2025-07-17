@@ -31,9 +31,13 @@ class Udemy:
                 confirm_button.click()
                 time.sleep(5)
                 if self.pattern in self.driver.current_url:
+                    self.logger.info('Attempt %d/%d succeeded!',
+                                     attempt+1,
+                                     self.max_retries)
                     return True
-                self.logger.warning('Attempt %d failed. Retrying...',
-                                    attempt+1)
+                self.logger.warning('Attempt %d/%d failed. Retrying...',
+                                    attempt+1,
+                                    self.max_retries)
             except WebDriverException as e:
                 self.logger.error('Webdriver error: %s', e)
                 continue

@@ -22,7 +22,9 @@ class IDownloadCoupon(Spider):
             (By.CSS_SELECTOR, 'form.cart')))
         action_url = form.get_attribute('action')
         response = requests.get(action_url, allow_redirects=True, timeout=30)
-        udemy_url: str = response.url
+        udemy_url: str = ''
+        if 'udemy.com' in response.url:
+            udemy_url: str = response.url
         return udemy_url
 
     def transform(self, url: str) -> str:
@@ -43,21 +45,22 @@ class IDownloadCoupon(Spider):
             try:
                 udemy_url: str = self.transform(url)
                 self.logger.info('%s ==> %s', url, udemy_url)
-                udemy_urls.add(udemy_url)
+                if udemy_url:
+                    udemy_urls.add(udemy_url)
             except TimeoutException as e:
-                self.logger.error('Timeout while parsing %s: %s', url, e)
+                self.logger.error('Timeout while parsing %s: %r', url, e)
                 continue
             except WebDriverException as e:
-                self.logger.error('WebDriver error for %s: %s', url, e)
+                self.logger.error('WebDriver error for %s: %r', url, e)
                 continue
             except RequestException as e:
-                self.logger.error('HTTP request failed for %s: %s', url, e)
+                self.logger.error('HTTP request failed for %s: %r', url, e)
                 continue
             except ProtocolError as e:
-                self.logger.error('Protocol error for %s: %s', url, e)
+                self.logger.error('Protocol error for %s: %r', url, e)
                 continue
             except ReadTimeoutError as e:
-                self.logger.error('Read timeout error for %s: %s', url, e)
+                self.logger.error('Read timeout error for %s: %r', url, e)
                 continue
         self.logger.info('iDC spider scraped %d Udemy links.', len(udemy_urls))
         return udemy_urls
