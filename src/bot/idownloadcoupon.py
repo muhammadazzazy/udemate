@@ -35,6 +35,14 @@ class IDownloadCoupon(Spider):
             return udemy_url
         return response.url
 
+    def clean(self, url: str) -> str:
+        """Return cleaned iDC link."""
+        parts: list[str] = url.split('/')
+        while '' in parts:
+            parts.remove('')
+        clean_url: str = parts[0] + '//' + '/'.join(parts[1:])
+        return clean_url
+
     def run(self) -> set[str]:
         """Return set of Udemy links extracted from iDC."""
         self.logger.info('iDC spider starting...')
@@ -43,15 +51,18 @@ class IDownloadCoupon(Spider):
         udemy_urls: set[str] = set()
         for url in self.urls:
             try:
-                udemy_url: str = self.transform(url)
-                self.logger.info('%s ==> %s', url, udemy_url)
+                if url.count('/') > 4:
+                    self.logger.info('Unclean URL: %s', url)
+                    clean_url: str = self.clean(url)
+                udemy_url: str = self.transform(clean_url)
+                self.logger.info('%s ==> %s', clean_url, udemy_url)
                 if udemy_url:
                     udemy_urls.add(udemy_url)
             except TimeoutException as e:
                 self.logger.error('Timeout while parsing %s: %r', url, e)
                 continue
             except WebDriverException as e:
-                self.logger.error('WebDriver error for %s: %r', url, e)
+                self.logger.error('Webdriver error for %s: %r', url, e)
                 continue
             except RequestException as e:
                 self.logger.error('HTTP request failed for %s: %r', url, e)
