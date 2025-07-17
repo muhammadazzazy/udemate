@@ -17,7 +17,7 @@ class Udemy:
         self.urls = urls
         self.logger = setup_logging()
         self.max_retries = 3
-        self.pattern = 'cart/success'
+        self.patterns = {'paid': 'cart/success', 'free': 'cart/subscribe'}
 
     def confirm(self) -> bool:
         """Scan for final 'Enroll now' button and click on it."""
@@ -30,7 +30,7 @@ class Udemy:
                 )))
                 confirm_button.click()
                 time.sleep(5)
-                if self.pattern in self.driver.current_url:
+                if self.patterns['paid'] in self.driver.current_url:
                     self.logger.info('Attempt %d/%d succeeded!',
                                      attempt+1,
                                      self.max_retries)
@@ -39,7 +39,7 @@ class Udemy:
                                     attempt+1,
                                     self.max_retries)
             except WebDriverException as e:
-                self.logger.error('Webdriver error: %s', e)
+                self.logger.error('Webdriver error: %r', e)
                 continue
         return False
 
@@ -95,6 +95,10 @@ class Udemy:
                 self.logger.info('%s is paid. Skipping...', course_name)
             elif self.enroll():
                 self.logger.info('Enrolling into %s', course_name)
+                if self.patterns['free'] in self.driver.current_url:
+                    self.logger.info('Successfully enrolled into %s',
+                                     course_name)
+                    continue
                 if self.confirm():
                     self.logger.info('Successfully enrolled into %s.',
                                      course_name)
