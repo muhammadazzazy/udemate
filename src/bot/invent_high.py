@@ -14,7 +14,7 @@ from bot.spider import Spider
 class InventHigh(Spider):
     """Get Udemy links with coupons from Invent High."""
 
-    def scrape(self, url: str) -> str:
+    def transform(self, url: str) -> str:
         """Return Udemy link from Invent High link."""
         self.driver.get(url)
         wait = WebDriverWait(self.driver, 30)
@@ -52,7 +52,7 @@ class InventHigh(Spider):
             try:
                 if self.is_coupon_expired(url):
                     continue
-                udemy_url: str = self.scrape(url)
+                udemy_url: str = self.transform(url)
                 self.logger.info('%s ==> %s', url, udemy_url)
                 udemy_urls.add(udemy_url)
             except WebDriverException as e:

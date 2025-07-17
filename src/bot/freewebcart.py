@@ -10,7 +10,7 @@ from bot.spider import Spider
 class Freewebcart(Spider):
     """Get Udemy links with coupons from Freewebcart."""
 
-    def scrape(self, url: str) -> str:
+    def transform(self, url: str) -> str:
         """Return Udemy link from Freewebcart link."""
         self.driver.get(url)
         wait = WebDriverWait(self.driver, 30)
@@ -29,7 +29,7 @@ class Freewebcart(Spider):
         udemy_urls: set[str] = set()
         for url in self.urls:
             try:
-                udemy_url: str = self.scrape(url)
+                udemy_url: str = self.transform(url)
                 self.logger.info('%s ==> %s', url, udemy_url)
                 udemy_urls.add(udemy_url)
             except TimeoutException as e:

@@ -9,7 +9,7 @@ from bot.spider import Spider
 class WebHelperApp(Spider):
     """Get Udemy links with coupons from WebHelperApp."""
 
-    def scrape(self, url: str) -> str:
+    def transform(self, url: str) -> str:
         """Return Udemy link from WebHelperApp link."""
         self.driver.get(url)
         link = self.driver.find_element(By.XPATH,
@@ -25,7 +25,7 @@ class WebHelperApp(Spider):
         udemy_urls: set[str] = set()
         for url in self.urls:
             try:
-                udemy_url: str = self.scrape(url)
+                udemy_url: str = self.transform(url)
                 self.logger.info('%s ==> %s', url, udemy_url)
                 udemy_urls.add(udemy_url)
             except TimeoutException as e:

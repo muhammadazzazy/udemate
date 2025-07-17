@@ -3,9 +3,6 @@ import requests
 from requests.exceptions import RequestException
 
 from selenium.common.exceptions import TimeoutException, WebDriverException
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
 from urllib3.exceptions import ProtocolError, ReadTimeoutError
 
 from bot.spider import Spider
@@ -14,25 +11,9 @@ from bot.spider import Spider
 class IDownloadCoupon(Spider):
     """Get Udemy links with coupons from iDC."""
 
-    def scrape(self, url: str) -> str:
-        """Scrape Udemy link from iDC link."""
-        self.driver.get(url)
-        wait = WebDriverWait(self.driver, 30)
-        form = wait.until(EC.presence_of_element_located(
-            (By.CSS_SELECTOR, 'form.cart')))
-        action_url = form.get_attribute('action')
-        response = requests.get(action_url, allow_redirects=True, timeout=30)
-        udemy_url: str = ''
-        if 'udemy.com' in response.url:
-            udemy_url: str = response.url
-        return udemy_url
-
     def transform(self, url: str) -> str:
         """Convert iDC link to final Udemy link with coupon."""
         response = requests.get(url, allow_redirects=True, timeout=30)
-        if 'idownloadcoupon' in response.url:
-            udemy_url: str = self.scrape(url)
-            return udemy_url
         return response.url
 
     def clean(self, url: str) -> str:
@@ -40,7 +21,7 @@ class IDownloadCoupon(Spider):
         parts: list[str] = url.split('/')
         while '' in parts:
             parts.remove('')
-        clean_url: str = parts[0] + '//' + '/'.join(parts[1:])
+        clean_url: str = parts[0] + '//' + '/'.join(parts[1:4])
         return clean_url
 
     def run(self) -> set[str]:
@@ -51,9 +32,9 @@ class IDownloadCoupon(Spider):
         udemy_urls: set[str] = set()
         for url in self.urls:
             try:
+                clean_url: str = url
                 if url.count('/') > 4:
-                    self.logger.info('Unclean URL: %s', url)
-                    clean_url: str = self.clean(url)
+                    clean_url = self.clean(url)
                 udemy_url: str = self.transform(clean_url)
                 self.logger.info('%s ==> %s', clean_url, udemy_url)
                 if udemy_url:

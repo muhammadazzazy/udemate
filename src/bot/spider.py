@@ -15,8 +15,8 @@ class Spider(ABC):
         self.logger = setup_logging()
 
     @abstractmethod
-    def scrape(self, url: str) -> str:
-        """Return a Udemy link extracted from middleman website."""
+    def transform(self, url: str) -> str:
+        """Return a Udemy link extracted from middleman link."""
 
     @abstractmethod
     def run(self) -> set[str]:
