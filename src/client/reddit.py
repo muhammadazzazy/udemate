@@ -1,4 +1,6 @@
 """Configure Reddit PRAW for r/udemyfreebies, fetch posts on subreddit, and extract hostnames."""
+from sys import exit
+
 import praw
 from prawcore.exceptions import RequestException
 from praw.models.reddit.submission import Submission
@@ -42,6 +44,7 @@ class RedditClient:
                 self.submissions.append(submission)
         except RequestException as e:
             self.logger.error('RequestException: %s', e)
+            exit()
 
     def get_middleman_urls(self, hostnames: set[str]) -> dict[str, set[str]]:
         """Return mapping between hostnames and submission links."""
