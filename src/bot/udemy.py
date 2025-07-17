@@ -16,25 +16,28 @@ class Udemy:
         self.driver = driver
         self.urls = urls
         self.logger = setup_logging()
+        self.max_retries = 3
         self.pattern = 'cart/success'
 
     def confirm(self) -> bool:
         """Scan for final 'Enroll now' button and click on it."""
-        try:
-            flag: bool = False
-            wait = WebDriverWait(self.driver, 30)
-            confirm_button = wait.until(EC.element_to_be_clickable((
-                By.XPATH,
-                '//*[@id="udemy"]/div[1]/div[2]/div/div/div/aside/div/div/div[2]/div[2]/button[1]'
-            )))
-            confirm_button.click()
-            time.sleep(3)
-            if self.pattern in self.driver.current_url:
-                flag = True
-            return flag
-        except WebDriverException as e:
-            self.logger.error('Webdriver error: %s', e)
-            return flag
+        for attempt in range(self.max_retries):
+            try:
+                wait = WebDriverWait(self.driver, 30)
+                confirm_button = wait.until(EC.element_to_be_clickable((
+                    By.XPATH,
+                    '//*[@id="udemy"]/div[1]/div[2]/div/div/div/aside/div/div/div[2]/div[2]/button[1]'
+                )))
+                confirm_button.click()
+                time.sleep(5)
+                if self.pattern in self.driver.current_url:
+                    return True
+                self.logger.warning('Attempt %d failed. Retrying...',
+                                    attempt+1)
+            except WebDriverException as e:
+                self.logger.error('Webdriver error: %s', e)
+                continue
+        return False
 
     def is_owned(self) -> bool:
         """Return a flag indicating whether a course is owned."""
