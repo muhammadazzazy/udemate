@@ -46,7 +46,7 @@ class Freewebcart(Spider):
                 self.logger.error('Protocol error for %s: %r', url, e)
                 continue
             except ReadTimeoutError as e:
-                self.logger.error('ReadTimeoutError error for %s: %r', url, e)
+                self.logger.error('Read timeout error for %s: %r', url, e)
                 continue
         self.logger.info('Freewebcart spider scraped %d Udemy links.',
                          len(udemy_urls))

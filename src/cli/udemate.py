@@ -50,8 +50,11 @@ class Udemate:
         udemy_urls: set[str] = set()
         headless_driver: WebDriver = self.browser.setup(headless=True)
         for key, cls in SPIDERS.items():
-            spider = cls.spider_cls(driver=headless_driver,
-                                    urls=middleman_urls[key])
+            if key == 'idownloadcoupon':
+                spider = cls.spider_cls(middleman_urls[key])
+            else:
+                spider = cls.spider_cls(driver=headless_driver,
+                                        urls=middleman_urls[key])
             if key in middleman_urls:
                 udemy_urls.update(spider.run())
         self.logger.info('Spiders scraped a total of %d Udemy links.',
