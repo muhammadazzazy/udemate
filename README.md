@@ -175,19 +175,25 @@ Udemate was tested on Ubuntu 24.04 LTS.
      python3.12 -m venv .venv
    ```
 
-5. Install dependencies
+5. Activate the virtual environment
+
+   ```sh
+     source .venv/bin/activate
+   ```
+
+6. Install dependencies
 
    ```sh
      pip install -r requirements.txt
    ```
 
-6. Run `launch_brave.sh` script to start Brave Browser with debugging and default user profile
+7. Run `launch_brave.sh` script to start Brave Browser with debugging and default user profile
 
    ```sh
     ./src/web/launch_brave.sh
    ```
 
-7. Run the script
+8. Run the script
    ```sh
     python3 src/main.py [--mode {headless|gui|hybrid}]
     # Default: --mode hybrid

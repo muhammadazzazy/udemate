@@ -10,11 +10,11 @@ class Cache:
     """Read and write cached middleman and Udemy links to JSON files."""
 
     def __init__(self) -> None:
-        self.json_dir: Path = Path(
-            __file__).parent.parent.parent / 'data' / FORMATTED_DATE / 'json'
+        self.json_dir = Path(__file__).parent.parent.parent / \
+            'data' / FORMATTED_DATE / 'json'
         self.json_dir.mkdir(parents=True, exist_ok=True)
         self.logger = setup_logging()
-        self.urls: dict[str, set[str]] = {}
+        self.urls = {}
 
     def read_json(self, filename: str, brand_name: str) -> bool:
         """Parse cached middleman and Udemy links with coupons from JSON files."""
@@ -38,7 +38,7 @@ class Cache:
             self.logger.info('Successfully written data to %s.', file_path)
 
     def delete_json(self, filename: str, brand_name: str) -> None:
-        """Clear JSON file in 'json' directory within 'data' directory"""
+        """Clear JSON file in 'json' directory within 'data' directory."""
         file_path: Path = self.json_dir / filename
         file_path.unlink(missing_ok=True)
         self.logger.info('Cleared cache for %s', brand_name)
