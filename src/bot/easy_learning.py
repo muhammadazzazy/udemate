@@ -1,4 +1,4 @@
-"""Scrape Udemy links with coupons from EasyLearning."""
+"""Scrape Udemy links with coupons from Easy Learning."""
 import requests
 from requests.exceptions import RequestException
 

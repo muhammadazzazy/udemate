@@ -55,16 +55,15 @@
         <li><a href="#prerequisites">Prerequisites</a></li>
         <ul>
           <li><a href="#option-1-run-from-source-recommended-for-full-automation">Option 1: Run from Source (Recommended for Full Automation)</a></li>
-          <ul>
-            <li><a href="#download-and-install-chromedriver-version-1380720449">Download and Install ChromeDriver (Version 138.0.7204.49)</a></li>
-            <li><a href="#brave--chromedriver-version-match">Brave + ChromeDriver Version Match</a></li>
-          </ul>
           <li><a href="#option-2-run-in-docker-headless-mode-only">Option 2: Run in Docker (Headless Mode Only)</a></li>
           <li><a href="#reddit-bot-setup">Reddit Bot Setup</a></li>
         </ul>
         <li><a href="#installation">Installation</a></li>
         <ul>
           <li><a href="#option-1-run-from-source">Option 1: Run from Source</a></li>
+          <ul>
+            <li><a href="#download-and-install-python312-venv">Download and Install python3.12-venv</a></li>
+          </ul>
           <li><a href="#option-2-run-in-docker">Option 2: Run in Docker</li></a>
         </ul>
       </ul>
@@ -102,34 +101,12 @@ An automation tool that reads Reddit posts from [r/udemyfreebies](https://www.re
 
 - [python3.12-venv](#download-and-install-python312-venv)
 
-- [ChromeDriver (Version 138.0.7204.49)](https://storage.googleapis.com/chrome-for-testing-public/137.0.7151.119/linux64/chromedriver-linux64.zip).
-
-  📌 Follow this [guide](#download-and-install-chromedriver-version-1380720449) to download and install the appropriate version.
-
 - [Brave Browser](https://brave.com/linux/)
 
 #### Download and Install python3.12-venv
 
 ```sh
 sudo apt-get install python3.12-venv
-```
-
-##### Download and Install ChromeDriver (Version 138.0.7204.49)
-
-```sh
-wget https://storage.googleapis.com/chrome-for-testing-public/138.0.7204.49/linux64/chromedriver-linux64.zip && unzip chromedriver-linux64.zip && cd chromedriver-linux64
-sudo mv chromedriver /usr/local/bin
-```
-
-##### Brave + ChromeDriver Version Match
-
-⚠️ The Brave Browser and ChromeDriver major versions **must match** for automation to work correctly.
-
-Check your installed versions
-
-```sh
-brave-browser --version
-chromedriver --version
 ```
 
 #### Option 2: Run in Docker (Headless Mode Only)
@@ -260,6 +237,7 @@ Udemate was tested on Ubuntu 24.04 LTS.
 - [x] Provide a docker image for headless mode to facilitate deployment
 - [x] Improve performance of Udemy bot by skipping owned and paid courses
 - [ ] Support parsing Reddit posts containing several links
+- [ ] Add push notifications for successful Udemy course enrollment
 
 See the [open issues](https://github.com/muhammadazzazy/udemate/issues) for a full list of proposed features (and known issues).
 
