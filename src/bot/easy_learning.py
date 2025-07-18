@@ -3,6 +3,7 @@ import requests
 from requests.exceptions import RequestException
 
 from selenium.common.exceptions import TimeoutException, WebDriverException
+from selenium.webdriver.chrome.webdriver import WebDriver
 from selenium.webdriver.common.by import By
 from urllib3.exceptions import ProtocolError, ReadTimeoutError
 
@@ -10,10 +11,14 @@ from bot.spider import Spider
 
 
 class EasyLearning(Spider):
-    """Get Udemy links with coupons from EasyLearning."""
+    """Get Udemy links with coupons from Easy Learning."""
+
+    def __init__(self, *, driver: WebDriver, urls: set[str]) -> None:
+        super().__init__(urls)
+        self.driver = driver
 
     def transform(self, url: str) -> str:
-        """Return Udemy link from EasyLearning link."""
+        """Return Udemy link from Easy Learning link."""
         self.driver.get(url)
         enroll_url: str = self.driver.find_element(
             By.CSS_SELECTOR, "a.purple-button").get_attribute('href')
@@ -22,7 +27,7 @@ class EasyLearning(Spider):
         return udemy_url
 
     def run(self) -> set[str]:
-        """Return set of Udemy links extracted from Easylearning."""
+        """Return set of Udemy links extracted from Easy Learning."""
         self.logger.info('Easy Learning spider starting...')
         self.logger.info('Processing %d intermediary links from Easy Learning...',
                          len(self.urls))

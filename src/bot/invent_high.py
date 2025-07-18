@@ -14,6 +14,10 @@ from bot.spider import Spider
 class InventHigh(Spider):
     """Get Udemy links with coupons from Invent High."""
 
+    def __init__(self, *, driver, urls: set[str]) -> None:
+        super().__init__(urls)
+        self.driver = driver
+
     def transform(self, url: str) -> str:
         """Return Udemy link from Invent High link."""
         self.driver.get(url)

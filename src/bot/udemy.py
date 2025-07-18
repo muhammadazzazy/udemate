@@ -1,5 +1,6 @@
 """Automatically enroll into free Udemy courses."""
 import time
+
 from selenium.common.exceptions import WebDriverException
 from selenium.webdriver.chrome.webdriver import WebDriver
 from selenium.webdriver.common.by import By
@@ -21,12 +22,13 @@ class Udemy:
 
     def confirm(self) -> bool:
         """Scan for final 'Enroll now' button and click on it."""
+        xp: str = '//*[@id="udemy"]/div[1]/div[2]/div/div/div/aside/div/div/div[2]/div[2]/button[1]'
         for attempt in range(self.max_retries):
             try:
                 wait = WebDriverWait(self.driver, 30)
                 confirm_button = wait.until(EC.element_to_be_clickable((
                     By.XPATH,
-                    '//*[@id="udemy"]/div[1]/div[2]/div/div/div/aside/div/div/div[2]/div[2]/button[1]'
+                    xp
                 )))
                 confirm_button.click()
                 time.sleep(5)

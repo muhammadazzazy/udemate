@@ -1,8 +1,6 @@
 """Fetch Udemy links with coupons from iDC."""
 import requests
 from requests.exceptions import RequestException
-
-from selenium.common.exceptions import TimeoutException, WebDriverException
 from urllib3.exceptions import ProtocolError, ReadTimeoutError
 
 from bot.spider import Spider
@@ -39,12 +37,6 @@ class IDownloadCoupon(Spider):
                 self.logger.info('%s ==> %s', clean_url, udemy_url)
                 if udemy_url:
                     udemy_urls.add(udemy_url)
-            except TimeoutException as e:
-                self.logger.error('Timeout while parsing %s: %r', url, e)
-                continue
-            except WebDriverException as e:
-                self.logger.error('Webdriver error for %s: %r', url, e)
-                continue
             except RequestException as e:
                 self.logger.error('HTTP request failed for %s: %r', url, e)
                 continue

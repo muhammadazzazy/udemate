@@ -11,6 +11,10 @@ from bot.spider import Spider
 class Line51(Spider):
     """Get Udemy links with coupons from Line51."""
 
+    def __init__(self, *, driver, urls: set[str]) -> None:
+        super().__init__(urls)
+        self.driver = driver
+
     def transform(self, url: str) -> str:
         """Return Udemy link from Line51 link."""
         self.driver.get(url)
