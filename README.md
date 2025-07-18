@@ -240,10 +240,10 @@ Udemate was tested on Ubuntu 24.04 LTS.
 - [x] Add requirements.txt
 - [x] Implement refresh token authentication
 - [x] Add functionality to generate JSON files of submissions grouped by hostname
-- [ ] Scrape intermediate links from the following middlemen:
+- [x] Scrape intermediate links from the following middlemen:
 
   - [x] Easy Learning
-  - [ ] Freewebcart
+  - [x] Freewebcart
   - [x] iDC
   - [x] Invent High
   - [x] Line51
@@ -259,6 +259,7 @@ Udemate was tested on Ubuntu 24.04 LTS.
 - [x] Add argument parsing for different modes (headless, non-headless, hybrid)
 - [x] Provide a docker image for headless mode to facilitate deployment
 - [x] Improve performance of Udemy bot by skipping owned and paid courses
+- [ ] Support parsing Reddit posts containing several links
 
 See the [open issues](https://github.com/muhammadazzazy/udemate/issues) for a full list of proposed features (and known issues).
 
