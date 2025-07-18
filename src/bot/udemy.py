@@ -85,6 +85,7 @@ class Udemy:
     def run(self) -> None:
         """Orchestrate automatic enrollment into Udemy courses."""
         self.logger.info('Udemy bot starting...')
+        count: dict[str, int] = {'owned': 0, 'paid': 0, 'enroll': 0}
         for udemy_url in self.urls:
             self.logger.info('Visiting %s', udemy_url)
             self.driver.get(udemy_url)
@@ -98,12 +99,20 @@ class Udemy:
                 if self.patterns['free'] in self.driver.current_url:
                     self.logger.info('Successfully enrolled into %s',
                                      course_name)
+                    count['enroll'] += 1
                     continue
                 if self.confirm():
                     self.logger.info('Successfully enrolled into %s.',
                                      course_name)
+                    count['enroll'] += 1
                 else:
                     self.logger.info('Failed to enroll into %s', course_name)
             else:
                 # "Unavailable" means private or does not exist.
                 self.logger.info('Course is unavailable. Skipping...')
+        self.logger.info('Encountered %d already owned courses.',
+                         count['owned'])
+        self.logger.info('Encountered %d paid courses.',
+                         count['paid'])
+        self.logger.info('Enrolled into %d free courses.',
+                         count['enroll'])

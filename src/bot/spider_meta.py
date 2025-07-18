@@ -3,11 +3,11 @@ from dataclasses import dataclass
 from typing import Final, Type
 
 from bot.easy_learning import EasyLearning
-# from bot.freewebcart import Freewebcart
+from bot.freewebcart import Freewebcart
 from bot.invent_high import InventHigh
 from bot.idownloadcoupon import IDownloadCoupon
 from bot.line51 import Line51
-from bot.web_helper_app import WebHelperApp
+from bot.webhelperapp import WebHelperApp
 
 
 @dataclass
@@ -19,10 +19,10 @@ class SpiderMeta:
 
 
 SPIDERS: Final[dict[str, Type]] = {
-    'idownloadcoupon': SpiderMeta(sld='idownloadcoupon', brand='iDC', spider_cls=IDownloadCoupon),
     'easylearn': SpiderMeta(sld='easylearn', brand='Easy Learning', spider_cls=EasyLearning),
+    'freewebcart': SpiderMeta(sld='freewebcart', brand='Freewebcart', spider_cls=Freewebcart),
+    'idownloadcoupon': SpiderMeta(sld='idownloadcoupon', brand='iDC', spider_cls=IDownloadCoupon),
     'inventhigh': SpiderMeta(sld='inventhigh', brand='Invent High', spider_cls=InventHigh),
     'line51': SpiderMeta(sld='line51', brand='Line 51', spider_cls=Line51),
     'webhelperapp': SpiderMeta(sld='webhelperapp', brand='WebHelperApp', spider_cls=WebHelperApp),
-    # 'freewebcart': SpiderMeta(sld='freewebcart', brand='Freewebcart', spider_cls=Freewebcart),
 }
