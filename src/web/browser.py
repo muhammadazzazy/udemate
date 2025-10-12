@@ -1,4 +1,5 @@
 """Manage browser used for scraping links and automating course enrollment."""
+import platform
 import shutil
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
@@ -34,7 +35,10 @@ class Browser:
         or with debugger address when automating course enrollment.
         """
         options = Options()
-        brave_path: str = shutil.which('brave-browser')
+        if platform.system() == 'Windows':
+            brave_path: str = 'C:\\Program Files\\BraveSoftware\\Brave-Browser\\Application\\brave.exe'
+        else:
+            brave_path: str = shutil.which('brave-browser')
         options.binary_location = brave_path
         options.add_argument('--disable-gpu')
         if headless:
