@@ -87,7 +87,11 @@ An automation tool that reads Reddit posts from [r/udemyfreebies](https://www.re
 - <a href="https://github.com/SeleniumHQ/selenium">
     <img src="https://raw.githubusercontent.com/SeleniumHQ/selenium/trunk/common/images/selenium_logo_mark_green.svg" width="50" alt="Selenium">
   </a>
-  <!-- GETTING STARTED -->
+- <a href="https://github.com/ultrafunkamsterdam/undetected-chromedriver">
+    <img src="https://avatars.githubusercontent.com/u/21027969?v=4" width="50" alt="undetected-chromedriver">
+  </a>
+
+<!-- GETTING STARTED -->
 
 ## Getting Started
 
@@ -159,10 +163,8 @@ Udemate was tested on Ubuntu 24.04 LTS.
     REDDIT_LIMIT=1000
 
     # Browser config
-    # Required for spoofing User-Agent.
-    BROWSER_USER_AGENT="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"
-    # Optional. Default is 9222.
-    BROWSER_PORT=9222
+    # Required if you want to enroll in courses with a user profile.
+    BROWSER_USER_DATA_DIR="C:\\Users\\username\\AppData\\Local\\BraveSoftware\\Brave-Browser\\User Data\\Udemate"
    ```
 
 #### Option 1: Run from Source
@@ -185,13 +187,7 @@ Udemate was tested on Ubuntu 24.04 LTS.
      pip install -r requirements.txt
    ```
 
-7. Run `launch_brave.sh` script to start Brave Browser with debugging and default user profile
-
-   ```sh
-    ./src/web/launch_brave.sh
-   ```
-
-8. Run the script
+7. Run the script
    ```sh
     python3 src/main.py [--mode {headless|gui|hybrid}]
     # Default: --mode hybrid
@@ -240,6 +236,7 @@ Udemate was tested on Ubuntu 24.04 LTS.
 - [x] Add argument parsing for different modes (headless, non-headless, hybrid)
 - [x] Provide a docker image for headless mode to facilitate deployment
 - [x] Improve performance of Udemy bot by skipping owned and paid courses
+- [x] Migrate from Selenium webdriver to undetected-chromedriver to reduce detection by Cloudflare anti-bot checks
 - [ ] Support parsing Reddit posts containing several links
 - [ ] Add push notifications for successful Udemy course enrollment
 
