@@ -38,9 +38,6 @@ class Config(BaseSettings):
         description='Password of Reddit account')
     REDDIT_USERNAME: str = Field(
         description='Username of Reddit account')
-    BROWSER_USER_AGENT: str = Field(
-        description='Spoof User-Agent for GUI mode when autoenrolling.')
-    BROWSER_PORT: int = Field(
-        default=DEFAULT_PORT,
-        description='Port number used for debugger address of Brave Browser in nonheadless mode.'
+    BROWSER_USER_DATA_DIR: str = Field(
+        description='Path to Brave Browser user data directory'
     )
