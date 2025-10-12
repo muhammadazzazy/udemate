@@ -1,4 +1,5 @@
 """Manage browser used for scraping links and automating course enrollment."""
+import shutil
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.webdriver import WebDriver
@@ -33,12 +34,13 @@ class Browser:
         or with debugger address when automating course enrollment.
         """
         options = Options()
-        options.binary_location = '/usr/bin/brave-browser'
+        brave_path: str = shutil.which('brave-browser')
+        options.binary_location = brave_path
         options.add_argument('--disable-gpu')
         if headless:
-            options.add_argument('--no-sandbox')
             options.add_argument(
-                f'user-agent={self.config.BROWSER_USER_AGENT}')
+                f'user-agent={self.config.BROWSER_USER_AGENT}'
+            )
             options.add_argument('--headless=new')
             return webdriver.Chrome(options=options)
         options.add_experimental_option(

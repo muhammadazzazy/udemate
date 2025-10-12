@@ -24,8 +24,6 @@
   </p>
 </div>
 
-<!-- PROJECT LOGO -->
-
 > **Disclaimer:** This software is not affiliated with, endorsed by, or sponsored by Udemy, Inc. "Udemy" is a registered trademark of Udemy, Inc. All other trademarks are the property of their respective owners.
 
 <!-- PROJECT SHIELDS -->
