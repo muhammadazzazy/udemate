@@ -1,4 +1,7 @@
-# Udemate
+<a id="udemate"></a>
+[![BuyMeACoffee][buymeacoffee-shield]][buymeacoffee-url]
+[![LinkedIn][linkedin-shield]][linkedin-url]
+[![Peerlist][peerlist-shield]][peerlist-url]
 
 <!-- PROJECT LOGO -->
 <br />
@@ -11,7 +14,7 @@
   <h3 align="center">Udemate</h3>
 
   <p align="center">
-    A tool for automating enrollment into free Udemy courses.
+    Automate Udemy course enrollment
     <br />
     <a href="https://github.com/muhammadazzazy/udemate"><strong>Explore the docs »</strong></a>
     <br />
@@ -35,8 +38,6 @@
 *** https://www.markdownguide.org/basic-syntax/#reference-style-links
 -->
 
-[![Buy Me A Coffee](https://img.shields.io/badge/Buy%20Me%20a%20Coffee-yellow?style=for-the-badge&logo=buy-me-a-coffee)](https://www.buymeacoffee.com/muhammadazzazy) [![LinkedIn][linkedin-shield]][linkedin-url]
-
 <!-- TABLE OF CONTENTS -->
 <details>
   <summary>Table of Contents</summary>
@@ -59,9 +60,6 @@
         <li><a href="#installation">Installation</a></li>
         <ul>
           <li><a href="#option-1-run-from-source">Option 1: Run from Source</a></li>
-          <ul>
-            <li><a href="#download-and-install-python312-venv">Download and Install python3.12-venv</a></li>
-          </ul>
           <li><a href="#option-2-run-in-docker">Option 2: Run in Docker</li></a>
         </ul>
       </ul>
@@ -101,15 +99,7 @@ An automation tool that reads Reddit posts from [r/udemyfreebies](https://www.re
 
 - [Python 3.12+](https://www.python.org/downloads)
 
-- [python3.12-venv](#download-and-install-python312-venv)
-
-- [Brave Browser](https://brave.com/linux/)
-
-#### Download and Install python3.12-venv
-
-```sh
-sudo apt-get install python3.12-venv
-```
+- [Brave Browser](https://brave.com/)
 
 #### Option 2: Run in Docker (Headless Mode Only)
 
@@ -133,7 +123,7 @@ Create a Reddit bot and get environment variables
 
 ### Tested Environment
 
-Udemate was tested on Ubuntu 24.04 LTS.
+Udemate was tested on Windows 11 and Ubuntu 24.04 LTS.
 
 ### Installation
 
@@ -296,8 +286,12 @@ Project Link: [https://github.com/muhammadazzazy/udemate](https://github.com/muh
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
 
-[linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
+[buymeacoffee-shield]: https://img.shields.io/badge/Buy%20Me%20a%20Coffee-yellow?style=for-the-badge&logo=buy-me-a-coffee
+[buymeacoffee-url]: https://www.buymeacoffee.com/muhammadazzazy
+[linkedin-shield]: https://img.shields.io/badge/LinkedIn-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white
 [linkedin-url]: https://linkedin.com/in/muhammad-azzazy
+[peerlist-shield]: https://img.shields.io/badge/Peerlist-00AA6C?style=for-the-badge&logo=peerlist&logoColor=white
+[peerlist-url]: https://peerlist.io/muhammadazzazy
 [Python]: https://img.shields.io/badge/python-000000?style=for-the-badge&logo=python
 [Python-url]: https://python.org
 [PRAW]: https://avatars.githubusercontent.com/u/1696888?s=50&v=4
