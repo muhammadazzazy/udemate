@@ -41,15 +41,11 @@ class Browser:
         options.add_argument('--disable-gpu')
         options.add_argument('--disable-software-rasterizer')
         options.add_argument('--disable-extensions')
-        if headless:
-            return uc.Chrome(
-                options=options,
-                browser_executable_path=brave_path,
-                user_data_dir=self.config.BROWSER_USER_DATA_DIR
-            )
         driver = uc.Chrome(
             options=options,
             browser_executable_path=brave_path,
-            user_data_dir=self.config.BROWSER_USER_DATA_DIR)
+            user_data_dir=self.config.BROWSER_USER_DATA_DIR,
+            headless=headless
+        )
         self.switch_tab(driver)
         return driver
