@@ -14,7 +14,7 @@
   <h3 align="center">Udemate</h3>
 
   <p align="center">
-    Automate Udemy course enrollment
+    Effortless Udemy course enrollment automation
     <br />
     <a href="https://github.com/muhammadazzazy/udemate"><strong>Explore the docs »</strong></a>
     <br />
@@ -162,13 +162,21 @@ Udemate was tested on Windows 11 and Ubuntu 24.04 LTS.
 4. Create a virtual environment
 
    ```sh
-     python3.12 -m venv .venv
+   # Windows
+   python -m venv .venv
+
+   # Linux
+   python3.12 -m venv .venv
    ```
 
 5. Activate the virtual environment
 
    ```sh
-     source .venv/bin/activate
+   # Windows
+   .\.venv\Scripts\activate
+
+   # Linux
+   source .venv/bin/activate
    ```
 
 6. Install dependencies
@@ -178,10 +186,16 @@ Udemate was tested on Windows 11 and Ubuntu 24.04 LTS.
    ```
 
 7. Run the script
+
    ```sh
+    # Windows
+    python .\src\main.py [--mode {headless|gui|hybrid}]
+
+    # Linux
     python3 src/main.py [--mode {headless|gui|hybrid}]
-    # Default: --mode hybrid
    ```
+
+   > Note: The `--mode` argument is optional. Default mode: `hybrid`
 
 #### Option 2: Run in Docker
 
