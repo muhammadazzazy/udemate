@@ -15,18 +15,13 @@ class Browser:
         self.config = Config()
         self.logger = setup_logging()
 
-    def switch_tab(self, driver: uc.Chrome) -> None:
-        """Switch to newtab if open; otherwise switch to last opened tab."""
-        tabs = driver.window_handles
-        target_url: str = 'chrome://newtab/'
-        for tab in tabs:
-            driver.switch_to.window(tab)
-            current_url: str = driver.current_url
-            if current_url == target_url:
-                self.logger.info("Switched to Brave Browser's launch tab.")
-                return
-        self.logger.warning('Launch tab not found. Defaulting to last tab.')
-        driver.switch_to.window(driver.window_handles[-1])
+    def get_brave_path(self) -> str:
+        """Return Brave Browser executable path based on the operating system."""
+        if platform.system() == 'Windows':
+            brave_path: str = 'C:\\Program Files\\BraveSoftware\\Brave-Browser\\Application\\brave.exe'
+        else:
+            brave_path: str = shutil.which('brave-browser')
+        return brave_path
 
     def setup(self, headless: bool) -> uc.Chrome:
         """
@@ -34,18 +29,27 @@ class Browser:
         or with debugger address when automating course enrollment.
         """
         options = uc.ChromeOptions()
-        if platform.system() == 'Windows':
-            brave_path: str = 'C:\\Program Files\\BraveSoftware\\Brave-Browser\\Application\\brave.exe'
-        else:
-            brave_path: str = shutil.which('brave-browser')
-        options.add_argument('--disable-gpu')
-        options.add_argument('--disable-software-rasterizer')
-        options.add_argument('--disable-extensions')
-        driver = uc.Chrome(
+        brave_path: str | None = self.get_brave_path()
+        common_args: list[str] = [
+            '--disable-extensions',
+            '--disable-background-networking',
+            '--disable-renderer-backgrounding',
+            '--renderer-process-limit=2',
+            '--disable-site-isolation-trials',
+            '--blink-settings=imagesEnabled=false'
+        ]
+        headless_args: list[str] = [
+            '--headless=new',
+            '--disable-gpu',
+            '--disable-software-rasterizer'
+        ]
+        for arg in common_args + (headless_args if headless else []):
+            options.add_argument(arg)
+            self.logger.debug('Added Chrome option: %s', arg)
+        driver: uc.Chrome = uc.Chrome(
             options=options,
             browser_executable_path=brave_path,
             user_data_dir=self.config.BROWSER_USER_DATA_DIR,
             headless=headless
         )
-        self.switch_tab(driver)
         return driver
