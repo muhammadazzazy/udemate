@@ -37,7 +37,7 @@ class Udemate:
         reddit_client: RedditClient = self.setup_reddit_client()
         reddit_client.populate_submissions()
         hostnames: set[str] = set(SPIDERS.keys())
-        middleman_urls: dict[str, set[str]
+        middleman_urls: dict[str, list[str]
                              ] = reddit_client.get_middleman_urls(hostnames)
         for sld in SPIDERS:
             self.cache.write_json(data=middleman_urls[sld],
@@ -47,7 +47,7 @@ class Udemate:
     def scrape(self) -> None:
         """Fetch collection of Udemy links with coupons using middleman bots."""
         middleman_urls: dict[str, set[str]] = self.collect_middleman_links()
-        udemy_urls: set[str] = set()
+        udemy_urls: list[str] = []
         headless_driver: WebDriver = self.browser.setup(headless=True)
         for key, cls in SPIDERS.items():
             if key == 'idownloadcoupon':
@@ -56,7 +56,8 @@ class Udemate:
                 spider = cls.spider_cls(driver=headless_driver,
                                         urls=middleman_urls[key])
             if key in middleman_urls:
-                udemy_urls.update(spider.run())
+                udemy_urls.extend(spider.run())
+        udemy_urls.sort()
         self.logger.info('Spiders scraped a total of %d Udemy links.',
                          len(udemy_urls))
         headless_driver.quit()
@@ -64,20 +65,24 @@ class Udemate:
 
     def autoenroll(self) -> None:
         """
-        Read Udemy links from cache, automate enrollment into free Udemy courses, 
+        Read unprocessed Udemy links from cache, automate enrollment into free Udemy courses, 
         and clear cache.
         """
         filename: str = 'udemy.json'
-        exists: bool = self.cache.read_json(filename=filename,
-                                            brand_name=filename[:-5].title())
+        exists: bool = self.cache.read_json(filename)
         if not exists:
             self.logger.info('Exiting...')
             return
-        udemy_driver: WebDriver = self.browser.setup(headless=False)
-        udemy: Udemy = Udemy(driver=udemy_driver,
-                             urls=self.cache.urls['udemy'])
+        processed_urls: list[str] = self.cache.read_jsonl('udemy.jsonl')
+        self.logger.debug('Processed URLs: %s', processed_urls)
+        self.cache.urls['udemy'] = sorted(set(
+            self.cache.urls['udemy']) - set(processed_urls))
+        gui_driver: WebDriver = self.browser.setup(headless=False)
+        udemy: Udemy = Udemy(
+            driver=gui_driver,
+            cache=self.cache
+        )
         udemy.run()
-        udemy_driver.quit()
+        gui_driver.quit()
         self.logger.info('Clearing Udemy cache...')
-        self.cache.delete_json(filename=filename,
-                               brand_name=filename[:-5].title())
+        self.cache.delete_json(filename)

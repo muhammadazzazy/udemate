@@ -46,13 +46,15 @@ class RedditClient:
             self.logger.error('RequestException: %s', e)
             exit()
 
-    def get_middleman_urls(self, hostnames: set[str]) -> dict[str, set[str]]:
+    def get_middleman_urls(self, hostnames: set[str]) -> dict[str, list[str]]:
         """Return mapping between hostnames and submission links."""
-        urls: dict[str, set[str]] = {
-            hostname: set() for hostname in hostnames
+        urls: dict[str, list[str]] = {
+            hostname: [] for hostname in hostnames
         }
         for submission in self.submissions:
             for hostname in hostnames:
                 if hostname in submission.url:
-                    urls[hostname].add(submission.url)
+                    urls[hostname].append(submission.url)
+        for hostname in hostnames:
+            urls[hostname] = sorted(set(urls[hostname]))
         return urls

@@ -16,29 +16,47 @@ class Cache:
         self.logger = setup_logging()
         self.urls = {}
 
-    def read_json(self, filename: str, brand_name: str) -> bool:
+    def read_json(self, filename: str) -> bool:
         """Parse cached middleman and Udemy links with coupons from JSON files."""
         file_path: Path = self.json_dir / filename
         if file_path.exists():
             with file_path.open('r', encoding='utf-8') as f:
-                self.urls[filename[:-5]] = set(json.load(f))
+                self.urls[filename[:-5]] = list(json.load(f))
             if self.urls[filename[:-5]]:
-                self.logger.info('Read %d %s links from JSON cache.',
-                                 len(self.urls[filename[:-5]]), brand_name)
+                self.logger.info('Read %d links from %s.',
+                                 len(self.urls[filename[:-5]]), filename[:-5])
             return True
-        self.logger.info('No %s links in JSON cache.', brand_name)
+        self.logger.info('No links in JSON cache for %s.', filename[:-5])
         return False
 
-    def write_json(self, *, filename: str, data: set[str]) -> None:
+    def write_json(self, *, filename: str, data: list[str]) -> None:
         """Write output to JSON file in 'json' directory within 'data' directory."""
         file_path: Path = self.json_dir / filename
         with file_path.open('w', encoding='utf-8') as f:
-            json.dump(list(data), f,
-                      ensure_ascii=False, indent=4)
+            json.dump(
+                data, f,
+                ensure_ascii=False, indent=4
+            )
             self.logger.info('Successfully written data to %s.', file_path)
 
-    def delete_json(self, filename: str, brand_name: str) -> None:
+    def delete_json(self, filename: str) -> None:
         """Clear JSON file in 'json' directory within 'data' directory."""
         file_path: Path = self.json_dir / filename
         file_path.unlink(missing_ok=True)
-        self.logger.info('Cleared cache for %s', brand_name)
+        self.logger.info('Deleted %s.', filename[:-5])
+
+    def read_jsonl(self, filename: str) -> list[str]:
+        """Return a list of processed Udemy links from 'udemy.jsonl' file."""
+        file_path: Path = self.json_dir / filename
+        if file_path.exists():
+            with file_path.open('r', encoding='utf-8') as f:
+                return [json.loads(line) for line in f]
+        return []
+
+    def append_jsonl(self, *, filename: str, url: str) -> None:
+        """Append Udemy link to JSONL file in 'json' directory within 'data' directory."""
+        file_path: Path = self.json_dir / filename
+        with file_path.open(mode='a', encoding='utf-8') as f:
+            json.dump(url, f, ensure_ascii=False)
+            f.write('\n')
+        self.logger.info('Successfully appended %s to %s.', url, file_path)

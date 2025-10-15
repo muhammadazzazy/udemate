@@ -18,10 +18,8 @@ class Browser:
     def get_brave_path(self) -> str:
         """Return Brave Browser executable path based on the operating system."""
         if platform.system() == 'Windows':
-            brave_path: str = 'C:\\Program Files\\BraveSoftware\\Brave-Browser\\Application\\brave.exe'
-        else:
-            brave_path: str = shutil.which('brave-browser')
-        return brave_path
+            return 'C:\\Program Files\\BraveSoftware\\Brave-Browser\\Application\\brave.exe'
+        return shutil.which('brave-browser')
 
     def setup(self, headless: bool) -> uc.Chrome:
         """
@@ -46,10 +44,15 @@ class Browser:
         for arg in common_args + (headless_args if headless else []):
             options.add_argument(arg)
             self.logger.debug('Added Chrome option: %s', arg)
-        driver: uc.Chrome = uc.Chrome(
+        if not headless:
+            return uc.Chrome(
+                options=options,
+                browser_executable_path=brave_path,
+                user_data_dir=self.config.BROWSER_USER_DATA_DIR,
+                headless=headless
+            )
+        return uc.Chrome(
             options=options,
             browser_executable_path=brave_path,
-            user_data_dir=self.config.BROWSER_USER_DATA_DIR,
             headless=headless
         )
-        return driver

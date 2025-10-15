@@ -7,15 +7,17 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
+from utils.cache import Cache
 from utils.logger import setup_logging
 
 
 class Udemy:
     """Autoenroll into free Udemy courses."""
 
-    def __init__(self, driver: WebDriver, urls: set[str]) -> None:
+    def __init__(self, *, driver: WebDriver, cache: Cache) -> None:
         self.driver = driver
-        self.urls = urls
+        self.cache = cache
+        self.urls = self.cache.urls.get('udemy', [])
         self.logger = setup_logging()
         self.max_retries = 3
         self.patterns = {'paid': 'cart/success', 'free': 'cart/subscribe'}
@@ -91,6 +93,7 @@ class Udemy:
         for udemy_url in self.urls:
             self.logger.info('Visiting %s', udemy_url)
             self.driver.get(udemy_url)
+            self.cache.append_jsonl(filename='udemy.jsonl', url=udemy_url)
             course_name: str = self.driver.title.removesuffix(' | Udemy')
             if self.is_owned():
                 self.logger.info('%s is owned. Skipping...', course_name)
