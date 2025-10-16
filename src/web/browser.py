@@ -1,6 +1,6 @@
 """Manage browser used for scraping links and automating course enrollment."""
 import platform
-import shutil
+from pathlib import Path
 
 import undetected_chromedriver as uc
 
@@ -15,11 +15,16 @@ class Browser:
         self.config = Config()
         self.logger = setup_logging()
 
-    def get_brave_path(self) -> str:
+    def get_brave_path(self) -> str | None:
         """Return Brave Browser executable path based on the operating system."""
-        if platform.system() == 'Windows':
-            return 'C:\\Program Files\\BraveSoftware\\Brave-Browser\\Application\\brave.exe'
-        return shutil.which('brave-browser')
+        paths: dict[str, str] = {
+            'Windows': r'C:\Program Files\BraveSoftware\Brave-Browser\Application\brave.exe',
+            'Linux': '/usr/bin/brave-browser',
+            'Darwin': '/Applications/Brave Browser.app/Contents/MacOS/Brave Browser'
+        }
+        system: str = platform.system()
+        brave_path: str | None = paths.get(system)
+        return brave_path
 
     def setup(self, headless: bool) -> uc.Chrome:
         """
@@ -28,6 +33,11 @@ class Browser:
         """
         options = uc.ChromeOptions()
         brave_path: str | None = self.get_brave_path()
+        if not brave_path:
+            self.logger.critical(
+                'Brave Browser executable not found. Exiting...'
+            )
+            raise FileNotFoundError('Brave Browser executable not found.')
         common_args: list[str] = [
             '--disable-extensions',
             '--disable-background-networking',
@@ -43,7 +53,6 @@ class Browser:
         ]
         for arg in common_args + (headless_args if headless else []):
             options.add_argument(arg)
-            self.logger.debug('Added Chrome option: %s', arg)
         if not headless:
             return uc.Chrome(
                 options=options,

@@ -72,7 +72,6 @@ class Udemate:
             self.logger.info('Exiting...')
             return
         processed_urls: list[str] = self.cache.read_jsonl('udemy.jsonl')
-        self.logger.debug('Processed URLs: %s', processed_urls)
         self.cache.urls['udemy'] = sorted(set(
             self.cache.urls['udemy']) - set(processed_urls))
         gui_driver: WebDriver = self.browser.setup(headless=False)
