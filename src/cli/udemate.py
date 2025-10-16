@@ -68,9 +68,7 @@ class Udemate:
         Read unprocessed Udemy links from cache, automate enrollment into free Udemy courses, 
         and clear cache.
         """
-        filename: str = 'udemy.json'
-        exists: bool = self.cache.read_json(filename)
-        if not exists:
+        if not self.cache.read_json('udemy.json'):
             self.logger.info('Exiting...')
             return
         processed_urls: list[str] = self.cache.read_jsonl('udemy.jsonl')
@@ -84,5 +82,3 @@ class Udemate:
         )
         udemy.run()
         gui_driver.quit()
-        self.logger.info('Clearing Udemy cache...')
-        self.cache.delete_json(filename)
