@@ -14,7 +14,7 @@ from bot.spider import Spider
 class InventHigh(Spider):
     """Get Udemy links with coupons from Invent High."""
 
-    def __init__(self, *, driver, urls: set[str]) -> None:
+    def __init__(self, *, driver, urls: list[str]) -> None:
         super().__init__(urls)
         self.driver = driver
 
@@ -47,18 +47,18 @@ class InventHigh(Spider):
             return False
 
     def run(self) -> None:
-        """Return set of Udemy links extracted from Invent High."""
+        """Return list of Udemy links extracted from Invent High."""
         self.logger.info('Invent High spider starting...')
         self.logger.info('Processing %d links from Invent High...',
                          len(self.urls))
-        udemy_urls: set[str] = set()
+        udemy_urls: list[str] = []
         for url in self.urls:
             try:
                 if self.is_coupon_expired(url):
                     continue
                 udemy_url: str = self.transform(url)
                 self.logger.info('%s ==> %s', url, udemy_url)
-                udemy_urls.add(udemy_url)
+                udemy_urls.append(udemy_url)
             except WebDriverException as e:
                 self.logger.error('Webdriver error for %s: %r', url, e)
                 continue
@@ -73,4 +73,4 @@ class InventHigh(Spider):
                 continue
         self.logger.info('Invent High spider scraped %d Udemy links.',
                          len(udemy_urls))
-        return udemy_urls
+        return sorted(set(udemy_urls))

@@ -223,6 +223,8 @@ Udemate was tested on Windows 11 and Ubuntu 24.04 LTS.
 - [x] Add functionality to generate JSON files of submissions grouped by hostname
 - [x] Scrape intermediate links from the following middlemen:
 
+  - [ ] Course Couponz
+  - [ ] Course Treat
   - [x] Easy Learning
   - [x] Freewebcart
   - [x] iDC
@@ -241,6 +243,7 @@ Udemate was tested on Windows 11 and Ubuntu 24.04 LTS.
 - [x] Provide a docker image for headless mode to facilitate deployment
 - [x] Improve performance of Udemy bot by skipping owned and paid courses
 - [x] Migrate from Selenium webdriver to undetected-chromedriver to reduce detection by Cloudflare anti-bot checks
+- [ ] Fix issue where Brave Browser runs out of memory
 - [ ] Support parsing Reddit posts containing several links
 - [ ] Add push notifications for successful Udemy course enrollment
 

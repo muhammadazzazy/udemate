@@ -1,5 +1,6 @@
 """Fetch Udemy links with coupons from iDC."""
 import requests
+
 from requests.exceptions import RequestException
 from urllib3.exceptions import ProtocolError, ReadTimeoutError
 
@@ -22,12 +23,12 @@ class IDownloadCoupon(Spider):
         clean_url: str = parts[0] + '//' + '/'.join(parts[1:4])
         return clean_url
 
-    def run(self) -> set[str]:
-        """Return set of Udemy links extracted from iDC."""
+    def run(self) -> list[str]:
+        """Return list of Udemy links extracted from iDC."""
         self.logger.info('iDC spider starting...')
         self.logger.info('Processing %d links from iDC...',
                          len(self.urls))
-        udemy_urls: set[str] = set()
+        udemy_urls: list[str] = []
         for url in self.urls:
             try:
                 clean_url: str = url
@@ -36,7 +37,7 @@ class IDownloadCoupon(Spider):
                 udemy_url: str = self.transform(clean_url)
                 self.logger.info('%s ==> %s', clean_url, udemy_url)
                 if udemy_url:
-                    udemy_urls.add(udemy_url)
+                    udemy_urls.append(udemy_url)
             except RequestException as e:
                 self.logger.error('HTTP request failed for %s: %r', url, e)
                 continue
@@ -47,4 +48,4 @@ class IDownloadCoupon(Spider):
                 self.logger.error('Read timeout error for %s: %r', url, e)
                 continue
         self.logger.info('iDC spider scraped %d Udemy links.', len(udemy_urls))
-        return udemy_urls
+        return sorted(set(udemy_urls))

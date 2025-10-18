@@ -6,7 +6,7 @@ from utils.logger import setup_logging
 class Spider(ABC):
     """Implements constructor and abstract methods for all intermediary spiders."""
 
-    def __init__(self, urls: set[str]) -> None:
+    def __init__(self, urls: list[str]) -> None:
         self.urls = urls
         self.logger = setup_logging()
 
@@ -15,5 +15,5 @@ class Spider(ABC):
         """Return a Udemy link extracted from middleman link."""
 
     @abstractmethod
-    def run(self) -> set[str]:
-        """Return set of Udemy links extracted from middleman website."""
+    def run(self) -> list[str]:
+        """Return list of Udemy links extracted from middleman website."""

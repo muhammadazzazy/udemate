@@ -11,7 +11,7 @@ from bot.spider import Spider
 class Line51(Spider):
     """Get Udemy links with coupons from Line51."""
 
-    def __init__(self, *, driver, urls: set[str]) -> None:
+    def __init__(self, *, driver, urls: list[str]) -> None:
         super().__init__(urls)
         self.driver = driver
 
@@ -31,12 +31,12 @@ class Line51(Spider):
         self.logger.info('Line51 spider starting...')
         self.logger.info('Processing %d links from Line51...',
                          len(self.urls))
-        udemy_urls: set[str] = set()
+        udemy_urls: list[str] = []
         for url in self.urls:
             try:
                 udemy_url: str = self.transform(url)
                 self.logger.info('%s ==> %s', url, udemy_url)
-                udemy_urls.add(udemy_url)
+                udemy_urls.append(udemy_url)
             except TimeoutException as e:
                 self.logger.error('Timeout while parsing %s: %r', url, e)
                 continue
@@ -51,4 +51,4 @@ class Line51(Spider):
                 continue
         self.logger.info('Line51 spider scraped %d Udemy links.',
                          len(udemy_urls))
-        return udemy_urls
+        return sorted(set(udemy_urls))

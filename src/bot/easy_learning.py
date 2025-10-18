@@ -13,7 +13,7 @@ from bot.spider import Spider
 class EasyLearning(Spider):
     """Get Udemy links with coupons from Easy Learning."""
 
-    def __init__(self, *, driver: WebDriver, urls: set[str]) -> None:
+    def __init__(self, *, driver: WebDriver, urls: list[str]) -> None:
         super().__init__(urls)
         self.driver = driver
 
@@ -26,17 +26,17 @@ class EasyLearning(Spider):
         udemy_url: str = response.url
         return udemy_url
 
-    def run(self) -> set[str]:
-        """Return set of Udemy links extracted from Easy Learning."""
+    def run(self) -> list[str]:
+        """Return list of Udemy links extracted from Easy Learning."""
         self.logger.info('Easy Learning spider starting...')
         self.logger.info('Processing %d intermediary links from Easy Learning...',
                          len(self.urls))
-        udemy_urls: set[str] = set()
+        udemy_urls: list[str] = []
         for url in self.urls:
             try:
                 udemy_url: str = self.transform(url)
                 self.logger.info('%s ==> %s', url, udemy_url)
-                udemy_urls.add(udemy_url)
+                udemy_urls.append(udemy_url)
             except TimeoutException as e:
                 self.logger.error('Timeout while parsing %s: %r', url, e)
                 continue
@@ -55,4 +55,4 @@ class EasyLearning(Spider):
 
         self.logger.info('Easy Learning spider scraped %d Udemy links.',
                          len(udemy_urls))
-        return udemy_urls
+        return sorted(set(udemy_urls))

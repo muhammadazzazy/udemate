@@ -10,7 +10,7 @@ from bot.spider import Spider
 class Freewebcart(Spider):
     """Get Udemy links with coupons from Freewebcart."""
 
-    def __init__(self, *, driver, urls: set[str]) -> None:
+    def __init__(self, *, driver, urls: list[str]) -> None:
         super().__init__(urls)
         self.driver = driver
 
@@ -25,17 +25,17 @@ class Freewebcart(Spider):
         udemy_url: str = link.get_attribute('href')
         return udemy_url
 
-    def run(self) -> set[str]:
-        """Return set of Udemy links extracted from Freewebcart."""
+    def run(self) -> list[str]:
+        """Return list of Udemy links extracted from Freewebcart."""
         self.logger.info('Freewebcart spider starting...')
         self.logger.info('Processing %d links from Freewebcart...',
                          len(self.urls))
-        udemy_urls: set[str] = set()
+        udemy_urls: list[str] = []
         for url in self.urls:
             try:
                 udemy_url: str = self.transform(url)
                 self.logger.info('%s ==> %s', url, udemy_url)
-                udemy_urls.add(udemy_url)
+                udemy_urls.append(udemy_url)
             except TimeoutException as e:
                 self.logger.error('Timeout while parsing %s: %r', url, e)
                 continue
@@ -50,4 +50,4 @@ class Freewebcart(Spider):
                 continue
         self.logger.info('Freewebcart spider scraped %d Udemy links.',
                          len(udemy_urls))
-        return udemy_urls
+        return sorted(set(udemy_urls))
