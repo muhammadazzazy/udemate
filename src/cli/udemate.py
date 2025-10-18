@@ -2,9 +2,11 @@
 Parse Udemy links with coupons from cache, automate course enrollment,
 scrape middleman links, get new Udemy links with coupons, and write them back to cache.
 """
+import json
+from pathlib import Path
 from selenium.webdriver.chrome.webdriver import WebDriver
 
-from bot.spider_meta import SPIDERS
+from bot.idownloadcoupon import IDownloadCoupon
 from bot.udemy import Udemy
 from client.get_refresh_token import get_refresh_token
 from client.reddit import RedditClient
@@ -23,6 +25,18 @@ class Udemate:
         self.browser = Browser()
         self.logger = setup_logging()
 
+    def get_middlemen(self) -> list[str]:
+        """Return list of middlemen from 'middlemen.json' configuration file."""
+        middlemen_path: Path = Path(
+            __file__).parent.parent.parent / 'config' / 'middlemen.json'
+        if not middlemen_path.exists():
+            self.logger.error('Middlemen configuration file not found.')
+            raise FileNotFoundError('middlemen.json not found.')
+        middlemen: list[str] = []
+        with middlemen_path.open('r', encoding='utf-8') as f:
+            middlemen = json.load(f)
+        return middlemen
+
     def setup_reddit_client(self) -> RedditClient:
         """Return Reddit client for r/udemyfreebies."""
         if self.config.REDDIT_PASSWORD:
@@ -36,27 +50,23 @@ class Udemate:
         """Collect middleman links from Reddit."""
         reddit_client: RedditClient = self.setup_reddit_client()
         reddit_client.populate_submissions()
-        hostnames: set[str] = set(SPIDERS.keys())
-        middleman_urls: dict[str, list[str]
-                             ] = reddit_client.get_middleman_urls(hostnames)
-        for sld in SPIDERS:
-            self.cache.write_json(data=middleman_urls[sld],
-                                  filename=f'{sld}.json')
+        middlemen: list[str] = self.get_middlemen()
+        middleman_urls: dict[str,
+                             list[str]] = reddit_client.get_middleman_urls(middlemen)
+        for middleman in middlemen:
+            self.cache.write_json(
+                data=middleman_urls[middleman],
+                filename=f'{middleman}.json'
+            )
         return middleman_urls
 
     def scrape(self) -> None:
-        """Fetch collection of Udemy links with coupons using middleman bots."""
+        """Fetch collection of Udemy links with coupons using middleman spiders."""
         middleman_urls: dict[str, set[str]] = self.collect_middleman_links()
         udemy_urls: list[str] = []
         headless_driver: WebDriver = self.browser.setup(headless=True)
-        for key, cls in SPIDERS.items():
-            if key == 'idownloadcoupon':
-                spider = cls.spider_cls(middleman_urls[key])
-            else:
-                spider = cls.spider_cls(driver=headless_driver,
-                                        urls=middleman_urls[key])
-            if key in middleman_urls:
-                udemy_urls.extend(spider.run())
+        udemy_urls.extend(IDownloadCoupon(
+            middleman_urls['idownloadcoupon']).run())
         udemy_urls.sort()
         self.logger.info('Spiders scraped a total of %d Udemy links.',
                          len(udemy_urls))

@@ -1,5 +1,4 @@
 """Configure Udemate based on environment variables in .env file."""
-import getpass
 from typing import Final
 from datetime import datetime
 
@@ -11,11 +10,6 @@ DEFAULT_USER_AGENT: Final[str] = 'Udemate:v1.0.0 (by u/kemitche)'
 DEFAULT_LIMIT: Final[int] = 500
 MIN_LIMIT: Final[int] = 1
 MAX_LIMIT: Final[int] = 1000
-
-DEFAULT_PROFILE_DIR: Final[str] = 'Default'
-DEFAULT_PORT: Final[int] = 9222
-USER: Final[str] = getpass.getuser()
-DEFAULT_USER_DATA_DIR: Final[str] = f'/home/{USER}/.config/BraveSoftware/Brave-Browser'
 
 FORMATTED_DATE: Final[str] = datetime.today().strftime('%Y%m%d')
 
