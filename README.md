@@ -157,9 +157,14 @@ Udemate was tested on Windows 11 and Ubuntu 24.04 LTS.
     BROWSER_USER_DATA_DIR="C:\\Users\\username\\AppData\\Local\\BraveSoftware\\Brave-Browser\\User Data\\Udemate"
    ```
 
+4. Specify middleman spiders in middlemen.json file
+   ```json
+   ["easylearn", "idownloadcoupon"]
+   ```
+
 #### Option 1: Run from Source
 
-4. Create a virtual environment
+5. Create a virtual environment
 
    ```sh
    # Windows
@@ -169,7 +174,7 @@ Udemate was tested on Windows 11 and Ubuntu 24.04 LTS.
    python3.12 -m venv .venv
    ```
 
-5. Activate the virtual environment
+6. Activate the virtual environment
 
    ```sh
    # Windows
@@ -179,13 +184,13 @@ Udemate was tested on Windows 11 and Ubuntu 24.04 LTS.
    source .venv/bin/activate
    ```
 
-6. Install dependencies
+7. Install dependencies
 
    ```sh
      pip install -r requirements.txt
    ```
 
-7. Run the script
+8. Run the script
 
    ```sh
     # Windows
@@ -199,13 +204,13 @@ Udemate was tested on Windows 11 and Ubuntu 24.04 LTS.
 
 #### Option 2: Run in Docker
 
-4. Build the Docker image
+5. Build the Docker image
 
    ```sh
     docker build --build-arg USER_ID=$(id -u) --build-arg GROUP_ID=$(id -g) -f docker/Dockerfile -t udemate .
    ```
 
-5. Run the docker image
+6. Run the docker image
 
    ```sh
     docker run --rm --env-file .env -v "$(pwd):/udemate" udemate
