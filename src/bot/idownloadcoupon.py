@@ -28,24 +28,31 @@ class IDownloadCoupon(Spider):
         self.logger.info('iDC spider starting...')
         self.logger.info('Processing %d links from iDC...',
                          len(self.urls))
-        udemy_urls: list[str] = []
+        clean_urls: list[str] = []
         for url in self.urls:
+            if url.count('/') > 4:
+                clean_url: str = self.clean(url)
+                clean_urls.append(clean_url)
+            else:
+                clean_urls.append(url)
+
+        udemy_urls: list[str] = []
+        for clean_url in clean_urls:
             try:
-                clean_url: str = url
-                if url.count('/') > 4:
-                    clean_url = self.clean(url)
                 udemy_url: str = self.transform(clean_url)
                 self.logger.info('%s ==> %s', clean_url, udemy_url)
                 if udemy_url:
                     udemy_urls.append(udemy_url)
             except RequestException as e:
-                self.logger.error('HTTP request failed for %s: %r', url, e)
+                self.logger.error(
+                    'HTTP request failed for %s: %r', clean_url, e)
                 continue
             except ProtocolError as e:
-                self.logger.error('Protocol error for %s: %r', url, e)
+                self.logger.error('Protocol error for %s: %r', clean_url, e)
                 continue
             except ReadTimeoutError as e:
-                self.logger.error('Read timeout error for %s: %r', url, e)
+                self.logger.error(
+                    'Read timeout error for %s: %r', clean_url, e)
                 continue
         self.logger.info('iDC spider scraped %d Udemy links.', len(udemy_urls))
         return sorted(set(udemy_urls))

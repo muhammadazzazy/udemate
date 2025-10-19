@@ -20,7 +20,8 @@ def main() -> None:
         udemate: Udemate = Udemate()
         logger.info('Starting Udemate in %s mode...', args.mode)
         if args.mode in ('headless', 'hybrid'):
-            udemate.scrape()
+            middlemen: list[str] = udemate.get_middlemen()
+            udemate.scrape(middlemen)
         if args.mode in ('hybrid', 'gui'):
             udemate.autoenroll()
     except KeyboardInterrupt:

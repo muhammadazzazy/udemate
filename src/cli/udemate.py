@@ -4,9 +4,15 @@ scrape middleman links, get new Udemy links with coupons, and write them back to
 """
 import json
 from pathlib import Path
+from typing import Any
 from selenium.webdriver.chrome.webdriver import WebDriver
 
+from bot.easy_learning import EasyLearning
+from bot.freewebcart import Freewebcart
 from bot.idownloadcoupon import IDownloadCoupon
+from bot.invent_high import InventHigh
+from bot.line51 import Line51
+from bot.webhelperapp import WebHelperApp
 from bot.udemy import Udemy
 from client.get_refresh_token import get_refresh_token
 from client.reddit import RedditClient
@@ -46,11 +52,10 @@ class Udemate:
             reddit_client: RedditClient = RedditClient(refresh_token)
         return reddit_client
 
-    def collect_middleman_links(self) -> dict[str, set[str]]:
+    def collect_middleman_links(self, middlemen: list[str]) -> dict[str, set[str]]:
         """Collect middleman links from Reddit."""
         reddit_client: RedditClient = self.setup_reddit_client()
         reddit_client.populate_submissions()
-        middlemen: list[str] = self.get_middlemen()
         middleman_urls: dict[str,
                              list[str]] = reddit_client.get_middleman_urls(middlemen)
         for middleman in middlemen:
@@ -60,17 +65,51 @@ class Udemate:
             )
         return middleman_urls
 
-    def scrape(self) -> None:
-        """Fetch collection of Udemy links with coupons using middleman spiders."""
-        middleman_urls: dict[str, set[str]] = self.collect_middleman_links()
-        udemy_urls: list[str] = []
+    def initialize_spiders(self, middleman_urls: dict[str, set[str]]) -> dict[str, Any]:
+        """Initialize spiders for each middleman."""
         headless_driver: WebDriver = self.browser.setup(headless=True)
-        udemy_urls.extend(IDownloadCoupon(
-            middleman_urls['idownloadcoupon']).run())
+        spiders: dict[str, Any] = {
+            'easylearn': EasyLearning(
+                driver=headless_driver,
+                urls=middleman_urls['easylearn'],
+            ),
+            'idownloadcoupon': IDownloadCoupon(
+                urls=middleman_urls['idownloadcoupon'],
+            ),
+            'freewebcart': Freewebcart(
+                driver=headless_driver,
+                urls=middleman_urls['freewebcart']
+            ),
+            'inventhigh': InventHigh(
+                driver=headless_driver,
+                urls=middleman_urls['inventhigh']
+            ),
+            'line51': Line51(
+                driver=headless_driver,
+                urls=middleman_urls['line51']
+            ),
+            'webhelperapp': WebHelperApp(
+                driver=headless_driver,
+                urls=middleman_urls['webhelperapp']
+            )
+        }
+        headless_driver.quit()
+        return spiders
+
+    def scrape(self, middlemen: list[str]) -> None:
+        """Fetch collection of Udemy links with coupons using middleman spiders."""
+        middleman_urls: dict[str, set[str]
+                             ] = self.collect_middleman_links(middlemen)
+        udemy_urls: list[str] = []
+
+        spiders: dict[str, Any] = self.initialize_spiders(middleman_urls)
+        for middleman, spider in spiders.items():
+            if middleman in middlemen:
+                udemy_urls.extend(spider.run())
+
         udemy_urls.sort()
         self.logger.info('Spiders scraped a total of %d Udemy links.',
                          len(udemy_urls))
-        headless_driver.quit()
         self.cache.write_json(data=udemy_urls, filename='udemy.json')
 
     def autoenroll(self) -> None:
