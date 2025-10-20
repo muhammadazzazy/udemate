@@ -68,31 +68,37 @@ class Udemate:
     def initialize_spiders(self, middleman_urls: dict[str, set[str]]) -> dict[str, Any]:
         """Initialize spiders for each middleman."""
         headless_driver: WebDriver = self.browser.setup(headless=True)
-        spiders: dict[str, Any] = {
-            'easylearn': EasyLearning(
-                driver=headless_driver,
-                urls=middleman_urls['easylearn'],
-            ),
-            'idownloadcoupon': IDownloadCoupon(
-                urls=middleman_urls['idownloadcoupon'],
-            ),
-            'freewebcart': Freewebcart(
-                driver=headless_driver,
-                urls=middleman_urls['freewebcart']
-            ),
-            'inventhigh': InventHigh(
-                driver=headless_driver,
-                urls=middleman_urls['inventhigh']
-            ),
-            'line51': Line51(
-                driver=headless_driver,
-                urls=middleman_urls['line51']
-            ),
-            'webhelperapp': WebHelperApp(
-                driver=headless_driver,
-                urls=middleman_urls['webhelperapp']
-            )
-        }
+        spiders: dict[str, Any] = {}
+        for middleman, urls in middleman_urls.items():
+            if middleman == 'easylearn':
+                spiders[middleman] = EasyLearning(
+                    driver=headless_driver,
+                    urls=urls
+                )
+            elif middleman == 'freewebcart':
+                spiders[middleman] = Freewebcart(
+                    driver=headless_driver,
+                    urls=urls
+                )
+            elif middleman == 'idownloadcoupon':
+                spiders[middleman] = IDownloadCoupon(
+                    urls=urls
+                )
+            elif middleman == 'inventhigh':
+                spiders[middleman] = InventHigh(
+                    driver=headless_driver,
+                    urls=urls
+                )
+            elif middleman == 'line51':
+                spiders[middleman] = Line51(
+                    driver=headless_driver,
+                    urls=urls
+                )
+            elif middleman == 'webhelperapp':
+                spiders[middleman] = WebHelperApp(
+                    driver=headless_driver,
+                    urls=urls
+                )
         headless_driver.quit()
         return spiders
 
