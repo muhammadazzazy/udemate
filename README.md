@@ -248,6 +248,8 @@ Udemate was tested on Windows 11 and Ubuntu 24.04 LTS.
 - [x] Provide a docker image for headless mode to facilitate deployment
 - [x] Improve performance of Udemy bot by skipping owned and paid courses
 - [x] Migrate from Selenium webdriver to undetected-chromedriver to reduce detection by Cloudflare anti-bot checks
+- [x] Standardize & dedupe middleman links pre-crawl
+- [x] Improve performance via per-domain concurrent spidering
 - [ ] Fix issue where Brave Browser runs out of VRAM in non-headless mode
 - [ ] Support parsing Reddit posts containing several links
 - [ ] Add push notifications for successful Udemy course enrollment
