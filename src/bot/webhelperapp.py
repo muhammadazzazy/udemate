@@ -46,4 +46,5 @@ class WebHelperApp(Spider):
                 continue
         self.logger.info('WebHelperApp spider scraped %d Udemy links.',
                          len(udemy_urls))
+        self.driver.quit()
         return sorted(set(udemy_urls))

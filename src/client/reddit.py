@@ -54,7 +54,15 @@ class RedditClient:
         for submission in self.submissions:
             for hostname in hostnames:
                 if hostname in submission.url:
-                    urls[hostname].append(submission.url)
+                    urls[hostname].append(self.clean(submission.url))
         for hostname in hostnames:
             urls[hostname] = sorted(set(urls[hostname]))
         return urls
+
+    def clean(self, url: str) -> str:
+        """Return cleaned middlemen links."""
+        parts: list[str] = url.split('/')
+        while '' in parts:
+            parts.remove('')
+        clean_url: str = parts[0] + '//' + '/'.join(parts[1:4])
+        return clean_url

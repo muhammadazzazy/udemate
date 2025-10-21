@@ -3,6 +3,7 @@ Parse Udemy links with coupons from cache, automate course enrollment,
 scrape middleman links, get new Udemy links with coupons, and write them back to cache.
 """
 import json
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 from typing import Any
 from selenium.webdriver.chrome.webdriver import WebDriver
@@ -67,39 +68,50 @@ class Udemate:
 
     def initialize_spiders(self, middleman_urls: dict[str, set[str]]) -> dict[str, Any]:
         """Initialize spiders for each middleman."""
-        headless_driver: WebDriver = self.browser.setup(headless=True)
         spiders: dict[str, Any] = {}
         for middleman, urls in middleman_urls.items():
-            if middleman == 'easylearn':
-                spiders[middleman] = EasyLearning(
-                    driver=headless_driver,
-                    urls=urls
-                )
-            elif middleman == 'freewebcart':
-                spiders[middleman] = Freewebcart(
-                    driver=headless_driver,
-                    urls=urls
-                )
-            elif middleman == 'idownloadcoupon':
-                spiders[middleman] = IDownloadCoupon(
-                    urls=urls
-                )
-            elif middleman == 'inventhigh':
-                spiders[middleman] = InventHigh(
-                    driver=headless_driver,
-                    urls=urls
-                )
-            elif middleman == 'line51':
-                spiders[middleman] = Line51(
-                    driver=headless_driver,
-                    urls=urls
-                )
-            elif middleman == 'webhelperapp':
-                spiders[middleman] = WebHelperApp(
-                    driver=headless_driver,
-                    urls=urls
-                )
-        headless_driver.quit()
+            match middleman:
+                case 'easylearn':
+                    headless_driver: WebDriver = self.browser.setup(
+                        headless=True)
+                    spiders[middleman] = EasyLearning(
+                        driver=headless_driver,
+                        urls=urls
+                    )
+                case 'freewebcart':
+                    headless_driver: WebDriver = self.browser.setup(
+                        headless=True)
+                    spiders[middleman] = Freewebcart(
+                        driver=headless_driver,
+                        urls=urls
+                    )
+                case 'idownloadcoupon':
+                    headless_driver: WebDriver = self.browser.setup(
+                        headless=True)
+                    spiders[middleman] = IDownloadCoupon(
+                        urls=urls
+                    )
+                case 'inventhigh':
+                    headless_driver: WebDriver = self.browser.setup(
+                        headless=True)
+                    spiders[middleman] = InventHigh(
+                        driver=headless_driver,
+                        urls=urls
+                    )
+                case 'line51':
+                    headless_driver: WebDriver = self.browser.setup(
+                        headless=True)
+                    spiders[middleman] = Line51(
+                        driver=headless_driver,
+                        urls=urls
+                    )
+                case 'webhelperapp':
+                    headless_driver: WebDriver = self.browser.setup(
+                        headless=True)
+                    spiders[middleman] = WebHelperApp(
+                        driver=headless_driver,
+                        urls=urls
+                    )
         return spiders
 
     def scrape(self, middlemen: list[str]) -> None:
@@ -109,11 +121,16 @@ class Udemate:
         udemy_urls: list[str] = []
 
         spiders: dict[str, Any] = self.initialize_spiders(middleman_urls)
-        for middleman, spider in spiders.items():
-            if middleman in middlemen:
-                udemy_urls.extend(spider.run())
+        with ThreadPoolExecutor(max_workers=min(8, len(spiders))) as executor:
+            futures = {executor.submit(
+                spider.run): middleman for middleman, spider in spiders.items()}
 
-        udemy_urls.sort()
+        for future in as_completed(futures):
+            __name: str = futures[future]
+            result: list[str] = future.result()
+            udemy_urls.extend(result)
+
+        udemy_urls = sorted(set(udemy_urls))
         self.logger.info('Spiders scraped a total of %d Udemy links.',
                          len(udemy_urls))
         self.cache.write_json(data=udemy_urls, filename='udemy.json')

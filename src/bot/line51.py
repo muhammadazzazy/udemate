@@ -51,4 +51,5 @@ class Line51(Spider):
                 continue
         self.logger.info('Line51 spider scraped %d Udemy links.',
                          len(udemy_urls))
+        self.driver.quit()
         return sorted(set(udemy_urls))

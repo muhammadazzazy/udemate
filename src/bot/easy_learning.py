@@ -55,4 +55,5 @@ class EasyLearning(Spider):
 
         self.logger.info('Easy Learning spider scraped %d Udemy links.',
                          len(udemy_urls))
+        self.driver.quit()
         return sorted(set(udemy_urls))
