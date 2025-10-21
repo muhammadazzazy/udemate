@@ -10,9 +10,13 @@ from bot.spider import Spider
 class IDownloadCoupon(Spider):
     """Get Udemy links with coupons from iDC."""
 
+    def __init__(self, urls: list[str]) -> None:
+        self.session = requests.Session()
+        super().__init__(urls)
+
     def transform(self, url: str) -> str:
         """Convert iDC link to final Udemy link with coupon."""
-        response = requests.get(url, allow_redirects=True, timeout=None)
+        response = self.session.get(url, allow_redirects=True, timeout=30)
         url: str = self.clean(response.url)
         return url
 
