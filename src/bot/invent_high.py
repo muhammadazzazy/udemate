@@ -28,7 +28,7 @@ class InventHigh(Spider):
         )
         url: str = link.get_attribute('href')
         response = requests.get(url, timeout=30)
-        udemy_url: str = response.url
+        udemy_url: str = self.clean(response.url)
         return udemy_url
 
     def is_coupon_expired(self, url: str) -> bool:

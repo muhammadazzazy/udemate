@@ -13,7 +13,8 @@ class IDownloadCoupon(Spider):
     def transform(self, url: str) -> str:
         """Convert iDC link to final Udemy link with coupon."""
         response = requests.get(url, allow_redirects=True, timeout=None)
-        return response.url
+        url: str = self.clean(response.url)
+        return url
 
     def run(self) -> list[str]:
         """Return list of Udemy links extracted from iDC."""

@@ -60,7 +60,7 @@ class RedditClient:
         return urls
 
     def clean(self, url: str) -> str:
-        """Return cleaned middlemen links."""
+        """Return cleaned middlemen link."""
         parts: list[str] = url.split('/')
         while '' in parts:
             parts.remove('')

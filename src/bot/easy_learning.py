@@ -23,7 +23,7 @@ class EasyLearning(Spider):
         enroll_url: str = self.driver.find_element(
             By.CSS_SELECTOR, "a.purple-button").get_attribute('href')
         response = requests.get(enroll_url, timeout=30)
-        udemy_url: str = response.url
+        udemy_url: str = self.clean(response.url)
         return udemy_url
 
     def run(self) -> list[str]:

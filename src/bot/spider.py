@@ -10,6 +10,13 @@ class Spider(ABC):
         self.urls = urls
         self.logger = setup_logging()
 
+    def clean(self, url: str) -> str:
+        """Return cleaned middleman link."""
+        index: int = url.find('&im_ref=')
+        if index != -1:
+            return url[:index]
+        return url
+
     @abstractmethod
     def transform(self, url: str) -> str:
         """Return a Udemy link extracted from middleman link."""

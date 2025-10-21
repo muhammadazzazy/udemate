@@ -18,7 +18,7 @@ class WebHelperApp(Spider):
         self.driver.get(url)
         link = self.driver.find_element(By.XPATH,
                                         "//a[contains(., 'GET COURSE')]")
-        udemy_url: str = link.get_attribute('href')
+        udemy_url: str = self.clean(link.get_attribute('href'))
         return udemy_url
 
     def run(self) -> list[str]:
