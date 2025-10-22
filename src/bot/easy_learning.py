@@ -21,7 +21,7 @@ class EasyLearning(Spider):
         """Return Udemy link from Easy Learning link."""
         self.driver.get(url)
         enroll_url: str = self.driver.find_element(
-            By.CSS_SELECTOR, "a.purple-button").get_attribute('href')
+            By.CSS_SELECTOR, 'a.purple-button').get_attribute('href')
         response = requests.get(enroll_url, timeout=30)
         udemy_url: str = self.clean(response.url)
         return udemy_url

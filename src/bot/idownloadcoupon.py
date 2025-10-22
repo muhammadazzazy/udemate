@@ -14,11 +14,13 @@ class IDownloadCoupon(Spider):
         self.session = requests.Session()
         super().__init__(urls)
 
-    def transform(self, url: str) -> str:
+    def transform(self, url: str) -> str | None:
         """Convert iDC link to final Udemy link with coupon."""
         response = self.session.get(url, allow_redirects=True, timeout=30)
         url: str = self.clean(response.url)
-        return url
+        if 'udemy.com' in url:
+            return url
+        return None
 
     def run(self) -> list[str]:
         """Return list of Udemy links extracted from iDC."""

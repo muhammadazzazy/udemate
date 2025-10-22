@@ -13,6 +13,9 @@ class Spider(ABC):
     def clean(self, url: str) -> str:
         """Return cleaned middleman link."""
         index: int = url.find('&im_ref=')
+        if index == -1:
+            index = url.find('/?im_ref=')
+
         if index != -1:
             return url[:index]
         return url
