@@ -48,7 +48,6 @@ class Browser:
             '--aggressive-cache-discard',
             '--disable-renderer-backgrounding',
             '--renderer-process-limit=4',
-            # '--disable-site-isolation-trials',
             '--disable-features=IsolateOrigins,site-per-process',
             '--blink-settings=imagesEnabled=false'
         ]

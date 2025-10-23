@@ -1,7 +1,7 @@
 """Fetch Udemy links with coupons from iDC."""
 import requests
-
 from requests.exceptions import RequestException
+
 from urllib3.exceptions import ProtocolError, ReadTimeoutError
 
 from bot.spider import Spider

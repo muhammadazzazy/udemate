@@ -1,4 +1,5 @@
 """Scrape Udemy links with coupons from Line51."""
+import undetected_chromedriver as uc
 from selenium.common.exceptions import TimeoutException, WebDriverException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -11,7 +12,7 @@ from bot.spider import Spider
 class Line51(Spider):
     """Get Udemy links with coupons from Line51."""
 
-    def __init__(self, *, driver, urls: list[str]) -> None:
+    def __init__(self, *, driver: uc.Chrome, urls: list[str]) -> None:
         super().__init__(urls)
         self.driver = driver
 

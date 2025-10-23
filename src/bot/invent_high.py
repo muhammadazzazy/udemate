@@ -1,7 +1,8 @@
 """Scrape Udemy links with coupons from Invent High."""
 import requests
-
 from requests import RequestException
+
+import undetected_chromedriver as uc
 from selenium.common.exceptions import TimeoutException, WebDriverException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
@@ -14,7 +15,7 @@ from bot.spider import Spider
 class InventHigh(Spider):
     """Get Udemy links with coupons from Invent High."""
 
-    def __init__(self, *, driver, urls: list[str]) -> None:
+    def __init__(self, *, driver: uc.Chrome, urls: list[str]) -> None:
         super().__init__(urls)
         self.driver = driver
 

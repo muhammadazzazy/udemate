@@ -6,8 +6,10 @@ import json
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 from typing import Any
-from selenium.webdriver.chrome.webdriver import WebDriver
 
+import undetected_chromedriver as uc
+
+from bot.coursecouponz import CourseCouponz
 from bot.easy_learning import EasyLearning
 from bot.freewebcart import Freewebcart
 from bot.idownloadcoupon import IDownloadCoupon
@@ -71,42 +73,49 @@ class Udemate:
         spiders: dict[str, Any] = {}
         for middleman, urls in middleman_urls.items():
             match middleman:
+                case 'coursecouponz':
+                    headless_driver: uc.Chrome = self.browser.setup(
+                        headless=True)
+                    spiders[middleman] = CourseCouponz(
+                        driver=headless_driver,
+                        urls=urls
+                    )
                 case 'easylearn':
-                    headless_driver: WebDriver = self.browser.setup(
+                    headless_driver: uc.Chrome = self.browser.setup(
                         headless=True)
                     spiders[middleman] = EasyLearning(
                         driver=headless_driver,
                         urls=urls
                     )
                 case 'freewebcart':
-                    headless_driver: WebDriver = self.browser.setup(
+                    headless_driver: uc.Chrome = self.browser.setup(
                         headless=True)
                     spiders[middleman] = Freewebcart(
                         driver=headless_driver,
                         urls=urls
                     )
                 case 'idownloadcoupon':
-                    headless_driver: WebDriver = self.browser.setup(
+                    headless_driver: uc.Chrome = self.browser.setup(
                         headless=True)
                     spiders[middleman] = IDownloadCoupon(
                         urls=urls
                     )
                 case 'inventhigh':
-                    headless_driver: WebDriver = self.browser.setup(
+                    headless_driver: uc.Chrome = self.browser.setup(
                         headless=True)
                     spiders[middleman] = InventHigh(
                         driver=headless_driver,
                         urls=urls
                     )
                 case 'line51':
-                    headless_driver: WebDriver = self.browser.setup(
+                    headless_driver: uc.Chrome = self.browser.setup(
                         headless=True)
                     spiders[middleman] = Line51(
                         driver=headless_driver,
                         urls=urls
                     )
                 case 'webhelperapp':
-                    headless_driver: WebDriver = self.browser.setup(
+                    headless_driver: uc.Chrome = self.browser.setup(
                         headless=True)
                     spiders[middleman] = WebHelperApp(
                         driver=headless_driver,
