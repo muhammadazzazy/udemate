@@ -228,7 +228,7 @@ Udemate was tested on Windows 11 and Ubuntu 24.04 LTS.
 - [x] Add functionality to generate JSON files of submissions grouped by hostname
 - [x] Scrape intermediate links from the following middlemen:
 
-  - [ ] Course Couponz
+  - [x] CourseCouponz
   - [ ] Course Treat
   - [x] Easy Learning
   - [x] Freewebcart
