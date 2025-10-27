@@ -1,31 +1,31 @@
 """Automatically enroll into free Udemy courses."""
 import time
+from logging import Logger
 
+import undetected_chromedriver as uc
 from selenium.common.exceptions import WebDriverException
-from selenium.webdriver.chrome.webdriver import WebDriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
 from utils.cache import Cache
-from utils.logger import setup_logging
 
 
 class Udemy:
     """Autoenroll into free Udemy courses."""
 
-    def __init__(self, *, driver: WebDriver, cache: Cache) -> None:
+    def __init__(self, *, driver: uc.Chrome, retries: int, urls: list[str], logger: Logger) -> None:
+        self.cache = Cache()
         self.driver = driver
-        self.cache = cache
-        self.urls = self.cache.urls.get('udemy', [])
-        self.logger = setup_logging()
-        self.max_retries = 3
+        self.logger = logger
+        self.retries = retries
+        self.urls = urls
         self.patterns = {'paid': 'cart/success', 'free': 'cart/subscribe'}
 
     def confirm(self) -> bool:
         """Scan for final 'Enroll now' button and click on it."""
         xp: str = '//*[@id="udemy"]/div[1]/div[2]/div/div/div/aside/div/div/div[2]/div[2]/button[1]'
-        for attempt in range(self.max_retries):
+        for attempt in range(self.retries):
             try:
                 wait = WebDriverWait(self.driver, 30)
                 confirm_button = wait.until(EC.element_to_be_clickable((
@@ -37,11 +37,11 @@ class Udemy:
                 if self.patterns['paid'] in self.driver.current_url:
                     self.logger.info('Attempt %d/%d succeeded!',
                                      attempt+1,
-                                     self.max_retries)
+                                     self.retries)
                     return True
-                self.logger.warning('Attempt %d/%d failed. Retrying...',
+                self.logger.warning('Attempt %d/%d failed.',
                                     attempt+1,
-                                    self.max_retries)
+                                    self.retries)
             except WebDriverException as e:
                 self.logger.error('Webdriver error: %r', e)
                 continue
@@ -93,8 +93,8 @@ class Udemy:
         for udemy_url in self.urls:
             self.logger.info('Visiting %s', udemy_url)
             self.driver.get(udemy_url)
-            self.cache.append_jsonl(filename='udemy.jsonl', url=udemy_url)
             course_name: str = self.driver.title.removesuffix(' | Udemy')
+            self.cache.append_jsonl(filename='udemy.jsonl', url=udemy_url)
             if self.is_owned():
                 self.logger.info('%s is owned. Skipping...', course_name)
             elif self.is_paid():

@@ -1,44 +1,30 @@
 """Manage browser used for scraping links and automating course enrollment."""
-import platform
-import shutil
-from pathlib import Path
+from abc import ABC, abstractmethod
 
 import undetected_chromedriver as uc
 
 from utils.config import Config
-from utils.logger import setup_logging
+from utils.logger import Logger
 
 
-class Browser:
+class Browser(ABC):
     """Manage browser configuration and expose Undetected Chromedriver."""
 
-    def __init__(self) -> None:
-        self.config = Config()
-        self.logger = setup_logging()
+    def __init__(self, *, config: Config, logger: Logger) -> None:
+        self.config = config
+        self.logger = logger
 
-    def get_brave_path(self) -> str:
-        """Return Brave Browser executable path based on the operating system."""
-        paths: dict[str, str] = {
-            'Windows': r'C:\Program Files\BraveSoftware\Brave-Browser\Application\brave.exe',
-            'Linux': shutil.which('brave-browser'),
-            'Darwin': shutil.which('Brave Browser')
-        }
-        system: str = platform.system()
-        self.logger.info('Detected OS: %s', system)
-        brave_path: str | None = paths.get(system)
-        if brave_path and Path(brave_path).exists():
-            return brave_path
-        message: str = 'Brave executable not found'
-        self.logger.error(message)
-        raise FileNotFoundError(message)
+    @abstractmethod
+    def get_executable_path(self) -> str:
+        """Return browser executable path based on the operating system."""
 
     def setup(self, headless: bool) -> uc.Chrome:
         """
-        Return Undetected Chromedriver for Brave Browser either in headless mode for scraping
-        or with debugger address when automating course enrollment.
+        Return Undetected Chromedriver for a Chromium browser either in headless mode for scraping
+        or in non-headless mode for automating course enrollment.
         """
         options = uc.ChromeOptions()
-        brave_path: str = self.get_brave_path()
+        brave_path: str = self.get_executable_path()
         common_args: list[str] = [
             '--disable-extensions',
             '--disable-component-extensions-with-background-pages',

@@ -3,7 +3,9 @@ Parse Udemy links with coupons from cache, automate course enrollment,
 scrape middleman links, get new Udemy links with coupons, and write them back to cache.
 """
 import json
+from argparse import Namespace
 from concurrent.futures import ThreadPoolExecutor, as_completed
+from logging import Logger
 from pathlib import Path
 from typing import Any
 
@@ -21,18 +23,23 @@ from client.get_refresh_token import get_refresh_token
 from client.reddit import RedditClient
 from utils.cache import Cache
 from utils.config import Config
-from utils.logger import setup_logging
-from web.browser import Browser
+from web.brave import Brave
+from web.google_chrome import GoogleChrome
 
 
 class Udemate:
     """Control the flow of Udemate."""
 
-    def __init__(self) -> None:
-        self.config = Config()
+    def __init__(self, *, browser: str, config: Config, logger: Logger, retries: int) -> None:
+        match browser:
+            case 'brave':
+                self.browser = Brave(config=config, logger=logger)
+            case 'chrome':
+                self.browser = GoogleChrome(config=config, logger=logger)
         self.cache = Cache()
-        self.browser = Browser()
-        self.logger = setup_logging()
+        self.config = config
+        self.logger = logger
+        self.retries = retries
 
     def get_middlemen(self) -> list[str]:
         """Return list of middlemen from 'middlemen.json' configuration file."""
@@ -123,42 +130,44 @@ class Udemate:
                     )
         return spiders
 
-    def scrape(self, middlemen: list[str]) -> None:
+    def scrape(self, middlemen: list[str]) -> list[str]:
         """Fetch collection of Udemy links with coupons using middleman spiders."""
         middleman_urls: dict[str, set[str]
                              ] = self.collect_middleman_links(middlemen)
         udemy_urls: list[str] = []
-
         spiders: dict[str, Any] = self.initialize_spiders(middleman_urls)
         with ThreadPoolExecutor(max_workers=min(8, len(spiders))) as executor:
             futures = {executor.submit(
                 spider.run): middleman for middleman, spider in spiders.items()}
-
-        for future in as_completed(futures):
-            __name: str = futures[future]
-            result: list[str] = future.result()
-            udemy_urls.extend(result)
-
+            for future in as_completed(futures):
+                __name: str = futures[future]
+                result: list[str] = future.result()
+                udemy_urls.extend(result)
         udemy_urls = sorted(set(udemy_urls))
         self.logger.info('Spiders scraped a total of %d Udemy links.',
                          len(udemy_urls))
         self.cache.write_json(data=udemy_urls, filename='udemy.json')
+        return udemy_urls
 
-    def autoenroll(self) -> None:
-        """
-        Read unprocessed Udemy links from cache, automate enrollment into free Udemy courses, 
-        and clear cache.
-        """
-        if not self.cache.read_json('udemy.json'):
-            self.logger.info('Exiting...')
-            return
-        processed_urls: list[str] = self.cache.read_jsonl('udemy.jsonl')
-        self.cache.urls['udemy'] = sorted(set(
-            self.cache.urls['udemy']) - set(processed_urls))
-        gui_driver: WebDriver = self.browser.setup(headless=False)
+    def autoenroll(self, udemy_urls: list[str]) -> None:
+        """Autoenroll into free Udemy courses using GUI browser."""
+        udemy_urls: list[str] = self.cache.filter_urls('udemy')
+        gui_driver: uc.Chrome = self.browser.setup(headless=False)
         udemy: Udemy = Udemy(
             driver=gui_driver,
-            cache=self.cache
+            logger=self.logger,
+            retries=self.retries,
+            urls=udemy_urls,
         )
         udemy.run()
         gui_driver.quit()
+
+    def run(self, args: Namespace) -> None:
+        """Run Udemate based on command-line arguments passed."""
+        self.logger.info('Starting Udemate in %s mode...', args.mode)
+        udemy_urls: list[str] = []
+        if args.mode in ('headless', 'hybrid'):
+            middlemen: list[str] = self.get_middlemen()
+            udemy_urls: list[str] = self.scrape(middlemen)
+        if args.mode in ('hybrid', 'gui'):
+            self.autoenroll(udemy_urls)

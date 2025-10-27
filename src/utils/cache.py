@@ -16,7 +16,7 @@ class Cache:
         self.logger = setup_logging()
         self.urls = {}
 
-    def read_json(self, filename: str) -> bool:
+    def read_json(self, filename: str) -> list[str]:
         """Parse cached middleman and Udemy links with coupons from JSON files."""
         file_path: Path = self.json_dir / filename
         if file_path.exists():
@@ -25,9 +25,9 @@ class Cache:
             if self.urls[filename[:-5]]:
                 self.logger.info('Read %d links from %s.',
                                  len(self.urls[filename[:-5]]), filename[:-5])
-            return True
+            return self.urls[filename[:-5]]
         self.logger.info('No links in JSON cache for %s.', filename[:-5])
-        return False
+        return []
 
     def write_json(self, *, filename: str, data: list[str]) -> None:
         """Write output to JSON file in 'json' directory within 'data' directory."""
@@ -46,7 +46,7 @@ class Cache:
         self.logger.info('Deleted %s.', filename[:-5])
 
     def read_jsonl(self, filename: str) -> list[str]:
-        """Return a list of processed Udemy links from 'udemy.jsonl' file."""
+        """Return a list of processed links from the associated JSONL file."""
         file_path: Path = self.json_dir / filename
         if file_path.exists():
             with file_path.open('r', encoding='utf-8') as f:
@@ -54,9 +54,14 @@ class Cache:
         return []
 
     def append_jsonl(self, *, filename: str, url: str) -> None:
-        """Append Udemy link to JSONL file in 'json' directory within 'data' directory."""
+        """Append middleman or Udemy link to corresponding JSONL file."""
         file_path: Path = self.json_dir / filename
         with file_path.open(mode='a', encoding='utf-8') as f:
             json.dump(url, f, ensure_ascii=False)
             f.write('\n')
-        self.logger.info('Successfully appended %s to %s.', url, file_path)
+
+    def filter_urls(self, bot: str) -> list[str]:
+        """Return list of unprocessed links associated with middleman scraper or Udemy bot."""
+        filtered_urls: list[str] = sorted(set(self.read_json(
+            f'{bot}.json')) - set(self.read_jsonl(f'{bot}.jsonl')))
+        return filtered_urls
