@@ -194,13 +194,18 @@ Udemate was tested on Windows 11 and Ubuntu 24.04 LTS.
 
    ```sh
     # Windows
-    python .\src\main.py [--mode {headless|gui|hybrid}]
+    python .\src\main.py [--mode {headless|gui|hybrid}]  --[browser {brave|chrome}] [--retries {<int>}]
 
     # Linux
-    python3 src/main.py [--mode {headless|gui|hybrid}]
+    python3 src/main.py [--mode {headless|gui|hybrid}] [--browser {brave|chrome}] [--retries {<int>}]
    ```
 
-   > Note: The `--mode` argument is optional. Default mode: `hybrid`
+> Note the following:
+>
+> 1. All command-line arguments are optional
+> 2. Default `mode` is `hybrid`
+> 3. Default `browser` is `brave`
+> 4. Default `retries` is `5`
 
 #### Option 2: Run in Docker
 
@@ -250,6 +255,11 @@ Udemate was tested on Windows 11 and Ubuntu 24.04 LTS.
 - [x] Standardize & dedupe middleman links pre-crawl
 - [x] Remove affiliate marketing parts from Udemy links before caching the URLs and automatic enrollment
 - [x] Improve performance via per-domain concurrent spidering
+- [x] Add command-line arguments for specifying
+  - [x] mode (hybrid, headless, or gui)
+  - [x] browser (Brave Browser or Google Chrome)
+  - [x] max number of retries
+- [x] Support Google Chrome for converting middleman links to Udemy links and automating course enrollment
 - [ ] Fix issue where Brave Browser runs out of VRAM in non-headless mode
 - [ ] Support parsing Reddit posts containing several links
 - [ ] Add push notifications for successful Udemy course enrollment
