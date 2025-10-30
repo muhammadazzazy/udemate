@@ -155,6 +155,7 @@ Udemate was tested on Windows 11 and Ubuntu 24.04 LTS.
     # Browser config
     # Required if you want to enroll in courses with a user profile.
     BROWSER_USER_DATA_DIR="C:\\Users\\username\\AppData\\Local\\BraveSoftware\\Brave-Browser\\User Data\\Udemate"
+    BROWSER_MAJOR_VERSION=141
    ```
 
 4. Specify middleman spiders in middlemen.json file
@@ -258,7 +259,7 @@ Udemate was tested on Windows 11 and Ubuntu 24.04 LTS.
 - [x] Add command-line arguments for specifying
   - [x] mode (hybrid, headless, or gui)
   - [x] browser (Brave Browser or Google Chrome)
-  - [x] max number of retries
+  - [x] retries
 - [x] Support Google Chrome for converting middleman links to Udemy links and automating course enrollment
 - [ ] Fix issue where Brave Browser runs out of VRAM in non-headless mode
 - [ ] Support parsing Reddit posts containing several links

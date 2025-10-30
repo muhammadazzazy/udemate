@@ -3,13 +3,14 @@ import platform
 import shutil
 from pathlib import Path
 
+
 from web.browser import Browser
 
 
 class Brave(Browser):
     """Encapsulates a method associated with fetching executable path of Brave Browser."""
 
-    def get_executable_path(self):
+    def get_executable_path(self) -> str:
         """Return executable path of Brave Browser."""
         paths: dict[str, str] = {
             'Windows': r'C:\Program Files\BraveSoftware\Brave-Browser\Application\brave.exe',

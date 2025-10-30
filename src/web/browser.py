@@ -1,17 +1,18 @@
 """Manage browser used for scraping links and automating course enrollment."""
+import platform
 from abc import ABC, abstractmethod
 
 import undetected_chromedriver as uc
 
-from utils.config import Config
 from utils.logger import Logger
 
 
 class Browser(ABC):
     """Manage browser configuration and expose Undetected Chromedriver."""
 
-    def __init__(self, *, config: Config, logger: Logger) -> None:
-        self.config = config
+    def __init__(self, *, user_data_dir: str, major_version: int, logger: Logger) -> None:
+        self.major_version = major_version
+        self.user_data_dir = user_data_dir
         self.logger = logger
 
     @abstractmethod
@@ -24,7 +25,8 @@ class Browser(ABC):
         or in non-headless mode for automating course enrollment.
         """
         options = uc.ChromeOptions()
-        brave_path: str = self.get_executable_path()
+        browser_executable: str = self.get_executable_path()
+
         common_args: list[str] = [
             '--disable-extensions',
             '--disable-component-extensions-with-background-pages',
@@ -42,20 +44,24 @@ class Browser(ABC):
             '--disable-gpu',
             '--disable-software-rasterizer'
         ]
-        gui_args: list[str] = [
-            '--use-angle=d3d11'
-        ]
+        gui_args: list[str] = []
+        if platform.system() == 'Windows':
+            gui_args = [
+                '--use-angle=d3d11'
+            ]
         for arg in common_args + (headless_args if headless else gui_args):
             options.add_argument(arg)
         if not headless:
             return uc.Chrome(
                 options=options,
-                browser_executable_path=brave_path,
-                user_data_dir=self.config.BROWSER_USER_DATA_DIR,
+                version_main=self.major_version,
+                browser_executable_path=browser_executable,
+                user_data_dir=self.user_data_dir,
                 headless=headless
             )
         return uc.Chrome(
             options=options,
-            browser_executable_path=brave_path,
+            version_main=self.major_version,
+            browser_executable_path=browser_executable,
             headless=headless
         )

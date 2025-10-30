@@ -33,9 +33,15 @@ class Udemate:
     def __init__(self, *, browser: str, config: Config, logger: Logger, retries: int) -> None:
         match browser:
             case 'brave':
-                self.browser = Brave(config=config, logger=logger)
+                self.browser = Brave(
+                    major_version=config.BROWSER_MAJOR_VERSION,
+                    user_data_dir=config.BROWSER_USER_DATA_DIR,
+                    logger=logger)
             case 'chrome':
-                self.browser = GoogleChrome(config=config, logger=logger)
+                self.browser = GoogleChrome(
+                    major_version=config.BROWSER_MAJOR_VERSION,
+                    user_data_dir=config.BROWSER_USER_DATA_DIR,
+                    logger=logger)
         self.cache = Cache()
         self.config = config
         self.logger = logger

@@ -35,3 +35,6 @@ class Config(BaseSettings):
     BROWSER_USER_DATA_DIR: str = Field(
         description='Path to Brave Browser user data directory'
     )
+    BROWSER_MAJOR_VERSION: int = Field(
+        description='Major version of the Chromium browser installed on the system'
+    )

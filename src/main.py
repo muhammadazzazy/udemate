@@ -24,7 +24,12 @@ def parse_arguments() -> Namespace:
     parser.add_argument(
         '--retries',
         type=int,
-        default=5
+        default=3
+    )
+    parser.add_argument(
+        '--timeout',
+        type=int,
+        default=60
     )
     return parser.parse_args()
 
