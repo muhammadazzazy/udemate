@@ -19,29 +19,29 @@ class Config(BaseSettings):
     model_config = SettingsConfigDict(env_file='.env',
                                       env_file_encoding='utf-8',
                                       case_sensitive=False)
-    REDDIT_CLIENT_ID: str = Field(description='Reddit script client ID')
-    REDDIT_CLIENT_SECRET: str = Field(
+    reddit_client_id: str = Field(description='Reddit script client ID')
+    reddit_client_secret: str = Field(
         description='Reddit script client secret')
-    REDDIT_USER_AGENT: str = Field(
+    reddit_user_agent: str = Field(
         default=DEFAULT_USER_AGENT, description='Reddit script user agent')
-    REDDIT_LIMIT: int = Field(DEFAULT_LIMIT,
+    reddit_limit: int = Field(DEFAULT_LIMIT,
                               le=MAX_LIMIT,
                               ge=MIN_LIMIT,
                               description='Maximum number of posts parsed by Reddit script')
-    REDDIT_PASSWORD: str = Field(
+    reddit_password: str = Field(
         description='Password of Reddit account')
-    REDDIT_USERNAME: str = Field(
+    reddit_username: str = Field(
         description='Username of Reddit account')
 
-    BROWSER_USER_DATA_DIR: Optional[str] = Field(
+    user_data_dir: Optional[str] = Field(
         description='Path to Brave Browser user data directory'
     )
 
-    TIMEOUT: Optional[int] = Field(
+    timeout: Optional[int] = Field(
         description='Timeout duration for web requests and driver waits in seconds',
         default=60
     )
-    RETRIES: Optional[int] = Field(
+    retries: Optional[int] = Field(
         description='Maximum number of retries for web actions such as enrollments',
         default=3
     )

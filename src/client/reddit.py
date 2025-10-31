@@ -25,11 +25,11 @@ class RedditClient:
             )
         else:
             self.reddit = praw.Reddit(
-                client_id=self.config.REDDIT_CLIENT_ID,
-                client_secret=self.config.REDDIT_CLIENT_SECRET,
-                password=self.config.REDDIT_PASSWORD,
-                user_agent=self.config.REDDIT_USER_AGENT,
-                username=self.config.REDDIT_USERNAME
+                client_id=self.config.reddit_client_id,
+                client_secret=self.config.reddit_client_secret,
+                password=self.config.reddit_password,
+                user_agent=self.config.reddit_user_agent,
+                username=self.config.reddit_username
             )
         self.submissions: list[Submission] = []
         self.logger = setup_logging()
@@ -38,7 +38,7 @@ class RedditClient:
         """Fill the list of Reddit posts."""
         try:
             subreddit = self.reddit.subreddit(subreddit)
-            for submission in subreddit.new(limit=self.config.REDDIT_LIMIT):
+            for submission in subreddit.new(limit=self.config.reddit_limit):
                 self.logger.info('Adding Reddit post with URL: %s',
                                  submission.url)
                 self.submissions.append(submission)
