@@ -155,6 +155,7 @@ Udemate was tested on Windows 11 and Ubuntu 24.04 LTS.
     # Browser config
     # Required if you want to enroll in courses with a user profile.
     BROWSER_USER_DATA_DIR="C:\\Users\\username\\AppData\\Local\\BraveSoftware\\Brave-Browser\\User Data\\Udemate"
+    # Required. Major version of the Chromium-based browser installed on your system.
     BROWSER_MAJOR_VERSION=141
    ```
 
@@ -231,10 +232,10 @@ Udemate was tested on Windows 11 and Ubuntu 24.04 LTS.
 - [x] Implement environment variable parsing
 - [x] Add requirements.txt
 - [x] Implement refresh token authentication
-- [x] Add functionality to generate JSON files of submissions grouped by hostname
+- [x] Add functionality to generate JSON files containing middleman links grouped by hostname
 - [x] Scrape intermediate links from the following middlemen:
 
-  - [x] CourseCouponz
+  - [ ] CourseCouponz
   - [ ] Course Treat
   - [x] Easy Learning
   - [x] Freewebcart
@@ -260,11 +261,11 @@ Udemate was tested on Windows 11 and Ubuntu 24.04 LTS.
   - [x] mode (hybrid, headless, or gui)
   - [x] browser (Brave Browser or Google Chrome)
   - [x] retries
+- [x] Fixed issue where the enrollment bot failed to detect the first button after Udemy changed its data-purpose from 'buy-this-course-button' to 'buy-now-button'
 - [x] Support Google Chrome for converting middleman links to Udemy links and automating course enrollment
-- [ ] Fix issue where Brave Browser runs out of VRAM in non-headless mode
+- [x] Fix issue where Brave Browser runs out of VRAM in non-headless mode
 - [ ] Support parsing Reddit posts containing several links
 - [ ] Add push notifications for successful Udemy course enrollment
-- [ ] Improve performance of idownloadcoupon spider using async/await
 
 See the [open issues](https://github.com/muhammadazzazy/udemate/issues) for a full list of proposed features (and known issues).
 
