@@ -36,16 +36,22 @@ def parse_arguments() -> Namespace:
     return parser.parse_args()
 
 
+def override_env_vars(args: Namespace) -> BaseSettings:
+    """Override environment variables with command-line arguments."""
+    cli_overrides: dict[str, int | str | None] = {
+        k: v for k, v in vars(args).items() if v is not None
+    }
+    config: Config = Config()
+    settings: BaseSettings = config.model_copy(update=cli_overrides)
+    return settings
+
+
 def main() -> None:
-    """Parse command-line arguments, override env vars with command-line arguments, and run Udemate accordingly."""
+    """Configure and run the automation tool."""
     logger: Logger = setup_logging()
     try:
         args: Namespace = parse_arguments()
-        cli_overrides: dict[str, int | str | None] = {
-            k: v for k, v in vars(args).items() if v is not None
-        }
-        config: Config = Config()
-        settings: BaseSettings = config.model_copy(update=cli_overrides)
+        settings: BaseSettings = override_env_vars(args)
         udemate: Udemate = Udemate(
             config=settings,
             logger=logger
