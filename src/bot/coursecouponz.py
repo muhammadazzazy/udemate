@@ -18,6 +18,11 @@ class CourseCouponz(Spider):
         self.driver.get(url)
         link = self.driver.find_element(By.XPATH,
                                         "//a[contains(., 'GET COURSE')]")
+        count: int = 0
+        while count < self.retries and 'coursecouponz.com' in link.get_attribute('href'):
+            link = self.driver.find_element(By.XPATH,
+                                            "//a[contains(., 'GET COURSE')]")
+            count += 1
         udemy_url: str = self.clean(link.get_attribute('href'))
         return udemy_url
 

@@ -3,7 +3,6 @@ Parse Udemy links with coupons from cache, automate course enrollment,
 scrape middleman links, get new Udemy links with coupons, and write them back to cache.
 """
 import json
-from argparse import Namespace
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from logging import Logger
 from pathlib import Path
@@ -173,8 +172,8 @@ class Udemate:
         gui_driver: uc.Chrome = self.browser.setup(headless=False)
         udemy: Udemy = Udemy(
             driver=gui_driver,
-            logger=self.logger,
             retries=self.config.retries,
+            timeout=self.config.timeout,
             urls=udemy_urls,
         )
         udemy.run()

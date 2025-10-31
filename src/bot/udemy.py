@@ -1,6 +1,5 @@
 """Automatically enroll into free Udemy courses."""
 import time
-from logging import Logger
 
 import undetected_chromedriver as uc
 from selenium.common.exceptions import WebDriverException
@@ -9,16 +8,18 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
 from utils.cache import Cache
+from utils.logger import setup_logging
 
 
 class Udemy:
     """Autoenroll into free Udemy courses."""
 
-    def __init__(self, *, driver: uc.Chrome, retries: int, urls: list[str], logger: Logger) -> None:
+    def __init__(self, *, driver: uc.Chrome, retries: int, timeout: int, urls: list[str]) -> None:
         self.cache = Cache()
         self.driver = driver
-        self.logger = logger
+        self.logger = setup_logging()
         self.retries = retries
+        self.timeout = timeout
         self.urls = urls
         self.patterns = {'paid': 'cart/success', 'free': 'cart/subscribe'}
 
@@ -27,7 +28,7 @@ class Udemy:
         xp: str = '//*[@id="udemy"]/div[1]/div[2]/div/div/div/aside/div/div/div[2]/div[2]/button[1]'
         for attempt in range(self.retries):
             try:
-                wait = WebDriverWait(self.driver, timeout=5)
+                wait = WebDriverWait(self.driver, timeout=self.timeout)
                 confirm_button = wait.until(EC.element_to_be_clickable((
                     By.XPATH,
                     xp
@@ -50,7 +51,7 @@ class Udemy:
     def is_owned(self, data_purpose: str) -> bool:
         """Return a flag indicating whether a course is owned."""
         try:
-            wait = WebDriverWait(self.driver, timeout=5)
+            wait = WebDriverWait(self.driver, timeout=self.timeout)
             _buttons = wait.until(lambda d: d.find_elements(
                 By.XPATH,
                 f"//button[@data-purpose='{data_purpose}' and contains(., 'Go to course')]",
@@ -62,7 +63,7 @@ class Udemy:
     def is_paid(self, data_purpose: str) -> bool:
         """Return a flag whether course is paid."""
         try:
-            wait = WebDriverWait(self.driver, timeout=5)
+            wait = WebDriverWait(self.driver, timeout=self.timeout)
             _buttons = wait.until(lambda d: d.find_elements(
                 By.XPATH,
                 f"//button[@data-purpose='{data_purpose}' and contains(., 'Buy now')]",
@@ -74,7 +75,7 @@ class Udemy:
     def enroll(self, data_purpose: str) -> bool:
         """Scan for first 'Enroll now' button and click on it."""
         try:
-            wait = WebDriverWait(self.driver, timeout=5)
+            wait = WebDriverWait(self.driver, timeout=self.timeout)
             buttons = wait.until(lambda d: d.find_elements(
                 By.XPATH,
                 f"//button[@data-purpose='{data_purpose}' and contains(., 'Enroll now')]",
@@ -98,8 +99,10 @@ class Udemy:
             self.cache.append_jsonl(filename='udemy.jsonl', url=udemy_url)
             if self.is_owned(data_purpose):
                 self.logger.info('%s is owned. Skipping...', course_name)
+                count['owned'] += 1
             elif self.is_paid(data_purpose):
                 self.logger.info('%s is paid. Skipping...', course_name)
+                count['paid'] += 1
             elif self.enroll(data_purpose):
                 self.logger.info('Enrolling into %s', course_name)
                 if self.patterns['free'] in self.driver.current_url:
@@ -116,9 +119,16 @@ class Udemy:
             else:
                 # "Unavailable" means private or does not exist.
                 self.logger.info('Course is unavailable. Skipping...')
-        self.logger.info('Encountered %d already owned courses.',
-                         count['owned'])
-        self.logger.info('Encountered %d paid courses.',
-                         count['paid'])
-        self.logger.info('Enrolled into %d free courses.',
-                         count['enroll'])
+
+        self.logger.info(
+            'Encountered %d already owned courses.',
+            count['owned']
+        )
+        self.logger.info(
+            'Encountered %d paid courses.',
+            count['paid']
+        )
+        self.logger.info(
+            'Enrolled into %d free courses.',
+            count['enroll']
+        )

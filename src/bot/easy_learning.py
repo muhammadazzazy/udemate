@@ -23,6 +23,10 @@ class EasyLearning(Spider):
         enroll_url: str = self.driver.find_element(
             By.CSS_SELECTOR, 'a.purple-button').get_attribute('href')
         response = requests.get(enroll_url, timeout=self.timeout)
+        count: int = 0
+        while count < self.retries and 'easylearn.ing' in response.url:
+            response = requests.get(enroll_url, timeout=self.timeout)
+            count += 1
         url: str = self.clean(response.url)
         return url
 
