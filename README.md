@@ -27,8 +27,6 @@
   </p>
 </div>
 
-> **Disclaimer:** This software is not affiliated with, endorsed by, or sponsored by Udemy, Inc. "Udemy" is a registered trademark of Udemy, Inc. All other trademarks are the property of their respective owners.
-
 <!-- PROJECT SHIELDS -->
 <!--
 *** I'm using markdown "reference style" links for readability.
@@ -298,8 +296,6 @@ Don't forget to give the project a star! Thanks again!
 Distributed under the MIT License. See [LICENSE](LICENSE) for more information.
 
 <p align="right">(<a href="#udemate">back to top</a>)</p>
-
-> **Disclaimer:** This software is not affiliated with, endorsed by, or sponsored by Udemy, Inc. "Udemy" is a registered trademark of Udemy, Inc. All other trademarks are the property of their respective owners.
 
 <!-- CONTACT -->
 
