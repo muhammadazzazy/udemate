@@ -38,8 +38,10 @@ class Config(BaseSettings):
     )
 
     TIMEOUT: Optional[int] = Field(
-        description='Timeout duration for web requests and driver waits in seconds'
+        description='Timeout duration for web requests and driver waits in seconds',
+        default=60
     )
     RETRIES: Optional[int] = Field(
-        description='Maximum number of retries for web actions such as enrollments'
+        description='Maximum number of retries for web actions such as enrollments',
+        default=3
     )

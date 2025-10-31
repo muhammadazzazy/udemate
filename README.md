@@ -97,9 +97,9 @@ An automation tool that reads Reddit posts from [r/udemyfreebies](https://www.re
 
 #### Option 1: Run from Source (Recommended for Full Automation)
 
-- [Python 3.12+](https://www.python.org/downloads)
+- [Python 3.13+](https://www.python.org/downloads)
 
-- [Brave Browser](https://brave.com/)
+- [Brave Browser](https://brave.com/) OR [Google Chrome](https://www.google.com/chrome/)
 
 #### Option 2: Run in Docker (Headless Mode Only)
 
@@ -155,8 +155,11 @@ Udemate was tested on Windows 11 and Ubuntu 24.04 LTS.
     # Browser config
     # Required if you want to enroll in courses with a user profile.
     BROWSER_USER_DATA_DIR="C:\\Users\\username\\AppData\\Local\\BraveSoftware\\Brave-Browser\\User Data\\Udemate"
-    # Required. Major version of the Chromium-based browser installed on your system.
-    BROWSER_MAJOR_VERSION=141
+
+    # Maximum number of retries for enrolling into a course.
+    RETRIES=3
+    # Timeout duration (in seconds) for web requests in headless mode and for web elements to load in gui mode.
+    TIMEOUT=60
    ```
 
 4. Specify middleman spiders in middlemen.json file
@@ -196,18 +199,18 @@ Udemate was tested on Windows 11 and Ubuntu 24.04 LTS.
 
    ```sh
     # Windows
-    python .\src\main.py [--mode {headless|gui|hybrid}]  --[browser {brave|chrome}] [--retries {<int>}]
+    python .\src\main.py [--mode {headless|gui|hybrid}] [--user-data-dir {<str>}] [--retries {<int>}] [--timeout {<int>}]
 
     # Linux
-    python3 src/main.py [--mode {headless|gui|hybrid}] [--browser {brave|chrome}] [--retries {<int>}]
+    python3 src/main.py [--mode {headless|gui|hybrid}] [--user-data-dir {<str>}] [--retries {<int>}] [--timeout {<int>}]
    ```
 
 > Note the following:
 >
 > 1. All command-line arguments are optional
 > 2. Default `mode` is `hybrid`
-> 3. Default `browser` is `brave`
-> 4. Default `retries` is `5`
+> 3. Default `retries` is `3`
+> 4. Default `timeout` is `60` seconds
 
 #### Option 2: Run in Docker
 
