@@ -162,7 +162,7 @@ Udemate was tested on Windows 11 and Ubuntu 24.04 LTS.
 
 4. Specify middleman spiders in middlemen.json file
    ```json
-   ["easylearn", "idownloadcoupon"]
+   ["coursecouponz", "easylearn", "idownloadcoupon"]
    ```
 
 #### Option 1: Run from Source
@@ -203,12 +203,13 @@ Udemate was tested on Windows 11 and Ubuntu 24.04 LTS.
     python3 src/main.py [--mode {headless|gui|hybrid}] [--user-data-dir {<str>}] [--retries {<int>}] [--timeout {<int>}]
    ```
 
-> Note the following:
->
-> 1. All command-line arguments are optional
-> 2. Default `mode` is `hybrid`
-> 3. Default `retries` is `3`
-> 4. Default `timeout` is `60` seconds
+   > Note the following:
+   >
+   > 1. Command-line arguments override environment variables
+   > 2. All command-line arguments are optional
+   > 3. Default `mode` is `hybrid`
+   > 4. Default `retries` is `3`
+   > 5. Default `timeout` is `60` seconds
 
 #### Option 2: Run in Docker
 
@@ -260,7 +261,7 @@ Udemate was tested on Windows 11 and Ubuntu 24.04 LTS.
 - [x] Improve performance via per-domain concurrent spidering
 - [x] Add command-line arguments for specifying
   - [x] mode (hybrid, headless, or gui)
-  - [x] browser (Brave Browser or Google Chrome)
+  - [x] timeout (in seconds)
   - [x] retries
 - [x] Fixed issue where the enrollment bot failed to detect the first button after Udemy changed its data-purpose from 'buy-this-course-button' to 'buy-now-button'
 - [x] Support Google Chrome for converting middleman links to Udemy links and automating course enrollment

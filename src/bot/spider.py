@@ -1,10 +1,10 @@
-"""Implement all common functionality between middleman bots."""
+"""Encapsulate common attributes and functionality between middleman spiders."""
 from abc import ABC, abstractmethod
 from utils.logger import setup_logging
 
 
 class Spider(ABC):
-    """Implements constructor and abstract methods for all intermediary spiders."""
+    """Encapsulates shared attributes and abstract methods for intermediary scrapers."""
 
     def __init__(self, *, urls: list[str], retries: int, timeout: int) -> None:
         self.urls = urls
