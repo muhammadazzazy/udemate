@@ -16,19 +16,19 @@ class InventHigh(Spider):
     """Get Udemy links with coupons from Invent High."""
 
     def __init__(self, *, driver: uc.Chrome, urls: list[str], retries: int, timeout: int) -> None:
-        super().__init__(urls=urls, retries=retries, timeout=timeout)
         self.driver = driver
+        super().__init__(urls=urls, retries=retries, timeout=timeout)
 
     def transform(self, url: str) -> str:
         """Return Udemy link from Invent High link."""
         self.driver.get(url)
-        wait = WebDriverWait(self.driver, self.timeout)
-        link = wait.until(
+        wait: WebDriverWait = WebDriverWait(self.driver, self.timeout)
+        link: uc.WebElement = wait.until(
             EC.visibility_of_element_located(
                 (By.ID, 'couponval'))
         )
         url: str = link.get_attribute('href')
-        response = requests.get(url, timeout=30)
+        response: requests.Response = requests.get(url, timeout=30)
         udemy_url: str = self.clean(response.url)
         return udemy_url
 

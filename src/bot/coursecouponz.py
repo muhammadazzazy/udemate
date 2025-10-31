@@ -10,25 +10,29 @@ class CourseCouponz(Spider):
     """Get Udemy links with coupons from CourseCouponz."""
 
     def __init__(self, *, driver: uc.Chrome, urls: list[str], retries: int, timeout: int) -> None:
-        super().__init__(urls=urls, retries=retries, timeout=timeout)
         self.driver = driver
+        super().__init__(urls=urls, retries=retries, timeout=timeout)
 
     def transform(self, url: str) -> str:
         """Return Udemy link from CourseCouponz link."""
         self.driver.get(url)
-        link = self.driver.find_element(By.XPATH,
-                                        "//a[contains(., 'GET COURSE')]")
+        link: uc.WebElement = self.driver.find_element(
+            By.XPATH,
+            "//a[contains(., 'GET COURSE')]"
+        )
         count: int = 0
         while count < self.retries and 'coursecouponz.com' in link.get_attribute('href'):
-            link = self.driver.find_element(By.XPATH,
-                                            "//a[contains(., 'GET COURSE')]")
+            link = self.driver.find_element(
+                By.XPATH,
+                "//a[contains(., 'GET COURSE')]"
+            )
             count += 1
         udemy_url: str = self.clean(link.get_attribute('href'))
         return udemy_url
 
     def run(self) -> list[str]:
         """Return list of Udemy links extracted from CourseCouponz."""
-        self.logger.info('Course Couponz spider starting...')
+        self.logger.info('CourseCouponz spider starting...')
         self.logger.info('Processing %d intermediary links from CourseCouponz...',
                          len(self.urls))
         udemy_urls: list[str] = []

@@ -28,8 +28,9 @@ class Udemy:
         xp: str = '//*[@id="udemy"]/div[1]/div[2]/div/div/div/aside/div/div/div[2]/div[2]/button[1]'
         for attempt in range(self.retries):
             try:
-                wait = WebDriverWait(self.driver, timeout=self.timeout)
-                confirm_button = wait.until(EC.element_to_be_clickable((
+                wait: WebDriverWait = WebDriverWait(
+                    self.driver, timeout=self.timeout)
+                confirm_button: uc.WebElement = wait.until(EC.element_to_be_clickable((
                     By.XPATH,
                     xp
                 )))
@@ -51,8 +52,9 @@ class Udemy:
     def is_owned(self, data_purpose: str) -> bool:
         """Return a flag indicating whether a course is owned."""
         try:
-            wait = WebDriverWait(self.driver, timeout=self.timeout)
-            _buttons = wait.until(lambda d: d.find_elements(
+            wait: WebDriverWait = WebDriverWait(
+                self.driver, timeout=self.timeout)
+            _buttons: list[uc.WebElement] = wait.until(lambda d: d.find_elements(
                 By.XPATH,
                 f"//button[@data-purpose='{data_purpose}' and contains(., 'Go to course')]",
             ))
@@ -63,8 +65,9 @@ class Udemy:
     def is_paid(self, data_purpose: str) -> bool:
         """Return a flag whether course is paid."""
         try:
-            wait = WebDriverWait(self.driver, timeout=self.timeout)
-            _buttons = wait.until(lambda d: d.find_elements(
+            wait: WebDriverWait = WebDriverWait(
+                self.driver, timeout=self.timeout)
+            _buttons: list[uc.WebElement] = wait.until(lambda d: d.find_elements(
                 By.XPATH,
                 f"//button[@data-purpose='{data_purpose}' and contains(., 'Buy now')]",
             ))
@@ -75,8 +78,9 @@ class Udemy:
     def enroll(self, data_purpose: str) -> bool:
         """Scan for first 'Enroll now' button and click on it."""
         try:
-            wait = WebDriverWait(self.driver, timeout=self.timeout)
-            buttons = wait.until(lambda d: d.find_elements(
+            wait: WebDriverWait = WebDriverWait(
+                self.driver, timeout=self.timeout)
+            buttons: list[uc.WebElement] = wait.until(lambda d: d.find_elements(
                 By.XPATH,
                 f"//button[@data-purpose='{data_purpose}' and contains(., 'Enroll now')]",
             ))

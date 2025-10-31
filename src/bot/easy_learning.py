@@ -14,15 +14,16 @@ class EasyLearning(Spider):
     """Get Udemy links with coupons from Easy Learning."""
 
     def __init__(self, *, driver: uc.Chrome, urls: list[str], retries: int, timeout: int) -> None:
-        super().__init__(urls=urls, retries=retries, timeout=timeout)
         self.driver = driver
+        super().__init__(urls=urls, retries=retries, timeout=timeout)
 
     def transform(self, url: str) -> str:
         """Return Udemy link from Easy Learning link."""
         self.driver.get(url)
         enroll_url: str = self.driver.find_element(
             By.CSS_SELECTOR, 'a.purple-button').get_attribute('href')
-        response = requests.get(enroll_url, timeout=self.timeout)
+        response: requests.Response = requests.get(
+            enroll_url, timeout=self.timeout)
         count: int = 0
         while count < self.retries and 'easylearn.ing' in response.url:
             response = requests.get(enroll_url, timeout=self.timeout)

@@ -17,8 +17,8 @@ class WebHelperApp(Spider):
     def transform(self, url: str) -> str:
         """Return Udemy link from WebHelperApp link."""
         self.driver.get(url)
-        link = self.driver.find_element(By.XPATH,
-                                        "//a[contains(., 'GET COURSE')]")
+        link: uc.WebElement = self.driver.find_element(By.XPATH,
+                                                       "//a[contains(., 'GET COURSE')]")
         udemy_url: str = self.clean(link.get_attribute('href'))
         return udemy_url
 

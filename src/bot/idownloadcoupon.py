@@ -16,7 +16,7 @@ class IDownloadCoupon(Spider):
 
     def transform(self, url: str) -> str | None:
         """Convert iDC link to final Udemy link with coupon."""
-        response = self.session.get(
+        response: requests.Response = self.session.get(
             url, allow_redirects=True, timeout=self.timeout)
         url: str = self.clean(response.url)
         count: int = 0
