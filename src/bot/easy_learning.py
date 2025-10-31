@@ -13,8 +13,8 @@ from bot.spider import Spider
 class EasyLearning(Spider):
     """Get Udemy links with coupons from Easy Learning."""
 
-    def __init__(self, *, driver: uc.Chrome, urls: list[str]) -> None:
-        super().__init__(urls)
+    def __init__(self, *, driver: uc.Chrome, urls: list[str], retries: int, timeout: int) -> None:
+        super().__init__(urls=urls, retries=retries, timeout=timeout)
         self.driver = driver
 
     def transform(self, url: str) -> str:
@@ -22,9 +22,13 @@ class EasyLearning(Spider):
         self.driver.get(url)
         enroll_url: str = self.driver.find_element(
             By.CSS_SELECTOR, 'a.purple-button').get_attribute('href')
-        response = requests.get(enroll_url, timeout=30)
-        udemy_url: str = self.clean(response.url)
-        return udemy_url
+        response = requests.get(enroll_url, timeout=self.timeout)
+        count: int = 0
+        while 'udemy.com' not in url and count < self.retries:
+            response = requests.get(url, timeout=self.timeout)
+            count += 1
+        url: str = self.clean(response.url)
+        return url
 
     def run(self) -> list[str]:
         """Return list of Udemy links extracted from Easy Learning."""

@@ -2,6 +2,8 @@
 
 """Autoenroll into free Udemy courses based on links posted on various middlemen websites."""
 from argparse import ArgumentParser, Namespace
+from logging import Logger
+from pydantic_settings import BaseSettings
 
 from cli.udemate import Udemate
 from utils.config import Config
@@ -17,36 +19,38 @@ def parse_arguments() -> Namespace:
         default='hybrid'
     )
     parser.add_argument(
-        '--browser',
-        choices=['brave', 'chrome'],
-        default='brave'
+        '--user-data-dir',
+        type=str,
+        default=None
     )
     parser.add_argument(
         '--retries',
         type=int,
-        default=3
+        default=None
     )
     parser.add_argument(
         '--timeout',
         type=int,
-        default=60
+        default=None
     )
     return parser.parse_args()
 
 
 def main() -> None:
-    """Parse command-line arguments for mode of automation and run Udemate accordingly."""
-    logger = setup_logging()
+    """Parse command-line arguments, override env vars with command-line arguments, and run Udemate accordingly."""
+    logger: Logger = setup_logging()
     try:
         args: Namespace = parse_arguments()
+        cli_overrides: dict[str, int | str | None] = {
+            k: v for k, v in vars(args).items() if v is not None
+        }
         config: Config = Config()
+        settings: BaseSettings = config.model_copy(update=cli_overrides)
         udemate: Udemate = Udemate(
-            browser=args.browser,
-            config=config,
-            logger=logger,
-            retries=args.retries
+            config=settings,
+            logger=logger
         )
-        udemate.run(args)
+        udemate.run(args.mode)
     except KeyboardInterrupt:
         logger.info('Exiting...')
 

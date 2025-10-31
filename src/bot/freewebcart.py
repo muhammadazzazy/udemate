@@ -12,14 +12,14 @@ from bot.spider import Spider
 class Freewebcart(Spider):
     """Get Udemy links with coupons from Freewebcart."""
 
-    def __init__(self, *, driver: uc.Chrome, urls: list[str]) -> None:
-        super().__init__(urls)
+    def __init__(self, *, driver: uc.Chrome, urls: list[str], retries: int, timeout: int) -> None:
         self.driver = driver
+        super().__init__(urls=urls, retries=retries, timeout=timeout)
 
     def transform(self, url: str) -> str:
         """Return Udemy link from Freewebcart link."""
         self.driver.get(url)
-        wait = WebDriverWait(self.driver, 30)
+        wait = WebDriverWait(self.driver, self.timeout)
         link = wait.until(
             EC.visibility_of_element_located(
                 (By.XPATH, "//a[contains(text(), 'Get 100% OFF Coupon')]"))

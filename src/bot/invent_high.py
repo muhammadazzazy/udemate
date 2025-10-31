@@ -15,14 +15,14 @@ from bot.spider import Spider
 class InventHigh(Spider):
     """Get Udemy links with coupons from Invent High."""
 
-    def __init__(self, *, driver: uc.Chrome, urls: list[str]) -> None:
-        super().__init__(urls)
+    def __init__(self, *, driver: uc.Chrome, urls: list[str], retries: int, timeout: int) -> None:
+        super().__init__(urls=urls, retries=retries, timeout=timeout)
         self.driver = driver
 
     def transform(self, url: str) -> str:
         """Return Udemy link from Invent High link."""
         self.driver.get(url)
-        wait = WebDriverWait(self.driver, 30)
+        wait = WebDriverWait(self.driver, self.timeout)
         link = wait.until(
             EC.visibility_of_element_located(
                 (By.ID, 'couponval'))
@@ -36,7 +36,7 @@ class InventHigh(Spider):
         """Check if Invent High coupon has expired."""
         try:
             self.driver.get(url)
-            wait = WebDriverWait(self.driver, 30)
+            wait = WebDriverWait(self.driver, self.timeout)
             _text: str = wait.until(
                 EC.visibility_of_element_located(
                     (By.XPATH, "//*[text()='---------Expired---------']")

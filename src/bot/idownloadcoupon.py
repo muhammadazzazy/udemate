@@ -10,17 +10,22 @@ from bot.spider import Spider
 class IDownloadCoupon(Spider):
     """Get Udemy links with coupons from iDC."""
 
-    def __init__(self, urls: list[str]) -> None:
+    def __init__(self, *, urls: list[str], retries: int, timeout: int) -> None:
         self.session = requests.Session()
-        super().__init__(urls)
+        super().__init__(urls=urls, retries=retries, timeout=timeout)
 
     def transform(self, url: str) -> str | None:
         """Convert iDC link to final Udemy link with coupon."""
-        response = self.session.get(url, allow_redirects=True, timeout=30)
+        response = self.session.get(
+            url, allow_redirects=True, timeout=self.timeout)
         url: str = self.clean(response.url)
-        if 'udemy.com' in url:
-            return url
-        return None
+        count: int = 0
+        while 'udemy.com' not in url and count < self.retries:
+            response = self.session.get(
+                url, allow_redirects=True, timeout=self.timeout)
+            url = self.clean(response.url)
+            count += 1
+        return url
 
     def run(self) -> list[str]:
         """Return list of Udemy links extracted from iDC."""

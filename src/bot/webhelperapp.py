@@ -10,9 +10,9 @@ from bot.spider import Spider
 class WebHelperApp(Spider):
     """Get Udemy links with coupons from WebHelperApp."""
 
-    def __init__(self, *, driver: uc.Chrome, urls: list[str]) -> None:
-        super().__init__(urls)
+    def __init__(self, *, driver: uc.Chrome, urls: list[str], retries: int, timeout: int) -> None:
         self.driver = driver
+        super().__init__(urls=urls, retries=retries, timeout=timeout)
 
     def transform(self, url: str) -> str:
         """Return Udemy link from WebHelperApp link."""

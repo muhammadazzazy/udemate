@@ -9,8 +9,8 @@ from bot.spider import Spider
 class CourseCouponz(Spider):
     """Get Udemy links with coupons from CourseCouponz."""
 
-    def __init__(self, *, driver: uc.Chrome, urls: list[str]) -> None:
-        super().__init__(urls)
+    def __init__(self, *, driver: uc.Chrome, urls: list[str], retries: int, timeout: int) -> None:
+        super().__init__(urls=urls, retries=retries, timeout=timeout)
         self.driver = driver
 
     def transform(self, url: str) -> str:

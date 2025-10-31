@@ -1,5 +1,5 @@
 """Configure Udemate based on environment variables in .env file."""
-from typing import Final
+from typing import Final, Optional
 from datetime import datetime
 
 from pydantic import Field
@@ -18,7 +18,7 @@ class Config(BaseSettings):
     """Encapsulate and validate configuration attributes loaded from .env."""
     model_config = SettingsConfigDict(env_file='.env',
                                       env_file_encoding='utf-8',
-                                      case_sensitive=True)
+                                      case_sensitive=False)
     REDDIT_CLIENT_ID: str = Field(description='Reddit script client ID')
     REDDIT_CLIENT_SECRET: str = Field(
         description='Reddit script client secret')
@@ -32,9 +32,14 @@ class Config(BaseSettings):
         description='Password of Reddit account')
     REDDIT_USERNAME: str = Field(
         description='Username of Reddit account')
-    BROWSER_USER_DATA_DIR: str = Field(
+
+    BROWSER_USER_DATA_DIR: Optional[str] = Field(
         description='Path to Brave Browser user data directory'
     )
-    BROWSER_MAJOR_VERSION: int = Field(
-        description='Major version of the Chromium browser installed on the system'
+
+    TIMEOUT: Optional[int] = Field(
+        description='Timeout duration for web requests and driver waits in seconds'
+    )
+    RETRIES: Optional[int] = Field(
+        description='Maximum number of retries for web actions such as enrollments'
     )

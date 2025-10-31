@@ -6,8 +6,10 @@ from utils.logger import setup_logging
 class Spider(ABC):
     """Implements constructor and abstract methods for all intermediary spiders."""
 
-    def __init__(self, urls: list[str]) -> None:
+    def __init__(self, *, urls: list[str], retries: int, timeout: int) -> None:
         self.urls = urls
+        self.retries = retries
+        self.timeout = timeout
         self.logger = setup_logging()
 
     def clean(self, url: str) -> str:

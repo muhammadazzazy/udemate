@@ -30,22 +30,20 @@ from web.google_chrome import GoogleChrome
 class Udemate:
     """Control the flow of Udemate."""
 
-    def __init__(self, *, browser: str, config: Config, logger: Logger, retries: int) -> None:
-        match browser:
-            case 'brave':
-                self.browser = Brave(
-                    major_version=config.BROWSER_MAJOR_VERSION,
-                    user_data_dir=config.BROWSER_USER_DATA_DIR,
-                    logger=logger)
-            case 'chrome':
-                self.browser = GoogleChrome(
-                    major_version=config.BROWSER_MAJOR_VERSION,
-                    user_data_dir=config.BROWSER_USER_DATA_DIR,
-                    logger=logger)
+    def __init__(self, *, config: Config, logger: Logger) -> None:
+        if 'brave' in config.BROWSER_USER_DATA_DIR.lower():
+            self.browser = Brave(
+                major_version=141,
+                user_data_dir=config.BROWSER_USER_DATA_DIR,
+                logger=logger)
+        elif 'chrome' in config.BROWSER_USER_DATA_DIR.lower():
+            self.browser = GoogleChrome(
+                major_version=141,
+                user_data_dir=config.BROWSER_USER_DATA_DIR,
+                logger=logger)
         self.cache = Cache()
         self.config = config
         self.logger = logger
-        self.retries = retries
 
     def get_middlemen(self) -> list[str]:
         """Return list of middlemen from 'middlemen.json' configuration file."""
@@ -91,48 +89,62 @@ class Udemate:
                         headless=True)
                     spiders[middleman] = CourseCouponz(
                         driver=headless_driver,
-                        urls=urls
+                        urls=urls,
+                        retries=self.config.RETRIES,
+                        timeout=self.config.TIMEOUT
                     )
                 case 'easylearn':
                     headless_driver: uc.Chrome = self.browser.setup(
                         headless=True)
                     spiders[middleman] = EasyLearning(
                         driver=headless_driver,
-                        urls=urls
+                        urls=urls,
+                        retries=self.config.RETRIES,
+                        timeout=self.config.TIMEOUT
                     )
                 case 'freewebcart':
                     headless_driver: uc.Chrome = self.browser.setup(
                         headless=True)
                     spiders[middleman] = Freewebcart(
                         driver=headless_driver,
-                        urls=urls
+                        urls=urls,
+                        retries=self.config.RETRIES,
+                        timeout=self.config.TIMEOUT
                     )
                 case 'idownloadcoupon':
                     headless_driver: uc.Chrome = self.browser.setup(
                         headless=True)
                     spiders[middleman] = IDownloadCoupon(
-                        urls=urls
+                        urls=urls,
+                        retries=self.config.RETRIES,
+                        timeout=self.config.TIMEOUT
                     )
                 case 'inventhigh':
                     headless_driver: uc.Chrome = self.browser.setup(
                         headless=True)
                     spiders[middleman] = InventHigh(
                         driver=headless_driver,
-                        urls=urls
+                        urls=urls,
+                        retries=self.config.RETRIES,
+                        timeout=self.config.TIMEOUT
                     )
                 case 'line51':
                     headless_driver: uc.Chrome = self.browser.setup(
                         headless=True)
                     spiders[middleman] = Line51(
                         driver=headless_driver,
-                        urls=urls
+                        urls=urls,
+                        retries=self.config.RETRIES,
+                        timeout=self.config.TIMEOUT
                     )
                 case 'webhelperapp':
                     headless_driver: uc.Chrome = self.browser.setup(
                         headless=True)
                     spiders[middleman] = WebHelperApp(
                         driver=headless_driver,
-                        urls=urls
+                        urls=urls,
+                        retries=self.config.RETRIES,
+                        timeout=self.config.TIMEOUT
                     )
         return spiders
 
@@ -162,18 +174,18 @@ class Udemate:
         udemy: Udemy = Udemy(
             driver=gui_driver,
             logger=self.logger,
-            retries=self.retries,
+            retries=self.config.RETRIES,
             urls=udemy_urls,
         )
         udemy.run()
         gui_driver.quit()
 
-    def run(self, args: Namespace) -> None:
+    def run(self, mode: str) -> None:
         """Run Udemate based on command-line arguments passed."""
-        self.logger.info('Starting Udemate in %s mode...', args.mode)
+        self.logger.info('Starting Udemate in %s mode...', mode)
         udemy_urls: list[str] = []
-        if args.mode in ('headless', 'hybrid'):
+        if mode in ('headless', 'hybrid'):
             middlemen: list[str] = self.get_middlemen()
             udemy_urls: list[str] = self.scrape(middlemen)
-        if args.mode in ('hybrid', 'gui'):
+        if mode in ('hybrid', 'gui'):
             self.autoenroll(udemy_urls)
