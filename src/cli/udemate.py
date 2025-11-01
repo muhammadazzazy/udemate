@@ -2,10 +2,8 @@
 Parse Udemy links with coupons from cache, automate course enrollment,
 scrape middleman links, get new Udemy links with coupons, and write them back to cache.
 """
-import json
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from logging import Logger
-from pathlib import Path
 from typing import Any
 
 import undetected_chromedriver as uc
@@ -44,18 +42,6 @@ class Udemate:
         self.config = config
         self.logger = logger
 
-    def get_middlemen(self) -> list[str]:
-        """Return list of middlemen from 'middlemen.json' configuration file."""
-        middlemen_path: Path = Path(
-            __file__).parent.parent.parent / 'config' / 'middlemen.json'
-        if not middlemen_path.exists():
-            self.logger.error('Middlemen configuration file not found.')
-            raise FileNotFoundError('middlemen.json not found.')
-        middlemen: list[str] = []
-        with middlemen_path.open('r', encoding='utf-8') as f:
-            middlemen = json.load(f)
-        return middlemen
-
     def setup_reddit_client(self) -> RedditClient:
         """Return Reddit client for r/udemyfreebies."""
         if self.config.reddit_password:
@@ -65,12 +51,15 @@ class Udemate:
             reddit_client: RedditClient = RedditClient(refresh_token)
         return reddit_client
 
-    def collect_middleman_links(self, middlemen: list[str]) -> dict[str, set[str]]:
+    def collect_middleman_links(self) -> dict[str, set[str]]:
         """Collect middleman links from Reddit."""
         reddit_client: RedditClient = self.setup_reddit_client()
         reddit_client.populate_submissions()
-        middleman_urls: dict[str,
-                             list[str]] = reddit_client.get_middleman_urls(middlemen)
+        middlemen: list[str] = reddit_client.get_middlemen()
+        middleman_urls: dict[
+            str,
+            list[str]
+        ] = reddit_client.get_middleman_urls(middlemen)
         for middleman in middlemen:
             self.cache.write_json(
                 data=middleman_urls[middleman],
@@ -89,8 +78,8 @@ class Udemate:
                     spiders[middleman] = CourseCouponz(
                         driver=headless_driver,
                         urls=urls,
-                        retries=self.config.retries,
-                        timeout=self.config.timeout
+                        retries=self.config.coursecouponz_retries,
+                        timeout=self.config.coursecouponz_timeout
                     )
                 case 'easylearn':
                     headless_driver: uc.Chrome = self.browser.setup(
@@ -98,8 +87,8 @@ class Udemate:
                     spiders[middleman] = EasyLearning(
                         driver=headless_driver,
                         urls=urls,
-                        retries=self.config.retries,
-                        timeout=self.config.timeout
+                        retries=self.config.easylearn_retries,
+                        timeout=self.config.easylearn_timeout
                     )
                 case 'freewebcart':
                     headless_driver: uc.Chrome = self.browser.setup(
@@ -107,16 +96,16 @@ class Udemate:
                     spiders[middleman] = Freewebcart(
                         driver=headless_driver,
                         urls=urls,
-                        retries=self.config.retries,
-                        timeout=self.config.timeout
+                        retries=self.config.freewebcart_retries,
+                        timeout=self.config.freewebcart_timeout
                     )
                 case 'idownloadcoupon':
                     headless_driver: uc.Chrome = self.browser.setup(
                         headless=True)
                     spiders[middleman] = IDownloadCoupon(
                         urls=urls,
-                        retries=self.config.retries,
-                        timeout=self.config.timeout
+                        retries=self.config.idc_retries,
+                        timeout=self.config.idc_timeout
                     )
                 case 'inventhigh':
                     headless_driver: uc.Chrome = self.browser.setup(
@@ -124,8 +113,8 @@ class Udemate:
                     spiders[middleman] = InventHigh(
                         driver=headless_driver,
                         urls=urls,
-                        retries=self.config.retries,
-                        timeout=self.config.timeout
+                        retries=self.config.inventhigh_retries,
+                        timeout=self.config.inventhigh_timeout
                     )
                 case 'line51':
                     headless_driver: uc.Chrome = self.browser.setup(
@@ -133,8 +122,8 @@ class Udemate:
                     spiders[middleman] = Line51(
                         driver=headless_driver,
                         urls=urls,
-                        retries=self.config.retries,
-                        timeout=self.config.timeout
+                        retries=self.config.line51_retries,
+                        timeout=self.config.line51_timeout
                     )
                 case 'webhelperapp':
                     headless_driver: uc.Chrome = self.browser.setup(
@@ -142,15 +131,14 @@ class Udemate:
                     spiders[middleman] = WebHelperApp(
                         driver=headless_driver,
                         urls=urls,
-                        retries=self.config.retries,
-                        timeout=self.config.timeout
+                        retries=self.config.webhelperapp_retries,
+                        timeout=self.config.webhelperapp_timeout
                     )
         return spiders
 
-    def scrape(self, middlemen: list[str]) -> list[str]:
+    def scrape(self) -> list[str]:
         """Fetch collection of Udemy links with coupons using middleman spiders."""
-        middleman_urls: dict[str, set[str]
-                             ] = self.collect_middleman_links(middlemen)
+        middleman_urls: dict[str, set[str]] = self.collect_middleman_links()
         udemy_urls: list[str] = []
         spiders: dict[str, Any] = self.initialize_spiders(middleman_urls)
         with ThreadPoolExecutor(max_workers=min(8, len(spiders))) as executor:
@@ -172,8 +160,8 @@ class Udemate:
         gui_driver: uc.Chrome = self.browser.setup(headless=False)
         udemy: Udemy = Udemy(
             driver=gui_driver,
-            retries=self.config.retries,
-            timeout=self.config.timeout,
+            retries=self.config.udemy_retries,
+            timeout=self.config.udemy_timeout,
             urls=udemy_urls,
         )
         udemy.run()
@@ -184,7 +172,6 @@ class Udemate:
         self.logger.info('Starting Udemate in %s mode...', mode)
         udemy_urls: list[str] = []
         if mode in ('headless', 'hybrid'):
-            middlemen: list[str] = self.get_middlemen()
-            udemy_urls: list[str] = self.scrape(middlemen)
+            udemy_urls: list[str] = self.scrape()
         if mode in ('hybrid', 'gui'):
             self.autoenroll(udemy_urls)

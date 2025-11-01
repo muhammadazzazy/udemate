@@ -136,38 +136,60 @@ Udemate was tested on Windows 11 and Ubuntu 24.04 LTS.
 3. Create a .env file
 
    ```env
-    # Reddit config
-    # Required.
-    REDDIT_CLIENT_ID=""
-    # Required.
-    REDDIT_CLIENT_SECRET=""
-    # Optional. Default is 'script:Udemate:v1.0 (by u/kemitche)'.
-    REDDIT_USER_AGENT=""
-    # Required if 2FA is not enabled.
-    REDDIT_PASSWORD=""
-    # Required if 2FA is not enabled.
-    REDDIT_USERNAME=""
-    # Optional. Default is 500.
-    REDDIT_LIMIT=1000
+   # Reddit config
+   # Required.
+   REDDIT_CLIENT_ID=""
+   # Required.
+   REDDIT_CLIENT_SECRET=""
+   # Optional. Default is 'script:Udemate:v1.0 (by u/kemitche)'.
+   REDDIT_USER_AGENT=""
+   # Required if 2FA is not enabled.
+   REDDIT_PASSWORD=""
+   # Required if 2FA is not enabled.
+   REDDIT_USERNAME=""
+   # Optional. Default is 500.
+   REDDIT_LIMIT=1000
 
-    # Browser config
-    # Required if you want to enroll in courses with a user profile.
-    USER_DATA_DIR="C:\\Users\\username\\AppData\\Local\\BraveSoftware\\Brave-Browser\\User Data\\Udemate"
+   # Browser config
+   # Required if you want to enroll in courses with a user profile.
+   USER_DATA_DIR="C:\\Users\\username\\AppData\\Local\\BraveSoftware\\Brave-Browser\\User Data\\Udemate"
 
-    # Maximum number of retries for enrolling into a course. Default is 3.
-    RETRIES=3
-    # Timeout duration (in seconds) for web requests and for web elements to load. Default is 60 seconds.
-    TIMEOUT=60
-   ```
+   # CourseCouponz config
+   COURSECOUPONZ_RETRIES=3
+   COURSECOUPONZ_TIMEOUT=30
 
-4. Specify middleman spiders in middlemen.json file
-   ```json
-   ["coursecouponz", "easylearn", "idownloadcoupon"]
+   # Easy Learn config
+   EASY_LEARN_RETRIES=3
+   EASY_LEARN_TIMEOUT=30
+
+   # Freewebcart config
+   FREEWEBCART_RETRIES=3
+   FREEWEBCART_TIMEOUT=30
+
+   # iDC config
+   IDC_RETRIES=3
+   IDC_TIMEOUT=30
+
+   # InventHigh config
+   INVENTHIGH_RETRIES=3
+   INVENTHIGH_TIMEOUT=30
+
+   # Line51 config
+   LINE51_RETRIES=3
+   LINE51_TIMEOUT=30
+
+   # WebHelperApp config
+   WEBHELPERAPP_RETRIES=3
+   WEBHELPERAPP_TIMEOUT=30
+
+   # Udemy bot enrollment config
+   UDEMY_RETRIES=3
+   UDEMY_TIMEOUT=10
    ```
 
 #### Option 1: Run from Source
 
-5. Create a virtual environment
+4. Create a virtual environment
 
    ```sh
    # Windows
@@ -177,7 +199,7 @@ Udemate was tested on Windows 11 and Ubuntu 24.04 LTS.
    python3.12 -m venv .venv
    ```
 
-6. Activate the virtual environment
+5. Activate the virtual environment
 
    ```sh
    # Windows
@@ -187,39 +209,47 @@ Udemate was tested on Windows 11 and Ubuntu 24.04 LTS.
    source .venv/bin/activate
    ```
 
-7. Install dependencies
+6. Install dependencies
 
    ```sh
      pip install -r requirements.txt
    ```
 
-8. Run the script
+7. Run the automation tool in headless mode to scrape intermediate links
 
    ```sh
     # Windows
-    python .\src\main.py [--mode {headless|gui|hybrid}] [--user-data-dir {<str>}] [--retries {<int>}] [--timeout {<int>}]
+    python .\src\main.py --mode headless
 
     # Linux
-    python3 src/main.py [--mode {headless|gui|hybrid}] [--user-data-dir {<str>}] [--retries {<int>}] [--timeout {<int>}]
+    python3 src/main.py --mode headless
    ```
 
-   > Note the following:
-   >
-   > 1. Command-line arguments override environment variables
-   > 2. All command-line arguments are optional
-   > 3. Default `mode` is `hybrid`
-   > 4. Default `retries` is `3`
-   > 5. Default `timeout` is `60` seconds
+8. Run the tool in GUI mode to automate course enrollment
+
+   ```sh
+   # Windows
+   python .\src\main.py --mode gui
+
+   # Linux
+   python3 src/main.py --mode gui
+   ```
+
+> Note the following:
+>
+> 1. Command-line arguments override environment variables
+> 2. All command-line arguments are optional
+> 3. Default `mode` is `hybrid`
 
 #### Option 2: Run in Docker
 
-5. Build the Docker image
+4. Build the Docker image
 
-   ```sh
-    docker build --build-arg USER_ID=$(id -u) --build-arg GROUP_ID=$(id -g) -f docker/Dockerfile -t udemate .
-   ```
+```sh
+ docker build --build-arg USER_ID=$(id -u) --build-arg GROUP_ID=$(id -g) -f docker/Dockerfile -t udemate .
+```
 
-6. Run the docker image
+5. Run the docker image
 
    ```sh
     docker run --rm --env-file .env -v "$(pwd):/udemate" udemate
@@ -261,9 +291,9 @@ Udemate was tested on Windows 11 and Ubuntu 24.04 LTS.
 - [x] Improve performance via per-domain concurrent spidering
 - [x] Add command-line arguments for specifying
   - [x] mode (hybrid, headless, or gui)
-  - [x] timeout (in seconds)
-  - [x] retries
-- [x] Fixed issue where the enrollment bot failed to detect the first button after Udemy changed its data-purpose from 'buy-this-course-button' to 'buy-now-button'
+  - [x] timeout for each spider and enrollment bot (in seconds)
+  - [x] retries for each spider and enrollment bot
+- [x] Fix issue where the enrollment bot failed to detect the first button after Udemy changed its data-purpose from 'buy-this-course-button' to 'buy-now-button'
 - [x] Support Google Chrome for converting middleman links to Udemy links and automating course enrollment
 - [x] Fix issue where Brave Browser runs out of VRAM in non-headless mode
 - [ ] Support parsing Reddit posts containing several links

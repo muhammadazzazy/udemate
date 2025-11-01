@@ -1,6 +1,4 @@
 """Configure Reddit PRAW for r/udemyfreebies, fetch posts on subreddit, and extract hostnames."""
-from sys import exit
-
 import praw
 from prawcore.exceptions import RequestException
 from praw.models.reddit.submission import Submission
@@ -46,17 +44,30 @@ class RedditClient:
             self.logger.error('RequestException: %s', e)
             exit()
 
-    def get_middleman_urls(self, hostnames: list[str]) -> dict[str, list[str]]:
-        """Return mapping between hostnames and submission links."""
-        urls: dict[str, list[str]] = {
-            hostname: [] for hostname in hostnames
-        }
+    def get_middlemen(self) -> list[str]:
+        """Return list of detected middlemen hostnames."""
+        middlemen: list[str] = []
         for submission in self.submissions:
-            for hostname in hostnames:
-                if hostname in submission.url:
-                    urls[hostname].append(self.clean(submission.url))
-        for hostname in hostnames:
-            urls[hostname] = sorted(set(urls[hostname]))
+            standard_url: str = self.clean(submission.url)
+            hostname: str = standard_url.split('/')[2]
+            middleman: str = hostname.split('.')[0]
+            if middleman not in middlemen:
+                middlemen.append(middleman)
+        self.logger.info('Detected middlemen: %s', middlemen)
+        return middlemen
+
+    def get_middleman_urls(self, middlemen: list[str]) -> dict[str, list[str]]:
+        """Return mapping between middlemen and submission links."""
+        urls: dict[str, list[str]] = {}
+        for middleman in middlemen:
+            urls[middleman] = []
+        for submission in self.submissions:
+            for middleman in middlemen:
+                if middleman in submission.url:
+                    urls[middleman].append(self.clean(submission.url))
+                    break
+        for middleman in middlemen:
+            urls[middleman] = sorted(set(urls[middleman]))
         return urls
 
     def clean(self, url: str) -> str:
@@ -65,4 +76,6 @@ class RedditClient:
         while '' in parts:
             parts.remove('')
         clean_url: str = parts[0] + '//' + '/'.join(parts[1:4])
+        clean_url = clean_url.replace('www.', '')
+        self.logger.debug('Cleaned URL: %s', clean_url)
         return clean_url

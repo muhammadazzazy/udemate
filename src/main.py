@@ -11,7 +11,7 @@ from utils.logger import setup_logging
 
 
 def parse_arguments() -> Namespace:
-    """Parse arguments passed via the CLI."""
+    """Parse command-line arguments."""
     parser: ArgumentParser = ArgumentParser()
     parser.add_argument(
         '--mode',
@@ -23,16 +23,20 @@ def parse_arguments() -> Namespace:
         type=str,
         default=None
     )
-    parser.add_argument(
-        '--retries',
-        type=int,
-        default=None
-    )
-    parser.add_argument(
-        '--timeout',
-        type=int,
-        default=None
-    )
+    bots: list[str] = ['coursecouponz', 'easylearn',
+                       'freewebcart', 'idc',
+                       'inventhigh', 'line51', 'webhelperapp', 'udemy']
+    for bot in bots:
+        parser.add_argument(
+            f'--{bot}-timeout',
+            type=int,
+            default=None
+        )
+        parser.add_argument(
+            f'--{bot}-retries',
+            type=int,
+            default=None
+        )
     return parser.parse_args()
 
 

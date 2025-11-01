@@ -11,6 +11,31 @@ DEFAULT_LIMIT: Final[int] = 500
 MIN_LIMIT: Final[int] = 1
 MAX_LIMIT: Final[int] = 1000
 
+
+DEFAULT_COURSECOUPONZ_TIMEOUT: Final[int] = 30
+DEFAULT_COURSECOUPONZ_RETRIES: Final[int] = 3
+
+DEFAULT_EASYLEARN_TIMEOUT: Final[int] = 30
+DEFAULT_EASYLEARN_RETRIES: Final[int] = 3
+
+DEFAULT_FREEWEBCART_TIMEOUT: Final[int] = 30
+DEFAULT_FREEWEBCART_RETRIES: Final[int] = 3
+
+DEFAULT_IDC_TIMEOUT: Final[int] = 30
+DEFAULT_IDC_RETRIES: Final[int] = 3
+
+DEFAULT_INVENTHIGH_TIMEOUT: Final[int] = 30
+DEFAULT_INVENTHIGH_RETRIES: Final[int] = 3
+
+DEFAULT_LINE51_TIMEOUT: Final[int] = 30
+DEFAULT_LINE51_RETRIES: Final[int] = 3
+
+DEFAULT_WEBHELPERAPP_TIMEOUT: Final[int] = 30
+DEFAULT_WEBHELPERAPP_RETRIES: Final[int] = 3
+
+DEFAULT_UDEMY_TIMEOUT: Final[int] = 10
+DEFAULT_UDEMY_RETRIES: Final[int] = 3
+
 FORMATTED_DATE: Final[str] = datetime.today().strftime('%Y%m%d')
 
 
@@ -37,11 +62,74 @@ class Config(BaseSettings):
         description='Path to Brave Browser user data directory'
     )
 
-    timeout: Optional[int] = Field(
-        description='Timeout duration for web requests and driver waits in seconds',
-        default=60
+    coursecouponz_retries: Optional[int] = Field(
+        description='Maximum number of retries for Course Couponz requests',
+        default=DEFAULT_COURSECOUPONZ_RETRIES
     )
-    retries: Optional[int] = Field(
+    coursecouponz_timeout: Optional[int] = Field(
+        description='Timeout (in seconds) for Course Couponz requests',
+        default=DEFAULT_COURSECOUPONZ_TIMEOUT
+    )
+
+    easylearn_retries: Optional[int] = Field(
+        description='Maximum number of retries for Easy Learning requests',
+        default=DEFAULT_EASYLEARN_RETRIES
+    )
+    easylearn_timeout: Optional[int] = Field(
+        description='Timeout (in seconds) for Easy Learning requests',
+        default=DEFAULT_EASYLEARN_TIMEOUT
+    )
+
+    freewebcart_retries: Optional[int] = Field(
+        description='Maximum number of retries for Freewebcart requests and actions',
+        default=DEFAULT_FREEWEBCART_RETRIES
+    )
+    freewebcart_timeout: Optional[int] = Field(
+        description='Timeout (in seconds) for Freewebcart web requests and actions',
+        default=DEFAULT_FREEWEBCART_TIMEOUT
+    )
+
+    idc_retries: Optional[int] = Field(
+        description='Maximum number of retries for iDC requests',
+        default=DEFAULT_IDC_RETRIES
+    )
+    idc_timeout: Optional[int] = Field(
+        description='Timeout (in seconds) for iDC requests',
+        default=DEFAULT_IDC_TIMEOUT
+    )
+
+    inventhigh_retries: Optional[int] = Field(
+        description='Maximum number of retries for InventHigh requests and actions',
+        default=DEFAULT_INVENTHIGH_RETRIES
+    )
+    inventhigh_timeout: Optional[int] = Field(
+        description='Timeout (in seconds) for InventHigh requests and actions',
+        default=DEFAULT_INVENTHIGH_TIMEOUT
+    )
+
+    line51_retries: Optional[int] = Field(
+        description='Maximum number of retries for Line51 requests and actions',
+        default=DEFAULT_LINE51_RETRIES
+    )
+    line51_timeout: Optional[int] = Field(
+        description='Timeout (in seconds) for Line51 requests and actions',
+        default=DEFAULT_LINE51_TIMEOUT
+    )
+
+    webhelperapp_retries: Optional[int] = Field(
+        description='Maximum number of retries for WebHelperApp requests and actions',
+        default=DEFAULT_WEBHELPERAPP_RETRIES
+    )
+    webhelperapp_timeout: Optional[int] = Field(
+        description='Timeout (in seconds) for WebHelperApp requests and actions',
+        default=DEFAULT_WEBHELPERAPP_TIMEOUT
+    )
+
+    udemy_retries: Optional[int] = Field(
         description='Maximum number of retries for web actions such as enrollments',
-        default=3
+        default=DEFAULT_UDEMY_RETRIES
+    )
+    udemy_timeout: Optional[int] = Field(
+        description='Timeout (in seconds) for web actions such as enrollments',
+        default=DEFAULT_UDEMY_TIMEOUT
     )
