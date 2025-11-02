@@ -49,40 +49,49 @@ class Udemy:
                 continue
         return False
 
-    def is_owned(self, data_purpose: str) -> bool:
+    def is_owned(self) -> bool:
         """Return a flag indicating whether a course is owned."""
+        button_xpath: str = (
+            "//button[(@data-purpose='buy-now-button' or @data-purpose='buy-this-course-button') and contains(., 'Go to course')]"
+        )
         try:
             wait: WebDriverWait = WebDriverWait(
                 self.driver, timeout=self.timeout)
             _buttons: list[uc.WebElement] = wait.until(lambda d: d.find_elements(
                 By.XPATH,
-                f"//button[@data-purpose='{data_purpose}' and contains(., 'Go to course')]",
+                button_xpath,
             ))
             return True
         except WebDriverException:
             return False
 
-    def is_paid(self, data_purpose: str) -> bool:
+    def is_paid(self) -> bool:
         """Return a flag whether course is paid."""
+        button_xpath: str = (
+            "//button[(@data-purpose='buy-now-button' or @data-purpose='buy-this-course-button') and contains(., 'Buy now')]"
+        )
         try:
             wait: WebDriverWait = WebDriverWait(
                 self.driver, timeout=self.timeout)
             _buttons: list[uc.WebElement] = wait.until(lambda d: d.find_elements(
                 By.XPATH,
-                f"//button[@data-purpose='{data_purpose}' and contains(., 'Buy now')]",
+                button_xpath
             ))
             return True
         except WebDriverException:
             return False
 
-    def enroll(self, data_purpose: str) -> bool:
+    def enroll(self) -> bool:
         """Scan for first 'Enroll now' button and click on it."""
+        button_xpath: str = (
+            "//button[(@data-purpose='buy-now-button' or @data-purpose='buy-this-course-button') and contains(., 'Enroll now')]"
+        )
         try:
             wait: WebDriverWait = WebDriverWait(
                 self.driver, timeout=self.timeout)
             buttons: list[uc.WebElement] = wait.until(lambda d: d.find_elements(
                 By.XPATH,
-                f"//button[@data-purpose='{data_purpose}' and contains(., 'Enroll now')]",
+                button_xpath
             ))
             enroll_button = next(
                 (b for b in buttons if b.is_displayed() and b.is_enabled()), None)
@@ -94,20 +103,19 @@ class Udemy:
     def run(self) -> None:
         """Orchestrate automatic enrollment into Udemy courses."""
         self.logger.info('Udemy bot starting...')
-        data_purpose: str = 'buy-now-button'
         count: dict[str, int] = {'owned': 0, 'paid': 0, 'enroll': 0}
         for udemy_url in self.urls:
             self.logger.info('Visiting %s', udemy_url)
             self.driver.get(udemy_url)
             course_name: str = self.driver.title.removesuffix(' | Udemy')
             self.cache.append_jsonl(filename='udemy.jsonl', url=udemy_url)
-            if self.is_owned(data_purpose):
+            if self.is_owned():
                 self.logger.info('%s is owned. Skipping...', course_name)
                 count['owned'] += 1
-            elif self.is_paid(data_purpose):
+            elif self.is_paid():
                 self.logger.info('%s is paid. Skipping...', course_name)
                 count['paid'] += 1
-            elif self.enroll(data_purpose):
+            elif self.enroll():
                 self.logger.info('Enrolling into %s', course_name)
                 if self.patterns['free'] in self.driver.current_url:
                     self.logger.info('Successfully enrolled into %s',
