@@ -17,7 +17,6 @@ class GoogleChrome(Browser):
             'Darwin': shutil.which('google-chrome')
         }
         system: str = platform.system()
-        self.logger.debug('Detected OS: %s', system)
         chrome_path: str | None = paths.get(system)
         if chrome_path and Path(chrome_path).exists():
             return chrome_path

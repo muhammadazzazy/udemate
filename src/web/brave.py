@@ -18,7 +18,6 @@ class Brave(Browser):
             'Darwin': shutil.which('Brave Browser')
         }
         system: str = platform.system()
-        self.logger.debug('Detected OS: %s', system)
         brave_path: str | None = paths.get(system)
         if brave_path and Path(brave_path).exists():
             return brave_path

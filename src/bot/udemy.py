@@ -1,4 +1,5 @@
 """Automatically enroll into free Udemy courses."""
+import random
 import time
 
 import undetected_chromedriver as uc
@@ -35,7 +36,7 @@ class Udemy:
                     xp
                 )))
                 confirm_button.click()
-                time.sleep(5)
+                time.sleep(random.uniform(2, 4))
                 if self.patterns['paid'] in self.driver.current_url:
                     self.logger.info('Attempt %d/%d succeeded!',
                                      attempt+1,
@@ -86,19 +87,27 @@ class Udemy:
         button_xpath: str = (
             "//button[(@data-purpose='buy-now-button' or @data-purpose='buy-this-course-button') and contains(., 'Enroll now')]"
         )
-        try:
-            wait: WebDriverWait = WebDriverWait(
-                self.driver, timeout=self.timeout)
-            buttons: list[uc.WebElement] = wait.until(lambda d: d.find_elements(
-                By.XPATH,
-                button_xpath
-            ))
-            enroll_button = next(
-                (b for b in buttons if b.is_displayed() and b.is_enabled()), None)
-            enroll_button.click()
-            return True
-        except WebDriverException:
-            return False
+        for attempt in range(self.retries):
+            try:
+                wait: WebDriverWait = WebDriverWait(
+                    self.driver, timeout=self.timeout)
+                buttons: list[uc.WebElement] = wait.until(lambda d: d.find_elements(
+                    By.XPATH,
+                    button_xpath
+                ))
+                enroll_button = next(
+                    (b for b in buttons if b.is_displayed() and b.is_enabled()), None)
+                enroll_button.click()
+                self.logger.info('Attempt %d/%d succeeded!',
+                                 attempt+1,
+                                 self.retries)
+                return True
+            except WebDriverException:
+                self.logger.warning('Attempt %d/%d failed.',
+                                    attempt+1,
+                                    self.retries)
+                time.sleep(random.uniform(2, 4))
+                continue
 
     def run(self) -> None:
         """Orchestrate automatic enrollment into Udemy courses."""
