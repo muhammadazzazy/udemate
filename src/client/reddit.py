@@ -16,9 +16,9 @@ class RedditClient:
         if refresh_token:
             self.refresh_token = refresh_token
             self.reddit = praw.Reddit(
-                client_id=self.config.REDDIT_CLIENT_ID,
-                client_secret=self.config.REDDIT_CLIENT_SECRET,
-                user_agent=self.config.REDDIT_USER_AGENT,
+                client_id=self.config.reddit_client_id,
+                client_secret=self.config.reddit_client_secret,
+                user_agent=self.config.reddit_user_agent,
                 refresh_token=refresh_token
             )
         else:
@@ -37,12 +37,9 @@ class RedditClient:
         try:
             subreddit = self.reddit.subreddit(subreddit)
             for submission in subreddit.new(limit=self.config.reddit_limit):
-                self.logger.info('Adding Reddit post with URL: %s',
-                                 submission.url)
                 self.submissions.append(submission)
         except RequestException as e:
-            self.logger.error('RequestException: %s', e)
-            exit()
+            self.logger.error('Failed to fetch Reddit posts: %r', e)
 
     def get_middlemen(self) -> list[str]:
         """Return list of detected middlemen hostnames."""
@@ -53,7 +50,6 @@ class RedditClient:
             middleman: str = hostname.split('.')[0]
             if middleman not in middlemen:
                 middlemen.append(middleman)
-        self.logger.info('Detected middlemen: %s', middlemen)
         return middlemen
 
     def get_middleman_urls(self, middlemen: list[str]) -> dict[str, list[str]]:
@@ -77,5 +73,4 @@ class RedditClient:
             parts.remove('')
         clean_url: str = parts[0] + '//' + '/'.join(parts[1:4])
         clean_url = clean_url.replace('www.', '')
-        self.logger.debug('Cleaned URL: %s', clean_url)
         return clean_url

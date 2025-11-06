@@ -293,11 +293,12 @@ Udemate was tested on Windows 11 and Ubuntu 24.04 LTS.
   - [x] mode (hybrid, headless, or gui)
   - [x] timeout for each spider and enrollment bot (in seconds)
   - [x] retries for each spider and enrollment bot
-- [x] Fix issue where the enrollment bot failed to detect the first button after Udemy changed its data-purpose from 'buy-this-course-button' to 'buy-now-button'
+- [x] Fix issue where the enrollment bot failed to detect the first button by considering both values of `data-purpose`: 'buy-this-course-button' and 'buy-now-button'
 - [x] Support Google Chrome for converting middleman links to Udemy links and automating course enrollment
 - [x] Fix issue where Brave Browser runs out of VRAM in non-headless mode
+- [ ] Delete the user data directory before GUI mode starts and wait for the user to login to Udemy
 - [ ] Support parsing Reddit posts containing several links
-- [ ] Add push notifications for successful Udemy course enrollment
+- [ ] Add push notifications using Gotify for successful/failed Udemy course enrollment
 
 See the [open issues](https://github.com/muhammadazzazy/udemate/issues) for a full list of proposed features (and known issues).
 
