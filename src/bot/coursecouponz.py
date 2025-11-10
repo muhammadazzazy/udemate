@@ -21,7 +21,7 @@ class CourseCouponz(Spider):
             "//a[contains(., 'GET COURSE')]"
         )
         count: int = 0
-        while count < self.retries and 'coursecouponz.com' in link.get_attribute('href'):
+        while (count < self.retries) and ('coursecouponz.com' in link.get_attribute('href')):
             link = self.driver.find_element(
                 By.XPATH,
                 "//a[contains(., 'GET COURSE')]"

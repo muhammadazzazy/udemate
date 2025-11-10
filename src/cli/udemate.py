@@ -9,6 +9,7 @@ from typing import Any
 import undetected_chromedriver as uc
 
 from bot.coursecouponz import CourseCouponz
+from bot.coursetreat import CourseTreat
 from bot.easy_learning import EasyLearning
 from bot.freewebcart import Freewebcart
 from bot.idownloadcoupon import IDownloadCoupon
@@ -80,6 +81,15 @@ class Udemate:
                         urls=urls,
                         retries=self.config.coursecouponz_retries,
                         timeout=self.config.coursecouponz_timeout
+                    )
+                case 'coursetreat':
+                    headless_driver: uc.Chrome = self.browser.setup(
+                        headless=True)
+                    spiders[middleman] = CourseTreat(
+                        driver=headless_driver,
+                        urls=urls,
+                        retries=self.config.coursetreat_retries,
+                        timeout=self.config.coursetreat_timeout
                     )
                 case 'easylearn':
                     headless_driver: uc.Chrome = self.browser.setup(

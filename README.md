@@ -268,7 +268,7 @@ Udemate was tested on Windows 11 and Ubuntu 24.04 LTS.
 - [x] Scrape intermediate links from the following middlemen:
 
   - [x] CourseCouponz
-  - [ ] Course Treat
+  - [x] Course Treat
   - [x] Easy Learning
   - [x] Freewebcart
   - [x] iDC

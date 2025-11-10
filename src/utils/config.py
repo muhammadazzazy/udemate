@@ -15,6 +15,9 @@ MAX_LIMIT: Final[int] = 1000
 DEFAULT_COURSECOUPONZ_TIMEOUT: Final[int] = 30
 DEFAULT_COURSECOUPONZ_RETRIES: Final[int] = 3
 
+DEFAULT_COURSETREAT_RETRIES: Final[int] = 3
+DEFAULT_COURSETREAT_TIMEOUT: Final[int] = 30
+
 DEFAULT_EASYLEARN_TIMEOUT: Final[int] = 30
 DEFAULT_EASYLEARN_RETRIES: Final[int] = 3
 
@@ -69,6 +72,15 @@ class Config(BaseSettings):
     coursecouponz_timeout: Optional[int] = Field(
         description='Timeout (in seconds) for Course Couponz requests',
         default=DEFAULT_COURSECOUPONZ_TIMEOUT
+    )
+
+    coursetreat_retries: Optional[int] = Field(
+        description='Maximum number of retries for Course Treat requests',
+        default=DEFAULT_COURSETREAT_RETRIES
+    )
+    coursetreat_timeout: Optional[int] = Field(
+        description='Timeout (in seconds) for Course Treat requests',
+        default=DEFAULT_COURSETREAT_TIMEOUT
     )
 
     easylearn_retries: Optional[int] = Field(

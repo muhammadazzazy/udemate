@@ -18,13 +18,12 @@ class IDownloadCoupon(Spider):
         """Convert iDC link to final Udemy link with coupon."""
         response: requests.Response = self.session.get(
             url, allow_redirects=True, timeout=self.timeout)
-        url: str = self.clean(response.url)
         count: int = 0
-        while 'udemy.com' not in url and count < self.retries:
+        while (count < self.retries) and ('idownloadcoupon.com' in url):
             response = self.session.get(
                 url, allow_redirects=True, timeout=self.timeout)
-            url = self.clean(response.url)
             count += 1
+        url: str = self.clean(response.url)
         return url
 
     def run(self) -> list[str]:

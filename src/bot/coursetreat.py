@@ -1,40 +1,40 @@
-"""Scrape Udemy links with coupons from Easy Learning."""
+"""Encapsulate the Course Treat spider methods and attributes."""
 import requests
-from requests.exceptions import RequestException
-
 import undetected_chromedriver as uc
-from selenium.common.exceptions import TimeoutException, WebDriverException
+from requests.exceptions import RequestException
 from selenium.webdriver.common.by import By
+from selenium.common.exceptions import WebDriverException
 from urllib3.exceptions import ProtocolError, ReadTimeoutError
 
 from bot.spider import Spider
 
 
-class EasyLearning(Spider):
-    """Get Udemy links with coupons from Easy Learning."""
+class CourseTreat(Spider):
+    """Course Treat spider to get Udemy links with coupons."""
 
-    def __init__(self, *, driver: uc.Chrome, urls: list[str], retries: int, timeout: int) -> None:
+    def __init__(self, urls: list[str], driver: uc.Chrome, retries: int, timeout: int) -> None:
         self.driver = driver
         super().__init__(urls=urls, retries=retries, timeout=timeout)
 
     def transform(self, url: str) -> str:
-        """Return Udemy link from Easy Learning link."""
+        """Return Udemy link from Course Treat link."""
         self.driver.get(url)
         enroll_url: str = self.driver.find_element(
-            By.CSS_SELECTOR, 'a.purple-button').get_attribute('href')
+            By.CLASS_NAME, 'btn-couponbtn',
+        ).get_attribute('href')
         response: requests.Response = requests.get(
             enroll_url, timeout=self.timeout)
         count: int = 0
-        while (count < self.retries) and ('easylearn.ing' in response.url):
+        while (count < self.retries) and ('coursetreat.com' in response.url):
             response = requests.get(enroll_url, timeout=self.timeout)
             count += 1
-        url: str = self.clean(response.url)
-        return url
+        udemy_url: str = self.clean(response.url)
+        return udemy_url
 
     def run(self) -> list[str]:
-        """Return list of Udemy links extracted from Easy Learning."""
-        self.logger.info('Easy Learning spider starting...')
-        self.logger.info('Processing %d intermediary links from Easy Learning...',
+        """Return list of Udemy links extracted from Course Treat."""
+        self.logger.info('Course Treat spider starting...')
+        self.logger.info('Processing %d intermediary links from Course Treat...',
                          len(self.urls))
         udemy_urls: list[str] = []
         for url in self.urls:
@@ -42,14 +42,8 @@ class EasyLearning(Spider):
                 udemy_url: str = self.transform(url)
                 self.logger.info('%s ==> %s', url, udemy_url)
                 udemy_urls.append(udemy_url)
-            except TimeoutException as e:
-                self.logger.error('Timeout while parsing %s: %r', url, e)
-                continue
             except WebDriverException as e:
                 self.logger.error('Webdriver error for %s: %r', url, e)
-                continue
-            except RequestException as e:
-                self.logger.error('HTTP request failed for %s: %r', url, e)
                 continue
             except ProtocolError as e:
                 self.logger.error('Protocol error for %s: %r', url, e)
@@ -57,8 +51,7 @@ class EasyLearning(Spider):
             except ReadTimeoutError as e:
                 self.logger.error('Read timeout error for %s: %r', url, e)
                 continue
-
-        self.logger.info('Easy Learning spider scraped %d Udemy links.',
-                         len(udemy_urls))
-        self.driver.quit()
-        return sorted(set(udemy_urls))
+            except RequestException as e:
+                self.logger.error('Request exception for %s: %r', url, e)
+                continue
+        return udemy_urls
