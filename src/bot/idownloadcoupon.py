@@ -1,7 +1,8 @@
 """Fetch Udemy links with coupons from iDC."""
+from urllib.parse import ParseResult, urlparse, parse_qs, unquote
+
 import requests
 from requests.exceptions import RequestException
-
 from urllib3.exceptions import ProtocolError, ReadTimeoutError
 
 from bot.spider import Spider
@@ -23,7 +24,16 @@ class IDownloadCoupon(Spider):
             response = self.session.get(
                 url, allow_redirects=True, timeout=self.timeout)
             count += 1
-        url: str = self.clean(response.url)
+        url: str = self.extract_udemy_link(self.clean(response.url))
+        return url
+
+    def extract_udemy_link(self, url: str) -> str:
+        """Return Udemy link from LinkSynergy affiliate link."""
+        parsed_url: ParseResult = urlparse(url)
+        query_params: dict = parse_qs(parsed_url.query)
+        murl: str | None = query_params.get('murl', [None])[0]
+        if murl:
+            return unquote(murl)
         return url
 
     def run(self) -> list[str]:
