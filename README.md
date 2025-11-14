@@ -86,6 +86,9 @@ An automation tool that reads Reddit posts from [r/udemyfreebies](https://www.re
 - <a href="https://github.com/ultrafunkamsterdam/undetected-chromedriver">
     <img src="https://avatars.githubusercontent.com/u/21027969?v=4" width="50" alt="undetected-chromedriver">
   </a>
+- <a href="https://gotify.net">
+    <img src="https://raw.githubusercontent.com/gotify/logo/master/gotify-logo.png" width="50" alt="gotify" />
+  </a>
 
 <!-- GETTING STARTED -->
 
