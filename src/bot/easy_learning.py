@@ -3,19 +3,23 @@ import requests
 from requests.exceptions import RequestException
 
 import undetected_chromedriver as uc
+from gotify import Gotify
 from selenium.common.exceptions import TimeoutException, WebDriverException
 from selenium.webdriver.common.by import By
 from urllib3.exceptions import ProtocolError, ReadTimeoutError
 
 from bot.spider import Spider
+from utils.config import BotConfig
 
 
 class EasyLearning(Spider):
     """Get Udemy links with coupons from Easy Learning."""
 
-    def __init__(self, *, driver: uc.Chrome, urls: list[str], retries: int, timeout: int) -> None:
+    def __init__(self, *, driver: uc.Chrome, urls: list[str],
+                 gotify: Gotify, config: BotConfig) -> None:
         self.driver = driver
-        super().__init__(urls=urls, retries=retries, timeout=timeout)
+        super().__init__(urls=urls, gotify=gotify,
+                         retries=config.retries, timeout=config.timeout)
 
     def transform(self, url: str) -> str:
         """Return Udemy link from Easy Learning link."""
@@ -33,9 +37,12 @@ class EasyLearning(Spider):
 
     def run(self) -> list[str]:
         """Return list of Udemy links extracted from Easy Learning."""
-        self.logger.info('Easy Learning spider starting...')
         self.logger.info('Processing %d intermediary links from Easy Learning...',
                          len(self.urls))
+        self.gotify.create_message(
+            title='Easy Learning spider started',
+            message=f'Processing {len(self.urls)} intermediary links from Easy Learning.'
+        )
         udemy_urls: list[str] = []
         for url in self.urls:
             try:
@@ -60,5 +67,9 @@ class EasyLearning(Spider):
 
         self.logger.info('Easy Learning spider scraped %d Udemy links.',
                          len(udemy_urls))
+        self.gotify.create_message(
+            title='Easy Learning spider finished',
+            message=f'Scraped {len(udemy_urls)} Udemy links from Easy Learning.'
+        )
         self.driver.quit()
         return sorted(set(udemy_urls))

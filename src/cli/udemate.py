@@ -18,9 +18,10 @@ from bot.line51 import Line51
 from bot.webhelperapp import WebHelperApp
 from bot.udemy import Udemy
 from client.get_refresh_token import get_refresh_token
+from client.gotify import GotifyClient
 from client.reddit import RedditClient
 from utils.cache import Cache
-from utils.config import Config
+from utils.config import BotConfig, Config
 from web.brave import Brave
 from web.google_chrome import GoogleChrome
 
@@ -28,7 +29,7 @@ from web.google_chrome import GoogleChrome
 class Udemate:
     """Control the flow of Udemate."""
 
-    def __init__(self, *, config: Config, logger: Logger) -> None:
+    def __init__(self, *, config: Config, gotify: GotifyClient, logger: Logger) -> None:
         if 'brave' in config.user_data_dir.lower():
             self.browser = Brave(
                 major_version=141,
@@ -41,6 +42,7 @@ class Udemate:
                 logger=logger)
         self.cache = Cache()
         self.config = config
+        self.gotify = gotify
         self.logger = logger
 
     def setup_reddit_client(self) -> RedditClient:
@@ -79,8 +81,11 @@ class Udemate:
                     spiders[middleman] = CourseCouponz(
                         driver=headless_driver,
                         urls=urls,
-                        retries=self.config.coursecouponz_retries,
-                        timeout=self.config.coursecouponz_timeout
+                        gotify=self.gotify,
+                        config=BotConfig(
+                            retries=self.config.coursecouponz_retries,
+                            timeout=self.config.coursecouponz_timeout
+                        )
                     )
                 case 'coursetreat':
                     headless_driver: uc.Chrome = self.browser.setup(
@@ -88,8 +93,11 @@ class Udemate:
                     spiders[middleman] = CourseTreat(
                         driver=headless_driver,
                         urls=urls,
-                        retries=self.config.coursetreat_retries,
-                        timeout=self.config.coursetreat_timeout
+                        gotify=self.gotify,
+                        config=BotConfig(
+                            retries=self.config.coursetreat_retries,
+                            timeout=self.config.coursetreat_timeout
+                        )
                     )
                 case 'easylearn':
                     headless_driver: uc.Chrome = self.browser.setup(
@@ -97,8 +105,11 @@ class Udemate:
                     spiders[middleman] = EasyLearning(
                         driver=headless_driver,
                         urls=urls,
-                        retries=self.config.easylearn_retries,
-                        timeout=self.config.easylearn_timeout
+                        gotify=self.gotify,
+                        config=BotConfig(
+                            retries=self.config.easylearn_retries,
+                            timeout=self.config.easylearn_timeout
+                        )
                     )
                 case 'freewebcart':
                     headless_driver: uc.Chrome = self.browser.setup(
@@ -106,16 +117,22 @@ class Udemate:
                     spiders[middleman] = Freewebcart(
                         driver=headless_driver,
                         urls=urls,
-                        retries=self.config.freewebcart_retries,
-                        timeout=self.config.freewebcart_timeout
+                        gotify=self.gotify,
+                        config=BotConfig(
+                            retries=self.config.freewebcart_retries,
+                            timeout=self.config.freewebcart_timeout
+                        )
                     )
                 case 'idownloadcoupon':
                     headless_driver: uc.Chrome = self.browser.setup(
                         headless=True)
                     spiders[middleman] = IDownloadCoupon(
                         urls=urls,
-                        retries=self.config.idc_retries,
-                        timeout=self.config.idc_timeout
+                        gotify=self.gotify,
+                        config=BotConfig(
+                            retries=self.config.idc_retries,
+                            timeout=self.config.idc_timeout
+                        )
                     )
                 case 'inventhigh':
                     headless_driver: uc.Chrome = self.browser.setup(
@@ -123,8 +140,11 @@ class Udemate:
                     spiders[middleman] = InventHigh(
                         driver=headless_driver,
                         urls=urls,
-                        retries=self.config.inventhigh_retries,
-                        timeout=self.config.inventhigh_timeout
+                        gotify=self.gotify,
+                        config=BotConfig(
+                            retries=self.config.inventhigh_retries,
+                            timeout=self.config.inventhigh_timeout
+                        )
                     )
                 case 'line51':
                     headless_driver: uc.Chrome = self.browser.setup(
@@ -132,8 +152,11 @@ class Udemate:
                     spiders[middleman] = Line51(
                         driver=headless_driver,
                         urls=urls,
-                        retries=self.config.line51_retries,
-                        timeout=self.config.line51_timeout
+                        gotify=self.gotify,
+                        config=BotConfig(
+                            retries=self.config.line51_retries,
+                            timeout=self.config.line51_timeout
+                        )
                     )
                 case 'webhelperapp':
                     headless_driver: uc.Chrome = self.browser.setup(
@@ -141,8 +164,11 @@ class Udemate:
                     spiders[middleman] = WebHelperApp(
                         driver=headless_driver,
                         urls=urls,
-                        retries=self.config.webhelperapp_retries,
-                        timeout=self.config.webhelperapp_timeout
+                        gotify=self.gotify,
+                        config=BotConfig(
+                            retries=self.config.webhelperapp_retries,
+                            timeout=self.config.webhelperapp_timeout
+                        )
                     )
         return spiders
 
@@ -159,6 +185,10 @@ class Udemate:
                 result: list[str] = future.result()
                 udemy_urls.extend(result)
         udemy_urls = sorted(set(udemy_urls))
+        self.gotify.create_message(
+            title='Scraping completed',
+            message=f'Spiders scraped a total of {len(udemy_urls)} Udemy links.'
+        )
         self.logger.info('Spiders scraped a total of %d Udemy links.',
                          len(udemy_urls))
         self.cache.write_json(data=udemy_urls, filename='udemy.json')
@@ -170,8 +200,10 @@ class Udemate:
         gui_driver: uc.Chrome = self.browser.setup(headless=False)
         udemy: Udemy = Udemy(
             driver=gui_driver,
-            retries=self.config.udemy_retries,
-            timeout=self.config.udemy_timeout,
+            config=BotConfig(
+                retries=self.config.udemy_retries,
+                timeout=self.config.udemy_timeout
+            ),
             urls=udemy_urls,
         )
         udemy.run()
@@ -179,6 +211,10 @@ class Udemate:
 
     def run(self, mode: str) -> None:
         """Run Udemate based on command-line arguments passed."""
+        self.gotify.create_message(
+            title='Udemate started',
+            message=f'Udemate is starting in {mode} mode.'
+        )
         self.logger.info('Starting Udemate in %s mode...', mode)
         udemy_urls: list[str] = []
         if mode in ('headless', 'hybrid'):

@@ -2,15 +2,16 @@
 from typing import Final, Optional
 from datetime import datetime
 
-from pydantic import Field
+from pydantic import BaseModel, Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
-
 
 DEFAULT_USER_AGENT: Final[str] = 'Udemate:v1.0.0 (by u/kemitche)'
 DEFAULT_LIMIT: Final[int] = 500
 MIN_LIMIT: Final[int] = 1
 MAX_LIMIT: Final[int] = 1000
 
+DEFAULT_RETRIES: Final[int] = 3
+DEFAULT_TIMEOUT: Final[int] = 30
 
 DEFAULT_COURSECOUPONZ_TIMEOUT: Final[int] = 30
 DEFAULT_COURSECOUPONZ_RETRIES: Final[int] = 3
@@ -145,3 +146,18 @@ class Config(BaseSettings):
         description='Timeout (in seconds) for web actions such as enrollments',
         default=DEFAULT_UDEMY_TIMEOUT
     )
+
+    gotify_base_url: Optional[str] = Field(
+        description='Base URL of Gotify server',
+        default=None
+    )
+    gotify_app_token: Optional[str] = Field(
+        description='Application token for Gotify notifications',
+        default=None
+    )
+
+
+class BotConfig(BaseModel):
+    """Encapsulate and validate configuration attributes."""
+    retries: int
+    timeout: int

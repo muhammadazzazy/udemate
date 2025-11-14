@@ -3,6 +3,7 @@ import requests
 from requests import RequestException
 
 import undetected_chromedriver as uc
+from gotify import Gotify
 from selenium.common.exceptions import TimeoutException, WebDriverException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
@@ -10,14 +11,17 @@ from selenium.webdriver.support.ui import WebDriverWait
 from urllib3.exceptions import ProtocolError, ReadTimeoutError
 
 from bot.spider import Spider
+from utils.config import BotConfig
 
 
 class InventHigh(Spider):
     """Get Udemy links with coupons from Invent High."""
 
-    def __init__(self, *, driver: uc.Chrome, urls: list[str], retries: int, timeout: int) -> None:
+    def __init__(self, *, driver: uc.Chrome, urls: list[str],
+                 gotify: Gotify, config: BotConfig) -> None:
         self.driver = driver
-        super().__init__(urls=urls, retries=retries, timeout=timeout)
+        super().__init__(urls=urls, gotify=gotify,
+                         retries=config.retries, timeout=config.timeout)
 
     def transform(self, url: str) -> str:
         """Return Udemy link from Invent High link."""
@@ -49,9 +53,12 @@ class InventHigh(Spider):
 
     def run(self) -> None:
         """Return list of Udemy links extracted from Invent High."""
-        self.logger.info('Invent High spider starting...')
         self.logger.info('Processing %d links from Invent High...',
                          len(self.urls))
+        self.gotify.create_message(
+            title='Invent High spider started',
+            message=f'Processing {len(self.urls)} intermediary links from Invent High.'
+        )
         udemy_urls: list[str] = []
         for url in self.urls:
             try:
@@ -74,5 +81,9 @@ class InventHigh(Spider):
                 continue
         self.logger.info('Invent High spider scraped %d Udemy links.',
                          len(udemy_urls))
+        self.gotify.create_message(
+            title='Invent High spider finished',
+            message=f'Scraped {len(udemy_urls)} Udemy links from Invent High.'
+        )
         self.driver.quit()
         return sorted(set(udemy_urls))

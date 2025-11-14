@@ -1,20 +1,24 @@
 """Encapsulate the Course Treat spider methods and attributes."""
 import requests
 import undetected_chromedriver as uc
+from gotify import Gotify
 from requests.exceptions import RequestException
 from selenium.webdriver.common.by import By
 from selenium.common.exceptions import WebDriverException
 from urllib3.exceptions import ProtocolError, ReadTimeoutError
 
 from bot.spider import Spider
+from utils.config import BotConfig
 
 
 class CourseTreat(Spider):
     """Course Treat spider to get Udemy links with coupons."""
 
-    def __init__(self, urls: list[str], driver: uc.Chrome, retries: int, timeout: int) -> None:
+    def __init__(self, urls: list[str], driver: uc.Chrome,
+                 gotify: Gotify, config: BotConfig) -> None:
         self.driver = driver
-        super().__init__(urls=urls, retries=retries, timeout=timeout)
+        super().__init__(urls=urls, gotify=gotify,
+                         retries=config.retries, timeout=config.timeout)
 
     def transform(self, url: str) -> str:
         """Return Udemy link from Course Treat link."""
@@ -33,9 +37,12 @@ class CourseTreat(Spider):
 
     def run(self) -> list[str]:
         """Return list of Udemy links extracted from Course Treat."""
-        self.logger.info('Course Treat spider starting...')
         self.logger.info('Processing %d intermediary links from Course Treat...',
                          len(self.urls))
+        self.gotify.create_message(
+            title='Course Treat spider started',
+            message=f'Processing {len(self.urls)} intermediary links from Course Treat.'
+        )
         udemy_urls: list[str] = []
         for url in self.urls:
             try:

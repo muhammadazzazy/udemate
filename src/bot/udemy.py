@@ -9,28 +9,28 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
 from utils.cache import Cache
+from utils.config import BotConfig
 from utils.logger import setup_logging
 
 
 class Udemy:
     """Autoenroll into free Udemy courses."""
 
-    def __init__(self, *, driver: uc.Chrome, retries: int, timeout: int, urls: list[str]) -> None:
+    def __init__(self, *, driver: uc.Chrome, urls: list[str], config: BotConfig) -> None:
         self.cache = Cache()
         self.driver = driver
         self.logger = setup_logging()
-        self.retries = retries
-        self.timeout = timeout
+        self.config = config
         self.urls = urls
         self.patterns = {'paid': 'cart/success', 'free': 'cart/subscribe'}
 
     def confirm(self) -> bool:
         """Scan for final 'Enroll now' button and click on it."""
         xp: str = '//*[@id="udemy"]/div[1]/div[2]/div/div/div/aside/div/div/div[2]/div[2]/button[1]'
-        for attempt in range(self.retries):
+        for attempt in range(self.config.retries):
             try:
                 wait: WebDriverWait = WebDriverWait(
-                    self.driver, timeout=self.timeout)
+                    self.driver, timeout=self.config.timeout)
                 confirm_button: uc.WebElement = wait.until(EC.element_to_be_clickable((
                     By.XPATH,
                     xp
@@ -40,11 +40,11 @@ class Udemy:
                 if self.patterns['paid'] in self.driver.current_url:
                     self.logger.info('Attempt %d/%d succeeded!',
                                      attempt+1,
-                                     self.retries)
+                                     self.config.retries)
                     return True
                 self.logger.warning('Attempt %d/%d failed.',
                                     attempt+1,
-                                    self.retries)
+                                    self.config.retries)
             except WebDriverException as e:
                 self.logger.error('Webdriver error: %r', e)
                 continue
@@ -57,7 +57,7 @@ class Udemy:
         )
         try:
             wait: WebDriverWait = WebDriverWait(
-                self.driver, timeout=self.timeout)
+                self.driver, timeout=self.config.timeout)
             _buttons: list[uc.WebElement] = wait.until(lambda d: d.find_elements(
                 By.XPATH,
                 button_xpath,
@@ -73,7 +73,7 @@ class Udemy:
         )
         try:
             wait: WebDriverWait = WebDriverWait(
-                self.driver, timeout=self.timeout)
+                self.driver, timeout=self.config.timeout)
             _buttons: list[uc.WebElement] = wait.until(lambda d: d.find_elements(
                 By.XPATH,
                 button_xpath
@@ -87,10 +87,10 @@ class Udemy:
         button_xpath: str = (
             "//button[(@data-purpose='buy-now-button' or @data-purpose='buy-this-course-button') and contains(., 'Enroll now')]"
         )
-        for attempt in range(self.retries):
+        for attempt in range(self.config.retries):
             try:
                 wait: WebDriverWait = WebDriverWait(
-                    self.driver, timeout=self.timeout)
+                    self.driver, timeout=self.config.timeout)
                 buttons: list[uc.WebElement] = wait.until(lambda d: d.find_elements(
                     By.XPATH,
                     button_xpath
@@ -100,12 +100,12 @@ class Udemy:
                 enroll_button.click()
                 self.logger.info('Attempt %d/%d succeeded!',
                                  attempt+1,
-                                 self.retries)
+                                 self.config.retries)
                 return True
             except WebDriverException:
                 self.logger.warning('Attempt %d/%d failed.',
                                     attempt+1,
-                                    self.retries)
+                                    self.config.retries)
                 time.sleep(random.uniform(2, 4))
                 continue
 
@@ -140,7 +140,6 @@ class Udemy:
             else:
                 # "Unavailable" means private or does not exist.
                 self.logger.info('Course is unavailable. Skipping...')
-
         self.logger.info(
             'Encountered %d already owned courses.',
             count['owned']

@@ -1,17 +1,21 @@
 """Scrape Udemy links with coupons from CourseCouponz."""
 import undetected_chromedriver as uc
+from gotify import Gotify
 from selenium.common.exceptions import TimeoutException, WebDriverException
 from selenium.webdriver.common.by import By
 
 from bot.spider import Spider
+from utils.config import BotConfig
 
 
 class CourseCouponz(Spider):
     """Get Udemy links with coupons from CourseCouponz."""
 
-    def __init__(self, *, driver: uc.Chrome, urls: list[str], retries: int, timeout: int) -> None:
+    def __init__(self, *, driver: uc.Chrome, urls: list[str],
+                 gotify: Gotify, config: BotConfig) -> None:
         self.driver = driver
-        super().__init__(urls=urls, retries=retries, timeout=timeout)
+        super().__init__(urls=urls, gotify=gotify,
+                         retries=config.retries, timeout=config.timeout)
 
     def transform(self, url: str) -> str:
         """Return Udemy link from CourseCouponz link."""
@@ -32,9 +36,12 @@ class CourseCouponz(Spider):
 
     def run(self) -> list[str]:
         """Return list of Udemy links extracted from CourseCouponz."""
-        self.logger.info('CourseCouponz spider starting...')
         self.logger.info('Processing %d intermediary links from CourseCouponz...',
                          len(self.urls))
+        self.gotify.create_message(
+            title='CourseCouponz spider started',
+            message=f'Processing {len(self.urls)} intermediary links from CourseCouponz.'
+        )
         udemy_urls: list[str] = []
         for url in self.urls:
             try:
@@ -49,5 +56,9 @@ class CourseCouponz(Spider):
                 continue
         self.logger.info('CourseCouponz spider scraped %d Udemy links.',
                          len(udemy_urls))
+        self.gotify.create_message(
+            title='CourseCouponz spider finished',
+            message=f'Scraped {len(udemy_urls)} Udemy links from CourseCouponz.'
+        )
         self.driver.quit()
         return sorted(set(udemy_urls))

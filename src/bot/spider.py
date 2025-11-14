@@ -1,13 +1,17 @@
 """Encapsulate common attributes and functionality between middleman spiders."""
 from abc import ABC, abstractmethod
+
+from gotify import Gotify
+
 from utils.logger import setup_logging
 
 
 class Spider(ABC):
     """Encapsulates shared attributes and abstract methods for intermediary scrapers."""
 
-    def __init__(self, *, urls: list[str], retries: int, timeout: int) -> None:
+    def __init__(self, *, urls: list[str], gotify: Gotify, retries: int, timeout: int) -> None:
         self.urls = urls
+        self.gotify = gotify
         self.retries = retries
         self.timeout = timeout
         self.logger = setup_logging()

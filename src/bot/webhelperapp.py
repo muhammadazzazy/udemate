@@ -1,18 +1,21 @@
 """Scrape Udemy links with coupons from WebHelperApp."""
 import undetected_chromedriver as uc
+from gotify import Gotify
 from selenium.common.exceptions import TimeoutException, WebDriverException
 from selenium.webdriver.common.by import By
 from urllib3.exceptions import ProtocolError, ReadTimeoutError
 
 from bot.spider import Spider
+from utils.config import BotConfig
 
 
 class WebHelperApp(Spider):
     """Get Udemy links with coupons from WebHelperApp."""
 
-    def __init__(self, *, driver: uc.Chrome, urls: list[str], retries: int, timeout: int) -> None:
+    def __init__(self, *, driver: uc.Chrome, urls: list[str], gotify: Gotify, config: BotConfig) -> None:
         self.driver = driver
-        super().__init__(urls=urls, retries=retries, timeout=timeout)
+        super().__init__(urls=urls, gotify=gotify,
+                         retries=config.retries, timeout=config.timeout)
 
     def transform(self, url: str) -> str:
         """Return Udemy link from WebHelperApp link."""
@@ -47,5 +50,9 @@ class WebHelperApp(Spider):
                 continue
         self.logger.info('WebHelperApp spider scraped %d Udemy links.',
                          len(udemy_urls))
+        self.gotify.create_message(
+            title='WebHelperApp spider finished',
+            message=f'Scraped {len(udemy_urls)} Udemy links from WebHelperApp.'
+        )
         self.driver.quit()
         return sorted(set(udemy_urls))

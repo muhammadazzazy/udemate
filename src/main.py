@@ -6,6 +6,7 @@ from logging import Logger
 from pydantic_settings import BaseSettings
 
 from cli.udemate import Udemate
+from client.gotify import GotifyClient
 from utils.config import Config
 from utils.logger import setup_logging
 
@@ -56,8 +57,14 @@ def main() -> None:
     try:
         args: Namespace = parse_arguments()
         settings: BaseSettings = override_env_vars(args)
+        gotify_client: GotifyClient = GotifyClient(
+            base_url=settings.gotify_base_url,
+            app_token=settings.gotify_app_token,
+            logger=logger
+        )
         udemate: Udemate = Udemate(
             config=settings,
+            gotify=gotify_client,
             logger=logger
         )
         udemate.run(args.mode)
