@@ -205,6 +205,7 @@ class Udemate:
                 timeout=self.config.udemy_timeout
             ),
             urls=udemy_urls,
+            gotify=self.gotify
         )
         udemy.run()
         gui_driver.quit()

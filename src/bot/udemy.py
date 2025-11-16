@@ -8,6 +8,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
+from client.gotify import GotifyClient
 from utils.cache import Cache
 from utils.config import BotConfig
 from utils.logger import setup_logging
@@ -16,12 +17,14 @@ from utils.logger import setup_logging
 class Udemy:
     """Autoenroll into free Udemy courses."""
 
-    def __init__(self, *, driver: uc.Chrome, urls: list[str], config: BotConfig) -> None:
+    def __init__(self, *, driver: uc.Chrome, urls: list[str],
+                 config: BotConfig, gotify: GotifyClient) -> None:
         self.cache = Cache()
         self.driver = driver
         self.logger = setup_logging()
         self.config = config
         self.urls = urls
+        self.gotify = gotify
         self.patterns = {'paid': 'cart/success', 'free': 'cart/subscribe'}
 
     def confirm(self) -> bool:
@@ -129,16 +132,23 @@ class Udemy:
                 if self.patterns['free'] in self.driver.current_url:
                     self.logger.info('Successfully enrolled into %s',
                                      course_name)
+                    self.gotify.create_message(
+                        title='Udemy Enrollment Successful',
+                        message=f'Enrolled into {course_name}',
+                    )
                     count['enroll'] += 1
                     continue
                 if self.confirm():
                     self.logger.info('Successfully enrolled into %s.',
                                      course_name)
+                    self.gotify.create_message(
+                        title='Udemy Enrollment Successful',
+                        message=f'Enrolled into {course_name}',
+                    )
                     count['enroll'] += 1
                 else:
                     self.logger.info('Failed to enroll into %s', course_name)
             else:
-                # "Unavailable" means private or does not exist.
                 self.logger.info('Course is unavailable. Skipping...')
         self.logger.info(
             'Encountered %d already owned courses.',
