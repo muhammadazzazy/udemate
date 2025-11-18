@@ -20,7 +20,7 @@ class CourseTreat(Spider):
         super().__init__(urls=urls, gotify=gotify,
                          retries=config.retries, timeout=config.timeout)
 
-    def transform(self, url: str) -> str:
+    def transform(self, url: str) -> str | None:
         """Return Udemy link from Course Treat link."""
         self.driver.get(url)
         enroll_url: str = self.driver.find_element(
@@ -32,6 +32,8 @@ class CourseTreat(Spider):
         while (count < self.retries) and ('coursetreat.com' in response.url):
             response = requests.get(enroll_url, timeout=self.timeout)
             count += 1
+        if 'coursetreat.com' in response.url:
+            return None
         udemy_url: str = self.clean(response.url)
         return udemy_url
 
@@ -48,7 +50,8 @@ class CourseTreat(Spider):
             try:
                 udemy_url: str = self.transform(url)
                 self.logger.info('%s ==> %s', url, udemy_url)
-                udemy_urls.append(udemy_url)
+                if udemy_url:
+                    udemy_urls.append(udemy_url)
             except WebDriverException as e:
                 self.logger.error('Webdriver error for %s: %r', url, e)
                 continue

@@ -21,7 +21,7 @@ class EasyLearning(Spider):
         super().__init__(urls=urls, gotify=gotify,
                          retries=config.retries, timeout=config.timeout)
 
-    def transform(self, url: str) -> str:
+    def transform(self, url: str) -> str | None:
         """Return Udemy link from Easy Learning link."""
         self.driver.get(url)
         enroll_url: str = self.driver.find_element(
@@ -32,8 +32,10 @@ class EasyLearning(Spider):
         while (count < self.retries) and ('easylearn.ing' in response.url):
             response = requests.get(enroll_url, timeout=self.timeout)
             count += 1
-        url: str = self.clean(response.url)
-        return url
+        if 'easylearn.ing' in response.url:
+            return None
+        udemy_url: str = self.clean(response.url)
+        return udemy_url
 
     def run(self) -> list[str]:
         """Return list of Udemy links extracted from Easy Learning."""
@@ -48,7 +50,8 @@ class EasyLearning(Spider):
             try:
                 udemy_url: str = self.transform(url)
                 self.logger.info('%s ==> %s', url, udemy_url)
-                udemy_urls.append(udemy_url)
+                if udemy_url:
+                    udemy_urls.append(udemy_url)
             except TimeoutException as e:
                 self.logger.error('Timeout while parsing %s: %r', url, e)
                 continue

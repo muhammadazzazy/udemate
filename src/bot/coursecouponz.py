@@ -17,21 +17,25 @@ class CourseCouponz(Spider):
         super().__init__(urls=urls, gotify=gotify,
                          retries=config.retries, timeout=config.timeout)
 
-    def transform(self, url: str) -> str:
+    def transform(self, url: str) -> str | None:
         """Return Udemy link from CourseCouponz link."""
         self.driver.get(url)
         link: uc.WebElement = self.driver.find_element(
             By.XPATH,
             "//a[contains(., 'GET COURSE')]"
         )
+        href: str = link.get_attribute('href')
         count: int = 0
-        while (count < self.retries) and ('coursecouponz.com' in link.get_attribute('href')):
+        while (count < self.retries) and ('coursecouponz.com' in href):
             link = self.driver.find_element(
                 By.XPATH,
                 "//a[contains(., 'GET COURSE')]"
             )
+            href = link.get_attribute('href')
             count += 1
-        udemy_url: str = self.clean(link.get_attribute('href'))
+        if 'coursecouponz.com' in href:
+            return None
+        udemy_url: str = self.clean(href)
         return udemy_url
 
     def run(self) -> list[str]:
@@ -47,7 +51,8 @@ class CourseCouponz(Spider):
             try:
                 udemy_url: str = self.transform(url)
                 self.logger.info('%s ==> %s', url, udemy_url)
-                udemy_urls.append(udemy_url)
+                if udemy_url:
+                    udemy_urls.append(udemy_url)
             except TimeoutException as e:
                 self.logger.error('Timeout while parsing %s: %r', url, e)
                 continue

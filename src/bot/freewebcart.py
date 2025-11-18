@@ -28,7 +28,8 @@ class Freewebcart(Spider):
             EC.visibility_of_element_located(
                 (By.XPATH, "//a[contains(text(), 'Get 100% OFF Coupon')]"))
         )
-        udemy_url: str = self.clean(link.get_attribute('href'))
+        href: str = link.get_attribute('href')
+        udemy_url: str = self.clean(href)
         return udemy_url
 
     def run(self) -> list[str]:
@@ -44,7 +45,8 @@ class Freewebcart(Spider):
             try:
                 udemy_url: str = self.transform(url)
                 self.logger.info('%s ==> %s', url, udemy_url)
-                udemy_urls.append(udemy_url)
+                if udemy_url:
+                    udemy_urls.append(udemy_url)
             except TimeoutException as e:
                 self.logger.error('Timeout while parsing %s: %r', url, e)
                 continue

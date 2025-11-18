@@ -23,7 +23,7 @@ class InventHigh(Spider):
         super().__init__(urls=urls, gotify=gotify,
                          retries=config.retries, timeout=config.timeout)
 
-    def transform(self, url: str) -> str:
+    def transform(self, url: str) -> str | None:
         """Return Udemy link from Invent High link."""
         self.driver.get(url)
         wait: WebDriverWait = WebDriverWait(self.driver, self.timeout)
@@ -31,9 +31,12 @@ class InventHigh(Spider):
             EC.visibility_of_element_located(
                 (By.ID, 'couponval'))
         )
-        url: str = link.get_attribute('href')
-        response: requests.Response = requests.get(url, timeout=30)
-        udemy_url: str = self.clean(response.url)
+        href: str = link.get_attribute('href')
+        response: requests.Response = requests.get(href, timeout=30)
+        url: str = response.url
+        if 'inventhigh.com' in url:
+            return None
+        udemy_url: str = self.clean(url)
         return udemy_url
 
     def is_coupon_expired(self, url: str) -> bool:
@@ -66,7 +69,8 @@ class InventHigh(Spider):
                     continue
                 udemy_url: str = self.transform(url)
                 self.logger.info('%s ==> %s', url, udemy_url)
-                udemy_urls.append(udemy_url)
+                if udemy_url:
+                    udemy_urls.append(udemy_url)
             except WebDriverException as e:
                 self.logger.error('Webdriver error for %s: %r', url, e)
                 continue

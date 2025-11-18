@@ -28,8 +28,10 @@ class IDownloadCoupon(Spider):
             response = self.session.get(
                 url, allow_redirects=True, timeout=self.timeout)
             count += 1
-        url: str = self.extract_udemy_link(self.clean(response.url))
-        return url
+        if 'idownloadcoupon.com' in url:
+            return None
+        udemy_url: str = self.extract_udemy_link(self.clean(response.url))
+        return udemy_url
 
     def extract_udemy_link(self, url: str) -> str:
         """Return Udemy link from LinkSynergy affiliate link."""

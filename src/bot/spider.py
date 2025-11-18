@@ -27,7 +27,7 @@ class Spider(ABC):
         return url
 
     @abstractmethod
-    def transform(self, url: str) -> str:
+    def transform(self, url: str) -> str | None:
         """Return a Udemy link extracted from middleman link."""
 
     @abstractmethod
