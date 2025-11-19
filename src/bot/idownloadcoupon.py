@@ -28,7 +28,7 @@ class IDownloadCoupon(Spider):
             response = self.session.get(
                 url, allow_redirects=True, timeout=self.timeout)
             count += 1
-        if 'idownloadcoupon.com' in url:
+        if 'idownloadcoupon.com' in response.url:
             return None
         udemy_url: str = self.extract_udemy_link(self.clean(response.url))
         return udemy_url
