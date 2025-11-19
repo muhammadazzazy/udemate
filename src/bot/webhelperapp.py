@@ -12,7 +12,8 @@ from utils.config import BotConfig
 class WebHelperApp(Spider):
     """Get Udemy links with coupons from WebHelperApp."""
 
-    def __init__(self, *, driver: uc.Chrome, urls: list[str], gotify: Gotify, config: BotConfig) -> None:
+    def __init__(self, *, driver: uc.Chrome, urls: list[str],
+                 gotify: Gotify, config: BotConfig) -> None:
         self.driver = driver
         super().__init__(urls=urls, gotify=gotify,
                          retries=config.retries, timeout=config.timeout)
@@ -28,9 +29,12 @@ class WebHelperApp(Spider):
 
     def run(self) -> list[str]:
         """Return list of Udemy links extracted from WebHelperApp."""
-        self.logger.info('WebHelperApp spider starting...')
         self.logger.info('Processing %d links from WebHelperApp...',
                          len(self.urls))
+        self.gotify.create_message(
+            title='WebHelperApp spider started',
+            message=f'Processing {len(self.urls)} intermediary links from WebHelperApp.'
+        )
         udemy_urls: list[str] = []
         for url in self.urls:
             try:

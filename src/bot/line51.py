@@ -14,7 +14,8 @@ from utils.config import BotConfig
 class Line51(Spider):
     """Get Udemy links with coupons from Line51."""
 
-    def __init__(self, *, driver: uc.Chrome, urls: list[str], gotify: Gotify, config: BotConfig) -> None:
+    def __init__(self, *, driver: uc.Chrome, urls: list[str],
+                 gotify: Gotify, config: BotConfig) -> None:
         self.driver = driver
         super().__init__(urls=urls, gotify=gotify,
                          retries=config.retries, timeout=config.timeout)
