@@ -50,6 +50,7 @@ class Udemy:
                                     self.config.retries)
             except WebDriverException as e:
                 self.logger.error('Webdriver error: %r', e)
+                time.sleep(random.uniform(2, 4))
                 continue
         return False
 
