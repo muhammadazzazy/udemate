@@ -39,8 +39,8 @@ class WebHelperApp(Spider):
         for url in self.urls:
             try:
                 udemy_url: str = self.transform(url)
-                self.logger.info('%s ==> %s', url, udemy_url)
                 if udemy_url:
+                    self.logger.info('%s ==> %s', url, udemy_url)
                     udemy_urls.append(udemy_url)
             except TimeoutException as e:
                 self.logger.error('Timeout while parsing %s: %r', url, e)

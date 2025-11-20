@@ -68,8 +68,8 @@ class InventHigh(Spider):
                 if self.is_coupon_expired(url):
                     continue
                 udemy_url: str = self.transform(url)
-                self.logger.info('%s ==> %s', url, udemy_url)
                 if udemy_url:
+                    self.logger.info('%s ==> %s', url, udemy_url)
                     udemy_urls.append(udemy_url)
             except WebDriverException as e:
                 self.logger.error('Webdriver error for %s: %r', url, e)

@@ -49,8 +49,8 @@ class CourseTreat(Spider):
         for url in self.urls:
             try:
                 udemy_url: str = self.transform(url)
-                self.logger.info('%s ==> %s', url, udemy_url)
                 if udemy_url:
+                    self.logger.info('%s ==> %s', url, udemy_url)
                     udemy_urls.append(udemy_url)
             except WebDriverException as e:
                 self.logger.error('Webdriver error for %s: %r', url, e)
@@ -64,4 +64,11 @@ class CourseTreat(Spider):
             except RequestException as e:
                 self.logger.error('Request exception for %s: %r', url, e)
                 continue
-        return udemy_urls
+        self.logger.info('Course Treat spider scraped %d Udemy links.',
+                         len(udemy_urls))
+        self.gotify.create_message(
+            title='Course Treat spider finished',
+            message=f'Scraped {len(udemy_urls)} Udemy links from Course Treat.'
+        )
+        self.driver.quit()
+        return sorted(set(udemy_urls))
