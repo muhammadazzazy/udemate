@@ -1,4 +1,6 @@
 """Manage browser used for scraping links and automating course enrollment."""
+import os
+import shutil
 import platform
 from abc import ABC, abstractmethod
 
@@ -18,6 +20,13 @@ class Browser(ABC):
     @abstractmethod
     def get_executable_path(self) -> str:
         """Return browser executable path based on the operating system."""
+
+    def delete_user_data_dir(self) -> None:
+        """Delete user data directory to reset browser state."""
+        if os.path.exists(self.user_data_dir):
+            shutil.rmtree(self.user_data_dir)
+            self.logger.info('Deleted user data directory: %s',
+                             self.user_data_dir)
 
     def setup(self, headless: bool) -> uc.Chrome:
         """
@@ -52,6 +61,7 @@ class Browser(ABC):
         for arg in common_args + (headless_args if headless else gui_args):
             options.add_argument(arg)
         if not headless:
+            self.delete_user_data_dir()
             return uc.Chrome(
                 options=options,
                 version_main=self.major_version,

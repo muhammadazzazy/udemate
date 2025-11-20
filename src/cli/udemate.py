@@ -198,6 +198,8 @@ class Udemate:
         """Autoenroll into free Udemy courses using GUI browser."""
         udemy_urls: list[str] = self.cache.filter_urls('udemy')
         gui_driver: uc.Chrome = self.browser.setup(headless=False)
+        gui_driver.get('https://www.udemy.com/')
+        _user_input: str = input('Press Enter after logging into Udemy...')
         udemy: Udemy = Udemy(
             driver=gui_driver,
             config=BotConfig(
