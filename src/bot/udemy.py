@@ -27,6 +27,96 @@ class Udemy:
         self.gotify = gotify
         self.patterns = {'paid': 'cart/success', 'free': 'cart/subscribe'}
 
+    def enter_email(self, wait: WebDriverWait, email: str) -> None:
+        """Enter email address into login form."""
+        container = wait.until(
+            EC.element_to_be_clickable(
+                (By.CSS_SELECTOR, ".ud-compact-form-control-container")))
+        container.click()
+        email_input = wait.until(
+            EC.visibility_of_element_located((By.NAME, "email")))
+        email_input.clear()
+        email_input.send_keys(email)
+
+    def login(self, email: str) -> bool:
+        """Log into Udemy account."""
+        self.driver.get('https://www.udemy.com/')
+        for retry in range(self.config.retries):
+            try:
+                wait: WebDriverWait = WebDriverWait(
+                    self.driver, timeout=self.config.timeout)
+                login_button: uc.WebElement = wait.until(EC.element_to_be_clickable((
+                    By.LINK_TEXT,
+                    'Log in'
+                )))
+                login_button.click()
+                time.sleep(random.uniform(2, 4))
+                self.enter_email(wait, email)
+                self.logger.info('Entered email address successfully.')
+                _user_input: str = input(
+                    'Click on the Continue button'
+                    ' and complete any additional steps, then press Enter to continue...')
+                return True
+            except WebDriverException:
+                self.logger.warning('Login attempt %d/%d failed.',
+                                    retry+1,
+                                    self.config.retries)
+                time.sleep(random.uniform(2, 4))
+                continue
+        return False
+
+    def get_first_button(self, text: str) -> uc.WebElement | None:
+        """Get the first enroll button that is clickable."""
+        button_xpath: str = (
+            "//button[(@data-purpose='buy-now-button' or @data-purpose='buy-this-course-button')"
+            f" and (contains(., '{text}'))]"
+        )
+        wait: WebDriverWait = WebDriverWait(
+            self.driver, timeout=self.config.timeout)
+        buttons: list[uc.WebElement] = wait.until(lambda d: d.find_elements(
+            By.XPATH,
+            button_xpath
+        ))
+        button = next(
+            (b for b in buttons if b.is_displayed() and b.is_enabled()), None)
+        return button
+
+    def is_owned(self) -> bool:
+        """Return a flag indicating whether a course is owned."""
+        try:
+            _button: uc.WebElement | None = self.get_first_button(
+                text='Go to course')
+            return True
+        except WebDriverException:
+            return False
+
+    def is_paid(self) -> bool:
+        """Return a flag whether course is paid."""
+        try:
+            _button: uc.WebElement = self.get_first_button(text='Buy now')
+            return True
+        except WebDriverException:
+            return False
+
+    def enroll(self) -> bool:
+        """Scan for first 'Enroll now' button and click on it."""
+        for attempt in range(self.config.retries):
+            try:
+                enroll_button: uc.WebElement = self.get_first_button(
+                    text='Enroll now')
+                enroll_button.click()
+                self.logger.info('Attempt %d/%d succeeded!',
+                                 attempt+1,
+                                 self.config.retries)
+                return True
+            except WebDriverException:
+                self.logger.warning('Attempt %d/%d failed.',
+                                    attempt+1,
+                                    self.config.retries)
+                time.sleep(random.uniform(2, 4))
+                continue
+        return False
+
     def confirm(self) -> bool:
         """Scan for final 'Enroll now' button and click on it."""
         xp: str = '//*[@id="udemy"]/div[1]/div[2]/div/div/div/aside/div/div/div[2]/div[2]/button[1]'
@@ -45,78 +135,19 @@ class Udemy:
                                      attempt+1,
                                      self.config.retries)
                     return True
-                self.logger.warning('Attempt %d/%d failed.',
-                                    attempt+1,
-                                    self.config.retries)
-            except WebDriverException as e:
-                self.logger.error('Webdriver error: %r', e)
-                time.sleep(random.uniform(2, 4))
-                continue
-        return False
-
-    def is_owned(self) -> bool:
-        """Return a flag indicating whether a course is owned."""
-        button_xpath: str = (
-            "//button[(@data-purpose='buy-now-button' or @data-purpose='buy-this-course-button') and contains(., 'Go to course')]"
-        )
-        try:
-            wait: WebDriverWait = WebDriverWait(
-                self.driver, timeout=self.config.timeout)
-            _buttons: list[uc.WebElement] = wait.until(lambda d: d.find_elements(
-                By.XPATH,
-                button_xpath,
-            ))
-            return True
-        except WebDriverException:
-            return False
-
-    def is_paid(self) -> bool:
-        """Return a flag whether course is paid."""
-        button_xpath: str = (
-            "//button[(@data-purpose='buy-now-button' or @data-purpose='buy-this-course-button') and contains(., 'Buy now')]"
-        )
-        try:
-            wait: WebDriverWait = WebDriverWait(
-                self.driver, timeout=self.config.timeout)
-            _buttons: list[uc.WebElement] = wait.until(lambda d: d.find_elements(
-                By.XPATH,
-                button_xpath
-            ))
-            return True
-        except WebDriverException:
-            return False
-
-    def enroll(self) -> bool:
-        """Scan for first 'Enroll now' button and click on it."""
-        button_xpath: str = (
-            "//button[(@data-purpose='buy-now-button' or @data-purpose='buy-this-course-button') and contains(., 'Enroll now')]"
-        )
-        for attempt in range(self.config.retries):
-            try:
-                wait: WebDriverWait = WebDriverWait(
-                    self.driver, timeout=self.config.timeout)
-                buttons: list[uc.WebElement] = wait.until(lambda d: d.find_elements(
-                    By.XPATH,
-                    button_xpath
-                ))
-                enroll_button = next(
-                    (b for b in buttons if b.is_displayed() and b.is_enabled()), None)
-                enroll_button.click()
-                self.logger.info('Attempt %d/%d succeeded!',
-                                 attempt+1,
-                                 self.config.retries)
-                return True
             except WebDriverException:
                 self.logger.warning('Attempt %d/%d failed.',
                                     attempt+1,
                                     self.config.retries)
                 time.sleep(random.uniform(2, 4))
                 continue
+        return False
 
-    def run(self) -> None:
+    def run(self, email: str) -> None:
         """Orchestrate automatic enrollment into Udemy courses."""
         self.logger.info('Udemy bot starting...')
-        count: dict[str, int] = {'owned': 0, 'paid': 0, 'enroll': 0}
+        count: dict[str, int] = {'owned': 0, 'paid': 0, 'enrolled': 0}
+        self.login(email=email)
         for udemy_url in self.urls:
             self.logger.info('Visiting %s', udemy_url)
             self.driver.get(udemy_url)
@@ -137,7 +168,7 @@ class Udemy:
                         title='Udemy Enrollment Successful',
                         message=f'Enrolled into {course_name}',
                     )
-                    count['enroll'] += 1
+                    count['enrolled'] += 1
                     continue
                 if self.confirm():
                     self.logger.info('Successfully enrolled into %s.',
@@ -146,7 +177,7 @@ class Udemy:
                         title='Udemy Enrollment Successful',
                         message=f'Enrolled into {course_name}',
                     )
-                    count['enroll'] += 1
+                    count['enrolled'] += 1
                 else:
                     self.logger.info('Failed to enroll into %s', course_name)
             else:
@@ -161,5 +192,5 @@ class Udemy:
         )
         self.logger.info(
             'Enrolled into %d free courses.',
-            count['enroll']
+            count['enrolled']
         )

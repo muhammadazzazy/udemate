@@ -138,6 +138,10 @@ class Config(BaseSettings):
         default=DEFAULT_WEBHELPERAPP_TIMEOUT
     )
 
+    udemy_email: Optional[str] = Field(
+        description='Email address for Udemy account',
+        default=None
+    )
     udemy_retries: Optional[int] = Field(
         description='Maximum number of retries for web actions such as enrollments',
         default=DEFAULT_UDEMY_RETRIES
