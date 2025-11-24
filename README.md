@@ -152,16 +152,22 @@ Udemate was tested on Windows 11 and Ubuntu 24.04 LTS.
    REDDIT_USERNAME=""
    # Optional. Default is 500.
    REDDIT_LIMIT=1000
+
    # Browser config
-   # Required if you want to enroll in courses with a user profile.
+   # Required if you want to enroll in courses with a user profile
    USER_DATA_DIR="C:\\Users\\username\\AppData\\Local\\BraveSoftware\\Brave-Browser\\User Data\\Udemate"
 
    # Gotify config
    GOTIFY_BASE_URL=""
    GOTIFY_APP_TOKEN=""
+
    # CourseCouponz config
    COURSECOUPONZ_RETRIES=3
    COURSECOUPONZ_TIMEOUT=30
+
+   # Course Treat config
+   COURSETREAT_RETRIES=3
+   COURSETREAT_TIMEOUT=30
 
    # Easy Learning config
    EASYLEARN_RETRIES=3
