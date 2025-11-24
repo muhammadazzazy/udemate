@@ -14,7 +14,7 @@
   <h3 align="center">Udemate</h3>
 
   <p align="center">
-    Effortless Udemy course enrollment automation
+    Udemy automation, supercharged
     <br />
     <a href="https://github.com/muhammadazzazy/udemate"><strong>Explore the docs »</strong></a>
     <br />
@@ -307,6 +307,8 @@ Udemate was tested on Windows 11 and Ubuntu 24.04 LTS.
 - [x] Delete the user data directory before the non-headless browser starts
 - [x] Automate Udemy login by clicking on **Log in** button and automating email entry
 - [ ] Automatically detect the browser major version
+- [ ] Add threads within each middleman spider to improve headless performance
+- [ ] Package Udemate and publish to PyPI
 
 See the [open issues](https://github.com/muhammadazzazy/udemate/issues) for a full list of proposed features (and known issues).
 
