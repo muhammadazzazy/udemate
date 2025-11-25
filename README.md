@@ -86,6 +86,9 @@ An automation tool that reads Reddit posts from [r/udemyfreebies](https://www.re
 - <a href="https://github.com/ultrafunkamsterdam/undetected-chromedriver">
     <img src="https://avatars.githubusercontent.com/u/21027969?v=4" width="50" alt="undetected-chromedriver">
   </a>
+- <a href="https://www.crummy.com/software/BeautifulSoup/">
+      <img src="https://www.crummy.com/software/BeautifulSoup/10.1.jpg" width="100" alt="BeautifulSoup" />
+  </a>
 - <a href="https://gotify.net">
     <img src="https://raw.githubusercontent.com/gotify/logo/master/gotify-logo.png" width="50" alt="gotify" />
   </a>
@@ -288,14 +291,14 @@ Udemate was tested on Windows 11.
 - [x] Add functionality to generate JSON files containing middleman links grouped by hostname
 - [x] Scrape intermediate links from the following middlemen:
 
-- [x] CourseCouponz
-- [x] Course Treat
-- [x] Easy Learning
-- [x] Freewebcart
-- [x] iDC
-- [x] Invent High
-- [x] Line51
-- [x] WebHelperApp
+  - [x] CourseCouponz
+  - [x] Course Treat
+  - [x] Easy Learning
+  - [x] Freewebcart
+  - [x] iDC
+  - [x] Invent High
+  - [x] Line51
+  - [x] WebHelperApp
 
 - [x] Automate enrollment into Udemy courses
 - [x] Implement caching mechanism for middleman and Udemy links
@@ -321,10 +324,11 @@ Udemate was tested on Windows 11.
 - [x] Add push notifications using Gotify for informing the user about events occurring during each run
 - [x] Delete the user data directory before the non-headless browser starts
 - [x] Automate Udemy login by clicking on **Log in** button and automating email entry
-- [ ] Add threads to improve headless performance for the following middleman spiders:
+- [x] Replace Undetected Chromedriver with Requests + Beautiful Soup for Easy Learn spider
+- [ ] Add threads to improve performance for the following middleman spiders:
 
   - [ ] Course Couponz
-  - [ ] Easy Learn
+  - [x] Easy Learn
   - [x] IDownloadCoupon
 
 - [ ] Automatically detect the browser major version
