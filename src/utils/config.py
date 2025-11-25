@@ -10,35 +10,17 @@ DEFAULT_LIMIT: Final[int] = 500
 MIN_LIMIT: Final[int] = 1
 MAX_LIMIT: Final[int] = 1000
 
-DEFAULT_RETRIES: Final[int] = 3
-DEFAULT_TIMEOUT: Final[int] = 30
-
-DEFAULT_COURSECOUPONZ_TIMEOUT: Final[int] = 30
-DEFAULT_COURSECOUPONZ_RETRIES: Final[int] = 3
-
-DEFAULT_COURSETREAT_RETRIES: Final[int] = 3
-DEFAULT_COURSETREAT_TIMEOUT: Final[int] = 30
-
-DEFAULT_EASYLEARN_TIMEOUT: Final[int] = 30
-DEFAULT_EASYLEARN_RETRIES: Final[int] = 3
-
-DEFAULT_FREEWEBCART_TIMEOUT: Final[int] = 30
-DEFAULT_FREEWEBCART_RETRIES: Final[int] = 3
-
-DEFAULT_IDC_TIMEOUT: Final[int] = 30
-DEFAULT_IDC_RETRIES: Final[int] = 3
-
-DEFAULT_INVENTHIGH_TIMEOUT: Final[int] = 30
-DEFAULT_INVENTHIGH_RETRIES: Final[int] = 3
-
-DEFAULT_LINE51_TIMEOUT: Final[int] = 30
-DEFAULT_LINE51_RETRIES: Final[int] = 3
-
-DEFAULT_WEBHELPERAPP_TIMEOUT: Final[int] = 30
-DEFAULT_WEBHELPERAPP_RETRIES: Final[int] = 3
-
-DEFAULT_UDEMY_TIMEOUT: Final[int] = 10
-DEFAULT_UDEMY_RETRIES: Final[int] = 3
+BOT_DEFAULTS: Final[dict[str, dict[str, int]]] = {
+    'coursecouponz': {'retries': 3, 'threads': 2, 'timeout': 30},
+    'coursetreat': {'retries': 3, 'threads': 2, 'timeout': 30},
+    'easylearn': {'retries': 3, 'threads': 2, 'timeout': 30},
+    'freewebcart': {'retries': 3, 'threads': 2, 'timeout': 30},
+    'idc': {'retries': 3, 'threads': 25, 'timeout': 30},
+    'inventhigh': {'retries': 3, 'threads': 2, 'timeout': 30},
+    'line51': {'retries': 3, 'threads': 2, 'timeout': 30},
+    'webhelperapp': {'retries': 3, 'threads': 2, 'timeout': 30},
+    'udemy': {'retries': 3, 'timeout': 10}
+}
 
 FORMATTED_DATE: Final[str] = datetime.today().strftime('%Y%m%d')
 
@@ -68,74 +50,106 @@ class Config(BaseSettings):
 
     coursecouponz_retries: Optional[int] = Field(
         description='Maximum number of retries for Course Couponz requests',
-        default=DEFAULT_COURSECOUPONZ_RETRIES
+        default=BOT_DEFAULTS['coursecouponz']['retries']
+    )
+    coursecouponz_threads: Optional[int] = Field(
+        description='Number of threads for Course Couponz requests',
+        default=BOT_DEFAULTS['coursecouponz']['threads']
     )
     coursecouponz_timeout: Optional[int] = Field(
         description='Timeout (in seconds) for Course Couponz requests',
-        default=DEFAULT_COURSECOUPONZ_TIMEOUT
+        default=BOT_DEFAULTS['coursecouponz']['timeout']
     )
 
     coursetreat_retries: Optional[int] = Field(
         description='Maximum number of retries for Course Treat requests',
-        default=DEFAULT_COURSETREAT_RETRIES
+        default=BOT_DEFAULTS['coursetreat']['retries']
+    )
+    coursetreat_threads: Optional[int] = Field(
+        description='Number of threads for Course Treat requests',
+        default=BOT_DEFAULTS['coursetreat']['threads']
     )
     coursetreat_timeout: Optional[int] = Field(
         description='Timeout (in seconds) for Course Treat requests',
-        default=DEFAULT_COURSETREAT_TIMEOUT
+        default=BOT_DEFAULTS['coursetreat']['timeout']
     )
 
     easylearn_retries: Optional[int] = Field(
         description='Maximum number of retries for Easy Learning requests',
-        default=DEFAULT_EASYLEARN_RETRIES
+        default=BOT_DEFAULTS['easylearn']['retries']
+    )
+    easylearn_threads: Optional[int] = Field(
+        description='Number of threads for Easy Learning requests',
+        default=BOT_DEFAULTS['easylearn']['threads']
     )
     easylearn_timeout: Optional[int] = Field(
-        description='Timeout (in seconds) for Easy Learning requests',
-        default=DEFAULT_EASYLEARN_TIMEOUT
+        description='Timeout (in seconds) for Easy Learning requests and actions',
+        default=BOT_DEFAULTS['easylearn']['timeout']
     )
 
     freewebcart_retries: Optional[int] = Field(
         description='Maximum number of retries for Freewebcart requests and actions',
-        default=DEFAULT_FREEWEBCART_RETRIES
+        default=BOT_DEFAULTS['freewebcart']['retries']
+    )
+    freewebcart_threads: Optional[int] = Field(
+        description='Number of threads for Freewebcart requests and actions',
+        default=BOT_DEFAULTS['freewebcart']['threads']
     )
     freewebcart_timeout: Optional[int] = Field(
         description='Timeout (in seconds) for Freewebcart web requests and actions',
-        default=DEFAULT_FREEWEBCART_TIMEOUT
+        default=BOT_DEFAULTS['freewebcart']['timeout']
     )
 
     idc_retries: Optional[int] = Field(
         description='Maximum number of retries for iDC requests',
-        default=DEFAULT_IDC_RETRIES
+        default=BOT_DEFAULTS['idc']['retries']
+    )
+    idc_threads: Optional[int] = Field(
+        description='Number of threads for iDC requests',
+        default=BOT_DEFAULTS['idc']['threads']
     )
     idc_timeout: Optional[int] = Field(
         description='Timeout (in seconds) for iDC requests',
-        default=DEFAULT_IDC_TIMEOUT
+        default=BOT_DEFAULTS['idc']['timeout']
     )
 
     inventhigh_retries: Optional[int] = Field(
         description='Maximum number of retries for InventHigh requests and actions',
-        default=DEFAULT_INVENTHIGH_RETRIES
+        default=BOT_DEFAULTS['inventhigh']['retries']
+    )
+    inventhigh_threads: Optional[int] = Field(
+        description='Number of threads for InventHigh requests and actions',
+        default=BOT_DEFAULTS['inventhigh']['threads']
     )
     inventhigh_timeout: Optional[int] = Field(
         description='Timeout (in seconds) for InventHigh requests and actions',
-        default=DEFAULT_INVENTHIGH_TIMEOUT
+        default=BOT_DEFAULTS['inventhigh']['timeout']
     )
 
     line51_retries: Optional[int] = Field(
         description='Maximum number of retries for Line51 requests and actions',
-        default=DEFAULT_LINE51_RETRIES
+        default=BOT_DEFAULTS['line51']['retries']
+    )
+    line51_threads: Optional[int] = Field(
+        description='Number of threads for Line51 requests and actions',
+        default=2
     )
     line51_timeout: Optional[int] = Field(
         description='Timeout (in seconds) for Line51 requests and actions',
-        default=DEFAULT_LINE51_TIMEOUT
+        default=BOT_DEFAULTS['line51']['timeout']
     )
 
     webhelperapp_retries: Optional[int] = Field(
         description='Maximum number of retries for WebHelperApp requests and actions',
-        default=DEFAULT_WEBHELPERAPP_RETRIES
+        default=BOT_DEFAULTS['webhelperapp']['retries']
+    )
+    webhelperapp_threads: Optional[int] = Field(
+        description='Number of threads for WebHelperApp requests and actions',
+        default=BOT_DEFAULTS['webhelperapp']['threads']
     )
     webhelperapp_timeout: Optional[int] = Field(
         description='Timeout (in seconds) for WebHelperApp requests and actions',
-        default=DEFAULT_WEBHELPERAPP_TIMEOUT
+        default=BOT_DEFAULTS['webhelperapp']['timeout']
     )
 
     udemy_email: Optional[str] = Field(
@@ -144,11 +158,11 @@ class Config(BaseSettings):
     )
     udemy_retries: Optional[int] = Field(
         description='Maximum number of retries for web actions such as enrollments',
-        default=DEFAULT_UDEMY_RETRIES
+        default=BOT_DEFAULTS['udemy']['retries']
     )
     udemy_timeout: Optional[int] = Field(
         description='Timeout (in seconds) for web actions such as enrollments',
-        default=DEFAULT_UDEMY_TIMEOUT
+        default=BOT_DEFAULTS['udemy']['timeout']
     )
 
     gotify_base_url: Optional[str] = Field(
@@ -161,7 +175,16 @@ class Config(BaseSettings):
     )
 
 
-class BotConfig(BaseModel):
-    """Encapsulate and validate configuration attributes."""
+class BaseConfig(BaseModel):
+    """Encapsulate and validate base configuration attributes."""
     retries: int
     timeout: int
+
+
+class BotConfig(BaseConfig):
+    """Encapsulate and validate bot configuration attributes."""
+
+
+class SpiderConfig(BaseConfig):
+    """Encapsulate and validate spider configuration attributes."""
+    threads: int

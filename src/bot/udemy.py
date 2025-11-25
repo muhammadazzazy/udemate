@@ -105,6 +105,7 @@ class Udemy:
                 enroll_button: uc.WebElement = self.get_first_button(
                     text='Enroll now')
                 enroll_button.click()
+                time.sleep(random.uniform(2, 4))
                 self.logger.info('Attempt %d/%d succeeded!',
                                  attempt+1,
                                  self.config.retries)

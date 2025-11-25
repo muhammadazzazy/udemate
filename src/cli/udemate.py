@@ -21,7 +21,7 @@ from client.get_refresh_token import get_refresh_token
 from client.gotify import GotifyClient
 from client.reddit import RedditClient
 from utils.cache import Cache
-from utils.config import BotConfig, Config
+from utils.config import BotConfig, Config, SpiderConfig
 from web.brave import Brave
 from web.google_chrome import GoogleChrome
 
@@ -82,8 +82,9 @@ class Udemate:
                         driver=headless_driver,
                         urls=urls,
                         gotify=self.gotify,
-                        config=BotConfig(
+                        config=SpiderConfig(
                             retries=self.config.coursecouponz_retries,
+                            threads=self.config.coursecouponz_threads,
                             timeout=self.config.coursecouponz_timeout
                         )
                     )
@@ -94,8 +95,9 @@ class Udemate:
                         driver=headless_driver,
                         urls=urls,
                         gotify=self.gotify,
-                        config=BotConfig(
+                        config=SpiderConfig(
                             retries=self.config.coursetreat_retries,
+                            threads=self.config.coursetreat_threads,
                             timeout=self.config.coursetreat_timeout
                         )
                     )
@@ -106,8 +108,9 @@ class Udemate:
                         driver=headless_driver,
                         urls=urls,
                         gotify=self.gotify,
-                        config=BotConfig(
+                        config=SpiderConfig(
                             retries=self.config.easylearn_retries,
+                            threads=self.config.easylearn_threads,
                             timeout=self.config.easylearn_timeout
                         )
                     )
@@ -118,8 +121,9 @@ class Udemate:
                         driver=headless_driver,
                         urls=urls,
                         gotify=self.gotify,
-                        config=BotConfig(
+                        config=SpiderConfig(
                             retries=self.config.freewebcart_retries,
+                            threads=self.config.freewebcart_threads,
                             timeout=self.config.freewebcart_timeout
                         )
                     )
@@ -129,8 +133,9 @@ class Udemate:
                     spiders[middleman] = IDownloadCoupon(
                         urls=urls,
                         gotify=self.gotify,
-                        config=BotConfig(
+                        config=SpiderConfig(
                             retries=self.config.idc_retries,
+                            threads=self.config.idc_threads,
                             timeout=self.config.idc_timeout
                         )
                     )
@@ -141,8 +146,9 @@ class Udemate:
                         driver=headless_driver,
                         urls=urls,
                         gotify=self.gotify,
-                        config=BotConfig(
+                        config=SpiderConfig(
                             retries=self.config.inventhigh_retries,
+                            threads=self.config.inventhigh_threads,
                             timeout=self.config.inventhigh_timeout
                         )
                     )
@@ -153,8 +159,9 @@ class Udemate:
                         driver=headless_driver,
                         urls=urls,
                         gotify=self.gotify,
-                        config=BotConfig(
+                        config=SpiderConfig(
                             retries=self.config.line51_retries,
+                            threads=self.config.line51_threads,
                             timeout=self.config.line51_timeout
                         )
                     )
@@ -165,8 +172,9 @@ class Udemate:
                         driver=headless_driver,
                         urls=urls,
                         gotify=self.gotify,
-                        config=BotConfig(
+                        config=SpiderConfig(
                             retries=self.config.webhelperapp_retries,
+                            threads=self.config.webhelperapp_threads,
                             timeout=self.config.webhelperapp_timeout
                         )
                     )

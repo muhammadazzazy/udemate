@@ -29,12 +29,17 @@ def parse_arguments() -> Namespace:
                        'inventhigh', 'line51', 'webhelperapp', 'udemy']
     for bot in bots:
         parser.add_argument(
-            f'--{bot}-timeout',
+            f'--{bot}-retries',
             type=int,
             default=None
         )
         parser.add_argument(
-            f'--{bot}-retries',
+            f'--{bot}-threads',
+            type=int,
+            default=None
+        )
+        parser.add_argument(
+            f'--{bot}-timeout',
             type=int,
             default=None
         )

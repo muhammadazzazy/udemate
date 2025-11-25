@@ -1,10 +1,9 @@
 """Fetch Udemy links with coupons from iDC."""
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from urllib.parse import ParseResult, urlparse, parse_qs, unquote
 
 import requests
 from gotify import Gotify
-from requests.exceptions import RequestException
-from urllib3.exceptions import ProtocolError, ReadTimeoutError
 
 from bot.spider import Spider
 from utils.config import BotConfig
@@ -16,8 +15,7 @@ class IDownloadCoupon(Spider):
     def __init__(self, *, urls: list[str],
                  gotify: Gotify, config: BotConfig) -> None:
         self.session = requests.Session()
-        super().__init__(urls=urls, gotify=gotify,
-                         retries=config.retries, timeout=config.timeout)
+        super().__init__(urls=urls, config=config, gotify=gotify)
 
     def transform(self, url: str) -> str | None:
         """Convert iDC link to final Udemy link with coupon."""
@@ -31,6 +29,7 @@ class IDownloadCoupon(Spider):
         if 'idownloadcoupon.com' in response.url:
             return None
         udemy_url: str = self.extract_udemy_link(self.clean(response.url))
+        self.logger.info('%s ==> %s', url, udemy_url)
         return udemy_url
 
     def extract_udemy_link(self, url: str) -> str:
@@ -51,23 +50,13 @@ class IDownloadCoupon(Spider):
             message=f'Processing {len(self.urls)} intermediary links from iDC.'
         )
         udemy_urls: list[str] = []
-        for url in self.urls:
-            try:
-                udemy_url: str = self.transform(url)
-                if udemy_url:
-                    self.logger.info('%s ==> %s', url, udemy_url)
-                    udemy_urls.append(udemy_url)
-            except RequestException as e:
-                self.logger.error(
-                    'HTTP request failed for %s: %r', url, e)
-                continue
-            except ProtocolError as e:
-                self.logger.error('Protocol error for %s: %r', url, e)
-                continue
-            except ReadTimeoutError as e:
-                self.logger.error(
-                    'Read timeout error for %s: %r', url, e)
-                continue
+        with ThreadPoolExecutor(max_workers=self.threads) as executor:
+            futures = {executor.submit(
+                self.transform, url): url for url in self.urls}
+            for future in as_completed(futures):
+                result: str | None = future.result()
+                if result:
+                    udemy_urls.append(result)
         self.logger.info('iDC spider scraped %d Udemy links.', len(udemy_urls))
         self.gotify.create_message(
             title='iDC spider finished',

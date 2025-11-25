@@ -15,8 +15,7 @@ class WebHelperApp(Spider):
     def __init__(self, *, driver: uc.Chrome, urls: list[str],
                  gotify: Gotify, config: BotConfig) -> None:
         self.driver = driver
-        super().__init__(urls=urls, gotify=gotify,
-                         retries=config.retries, timeout=config.timeout)
+        super().__init__(urls=urls, config=config, gotify=gotify)
 
     def transform(self, url: str) -> str:
         """Return Udemy link from WebHelperApp link."""

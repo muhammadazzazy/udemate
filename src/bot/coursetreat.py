@@ -17,8 +17,7 @@ class CourseTreat(Spider):
     def __init__(self, urls: list[str], driver: uc.Chrome,
                  gotify: Gotify, config: BotConfig) -> None:
         self.driver = driver
-        super().__init__(urls=urls, gotify=gotify,
-                         retries=config.retries, timeout=config.timeout)
+        super().__init__(urls=urls, config=config, gotify=gotify)
 
     def transform(self, url: str) -> str | None:
         """Return Udemy link from Course Treat link."""
