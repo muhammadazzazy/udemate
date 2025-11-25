@@ -154,7 +154,7 @@ Udemate was tested on Windows 11 and Ubuntu 24.04 LTS.
    REDDIT_LIMIT=1000
 
    # Browser config
-   # Required if you want to enroll in courses with a user profile
+   # Required if you want to enroll in courses with a user profile.
    USER_DATA_DIR="C:\\Users\\username\\AppData\\Local\\BraveSoftware\\Brave-Browser\\User Data\\Udemate"
 
    # Gotify config
@@ -163,34 +163,42 @@ Udemate was tested on Windows 11 and Ubuntu 24.04 LTS.
 
    # CourseCouponz config
    COURSECOUPONZ_RETRIES=3
+   COURSECOUPONZ_THREADS=2
    COURSECOUPONZ_TIMEOUT=30
 
    # Course Treat config
    COURSETREAT_RETRIES=3
+   COURSECOUPONZ_THREADS=2
    COURSETREAT_TIMEOUT=30
 
    # Easy Learning config
    EASYLEARN_RETRIES=3
+   EASYLEARN_THREADS=2
    EASYLEARN_TIMEOUT=30
 
    # Freewebcart config
    FREEWEBCART_RETRIES=3
+   FREEWEBCART_THREADS=2
    FREEWEBCART_TIMEOUT=30
 
    # iDC config
    IDC_RETRIES=3
+   IDC_THREADS=25
    IDC_TIMEOUT=30
 
    # InventHigh config
    INVENTHIGH_RETRIES=3
+   INVENTHIGH_THREADS=2
    INVENTHIGH_TIMEOUT=30
 
    # Line51 config
    LINE51_RETRIES=3
+   LINE51_THREADS=2
    LINE51_TIMEOUT=30
 
    # WebHelperApp config
    WEBHELPERAPP_RETRIES=3
+   WEBHELPERAPP_THREADS=2
    WEBHELPERAPP_TIMEOUT=30
 
    # Udemy bot enrollment config
@@ -312,8 +320,10 @@ Udemate was tested on Windows 11 and Ubuntu 24.04 LTS.
 - [x] Add push notifications using Gotify for informing the user about events occurring during each run
 - [x] Delete the user data directory before the non-headless browser starts
 - [x] Automate Udemy login by clicking on **Log in** button and automating email entry
+- [ ] Add threads to improve headless performance for the following middleman spiders:
+  - [ ] Easy Learn
+  - [x] IDownloadCoupon
 - [ ] Automatically detect the browser major version
-- [ ] Add threads within each middleman spider to improve headless performance
 - [ ] Package Udemate and publish to PyPI
 
 See the [open issues](https://github.com/muhammadazzazy/udemate/issues) for a full list of proposed features (and known issues).
