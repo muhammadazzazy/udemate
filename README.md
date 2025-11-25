@@ -124,7 +124,7 @@ Create a Reddit bot and get environment variables
 
 ### Tested Environment
 
-Udemate was tested on Windows 11 and Ubuntu 24.04 LTS.
+Udemate was tested on Windows 11.
 
 ### Installation
 
@@ -257,22 +257,23 @@ Udemate was tested on Windows 11 and Ubuntu 24.04 LTS.
 
 > Note the following:
 >
-> 1. Command-line arguments override environment variables
-> 2. All command-line arguments are optional
-> 3. Default `mode` is `hybrid`
+> 1. Command-line arguments override the corresponding environment variables.
+> 2. All command-line arguments are optional.
+> 3. The default mode is hybrid.
+> 4. For testing, logging in with Google/Facebook/Apple is recommended. Udemy may temporarily lock your account if you repeatedly log in using verification codes sent via email.
 
 #### Option 2: Run in Docker
 
 4. Build the Docker image
 
-```sh
- docker build --build-arg USER_ID=$(id -u) --build-arg GROUP_ID=$(id -g) -f docker/Dockerfile -t udemate .
-```
+   ```sh
+   docker build --build-arg USER_ID=$(id -u) --build-arg GROUP_ID=$(id -g) -f docker/Dockerfile -t udemate .
+   ```
 
 5. Run the docker image
 
    ```sh
-    docker run --rm --env-file .env -v "$(pwd):/udemate" udemate
+   docker run --rm --env-file .env -v "$(pwd):/udemate" udemate
    ```
 
 <p align="right">(<a href="#udemate">back to top</a>)</p>
@@ -287,14 +288,14 @@ Udemate was tested on Windows 11 and Ubuntu 24.04 LTS.
 - [x] Add functionality to generate JSON files containing middleman links grouped by hostname
 - [x] Scrape intermediate links from the following middlemen:
 
-  - [x] CourseCouponz
-  - [x] Course Treat
-  - [x] Easy Learning
-  - [x] Freewebcart
-  - [x] iDC
-  - [x] Invent High
-  - [x] Line51
-  - [x] WebHelperApp
+- [x] CourseCouponz
+- [x] Course Treat
+- [x] Easy Learning
+- [x] Freewebcart
+- [x] iDC
+- [x] Invent High
+- [x] Line51
+- [x] WebHelperApp
 
 - [x] Automate enrollment into Udemy courses
 - [x] Implement caching mechanism for middleman and Udemy links
@@ -310,9 +311,9 @@ Udemate was tested on Windows 11 and Ubuntu 24.04 LTS.
 - [x] Remove affiliate marketing parts from Udemy links before caching the URLs and automatic enrollment
 - [x] Improve performance via per-domain concurrent spidering
 - [x] Add command-line arguments for specifying
-  - [x] mode (hybrid, headless, or gui)
-  - [x] timeout for each spider and enrollment bot (in seconds)
-  - [x] retries for each spider and enrollment bot
+- [x] mode (hybrid, headless, or gui)
+- [x] timeout for each spider and enrollment bot (in seconds)
+- [x] retries for each spider and enrollment bot
 - [x] Fix issue where the enrollment bot failed to detect the first button by considering both values of `data-purpose`: 'buy-this-course-button' and 'buy-now-button'
 - [x] Support Google Chrome for converting middleman links to Udemy links and automating course enrollment
 - [x] Fix issue where Brave Browser runs out of VRAM in non-headless mode
@@ -321,8 +322,11 @@ Udemate was tested on Windows 11 and Ubuntu 24.04 LTS.
 - [x] Delete the user data directory before the non-headless browser starts
 - [x] Automate Udemy login by clicking on **Log in** button and automating email entry
 - [ ] Add threads to improve headless performance for the following middleman spiders:
+
+  - [ ] Course Couponz
   - [ ] Easy Learn
   - [x] IDownloadCoupon
+
 - [ ] Automatically detect the browser major version
 - [ ] Package Udemate and publish to PyPI
 
@@ -359,7 +363,7 @@ Distributed under the MIT License. See [LICENSE](LICENSE) for more information.
 
 ## Contact
 
-Muhammad Azzazy - muhammadazzazy8@gmail.com
+Muhammad Azzazy - [muhammadazzazy8@gmail.com](mailto:muhammadazzazy8@gmail.com)
 
 Project Link: [https://github.com/muhammadazzazy/udemate](https://github.com/muhammadazzazy/udemate)
 
