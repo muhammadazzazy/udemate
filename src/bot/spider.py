@@ -1,4 +1,5 @@
 """Encapsulate common attributes and functionality between middleman spiders."""
+import urllib.parse as urlparse
 from abc import ABC, abstractmethod
 
 from gotify import Gotify
@@ -19,14 +20,16 @@ class Spider(ABC):
         self.logger = setup_logging()
 
     def clean(self, url: str) -> str:
-        """Return cleaned middleman link."""
-        index: int = url.find('&im_ref=')
-        if index == -1:
-            index = url.find('/?im_ref=')
+        """Return clean Udemy link without tracking parameters."""
+        parsed = urlparse.urlparse(url)
+        params = urlparse.parse_qs(parsed.query)
+        udemy_url: str = params.get('u', [url])[0]
 
-        if index != -1:
-            return url[:index]
-        return url
+        index: int = udemy_url.find('&im_ref=')
+        if index == -1:
+            index = udemy_url.find('/?im_ref=')
+            return udemy_url
+        return udemy_url[:index]
 
     @abstractmethod
     def transform(self, url: str) -> str | None:
