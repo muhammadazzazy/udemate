@@ -24,12 +24,13 @@ class Spider(ABC):
         parsed = urlparse.urlparse(url)
         params = urlparse.parse_qs(parsed.query)
         udemy_url: str = params.get('u', [url])[0]
-
-        index: int = udemy_url.find('&im_ref=')
-        if index == -1:
-            index = udemy_url.find('/?im_ref=')
-            return udemy_url
-        return udemy_url[:index]
+        i: int = udemy_url.find('&im_ref')
+        if i != -1:
+            return udemy_url[:i]
+        j: int = udemy_url.find('?im_ref')
+        if j != -1:
+            return udemy_url[:j]
+        return udemy_url
 
     @abstractmethod
     def transform(self, url: str) -> str | None:
