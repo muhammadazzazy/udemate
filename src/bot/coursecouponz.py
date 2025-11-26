@@ -1,39 +1,25 @@
 """Scrape Udemy links with coupons from CourseCouponz."""
-import undetected_chromedriver as uc
-from gotify import Gotify
-from selenium.common.exceptions import TimeoutException, WebDriverException
-from selenium.webdriver.common.by import By
+import requests
+from concurrent.futures import ThreadPoolExecutor, as_completed
+from bs4 import BeautifulSoup
 
 from bot.spider import Spider
-from utils.config import BotConfig
 
 
 class CourseCouponz(Spider):
     """Get Udemy links with coupons from CourseCouponz."""
 
-    def __init__(self, *, driver: uc.Chrome, urls: list[str],
-                 gotify: Gotify, config: BotConfig) -> None:
-        self.driver = driver
-        super().__init__(urls=urls, config=config, gotify=gotify)
-
     def transform(self, url: str) -> str | None:
         """Return Udemy link from CourseCouponz link."""
-        self.driver.get(url)
-        link: uc.WebElement = self.driver.find_element(
-            By.XPATH,
-            "//a[contains(., 'GET COURSE')]"
-        )
-        href: str = link.get_attribute('href')
-        count: int = 0
-        while (count < self.retries) and ('coursecouponz.com' in href):
-            link = self.driver.find_element(
-                By.XPATH,
-                "//a[contains(., 'GET COURSE')]"
-            )
-            href = link.get_attribute('href')
-            count += 1
-        if 'coursecouponz.com' in href:
+        response: requests.Response = requests.get(url, timeout=self.timeout)
+        html: str = response.text
+        soup: BeautifulSoup = BeautifulSoup(html, 'html.parser')
+        elements = soup.select(
+            'a.elementor-button.elementor-button-link.elementor-size-sm')
+        btn = elements[-1] if elements else None
+        if not btn:
             return None
+        href: str = btn.get('href')
         udemy_url: str = self.clean(href)
         return udemy_url
 
@@ -46,23 +32,17 @@ class CourseCouponz(Spider):
             message=f'Processing {len(self.urls)} intermediary links from CourseCouponz.'
         )
         udemy_urls: list[str] = []
-        for url in self.urls:
-            try:
-                udemy_url: str = self.transform(url)
-                if udemy_url:
-                    self.logger.info('%s ==> %s', url, udemy_url)
-                    udemy_urls.append(udemy_url)
-            except TimeoutException as e:
-                self.logger.error('Timeout while parsing %s: %r', url, e)
-                continue
-            except WebDriverException as e:
-                self.logger.error('Webdriver error for %s: %r', url, e)
-                continue
+        with ThreadPoolExecutor(max_workers=self.threads) as executor:
+            futures = {executor.submit(
+                self.transform, url): url for url in self.urls}
+            for future in as_completed(futures):
+                result: str | None = future.result()
+                if result:
+                    udemy_urls.append(result)
         self.logger.info('CourseCouponz spider scraped %d Udemy links.',
                          len(udemy_urls))
         self.gotify.create_message(
             title='CourseCouponz spider finished',
             message=f'Scraped {len(udemy_urls)} Udemy links from CourseCouponz.'
         )
-        self.driver.quit()
         return sorted(set(udemy_urls))

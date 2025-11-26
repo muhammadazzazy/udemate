@@ -76,10 +76,7 @@ class Udemate:
         for middleman, urls in middleman_urls.items():
             match middleman:
                 case 'coursecouponz':
-                    headless_driver: uc.Chrome = self.browser.setup(
-                        headless=True)
                     spiders[middleman] = CourseCouponz(
-                        driver=headless_driver,
                         urls=urls,
                         gotify=self.gotify,
                         config=SpiderConfig(
@@ -102,8 +99,6 @@ class Udemate:
                         )
                     )
                 case 'easylearn':
-                    headless_driver: uc.Chrome = self.browser.setup(
-                        headless=True)
                     spiders[middleman] = EasyLearning(
                         urls=urls,
                         gotify=self.gotify,
