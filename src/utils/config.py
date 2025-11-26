@@ -13,7 +13,7 @@ MAX_LIMIT: Final[int] = 1000
 BOT_DEFAULTS: Final[dict[str, dict[str, int]]] = {
     'coursecouponz': {'retries': 3, 'threads': 2, 'timeout': 30},
     'coursetreat': {'retries': 3, 'threads': 2, 'timeout': 30},
-    'easylearn': {'retries': 3, 'threads': 2, 'timeout': 30},
+    'easylearn': {'retries': 3, 'threads': 10, 'timeout': 30},
     'freewebcart': {'retries': 3, 'threads': 2, 'timeout': 30},
     'idc': {'retries': 3, 'threads': 25, 'timeout': 30},
     'inventhigh': {'retries': 3, 'threads': 2, 'timeout': 30},
