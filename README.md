@@ -334,7 +334,7 @@ Udemate was tested on Windows 11.
   - [x] IDownloadCoupon
   - [x] InventHigh
 
-- [ ] Prevent GUI driver from starting when no new Udemy links are available
+- [x] Prevent GUI driver from starting when no new Udemy links are available
 - [ ] Automatically detect the browser major version
 - [ ] Fix false-negative enrollment status in Udemy bot
 - [ ] Package Udemate and publish to PyPI
