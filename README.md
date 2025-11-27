@@ -176,7 +176,7 @@ Udemate was tested on Windows 11.
 
    # Easy Learning config
    EASYLEARN_RETRIES=3
-   EASYLEARN_THREADS=2
+   EASYLEARN_THREADS=10
    EASYLEARN_TIMEOUT=30
 
    # Freewebcart config
@@ -295,7 +295,7 @@ Udemate was tested on Windows 11.
   - [x] Course Treat
   - [x] Easy Learning
   - [x] Freewebcart
-  - [x] iDC
+  - [x] IDownloadCoupon
   - [x] Invent High
   - [x] Line51
   - [x] WebHelperApp
@@ -314,9 +314,11 @@ Udemate was tested on Windows 11.
 - [x] Remove affiliate marketing parts from Udemy links before caching the URLs and automatic enrollment
 - [x] Improve performance via per-domain concurrent spidering
 - [x] Add command-line arguments for specifying
-- [x] mode (hybrid, headless, or gui)
-- [x] timeout for each spider and enrollment bot (in seconds)
-- [x] retries for each spider and enrollment bot
+
+  - [x] mode (hybrid, headless, or gui)
+  - [x] timeout for each spider and enrollment bot (in seconds)
+  - [x] retries for each spider and enrollment bot
+
 - [x] Fix issue where the enrollment bot failed to detect the first button by considering both values of `data-purpose`: 'buy-this-course-button' and 'buy-now-button'
 - [x] Support Google Chrome for converting middleman links to Udemy links and automating course enrollment
 - [x] Fix issue where Brave Browser runs out of VRAM in non-headless mode
@@ -325,13 +327,16 @@ Udemate was tested on Windows 11.
 - [x] Delete the user data directory before the non-headless browser starts
 - [x] Automate Udemy login by clicking on **Log in** button and automating email entry
 - [x] Replace Undetected Chromedriver with Requests + Beautiful Soup for Easy Learn spider
-- [ ] Add threads to improve performance for the following middleman spiders:
+- [x] Add threads to improve performance for the following middleman spiders:
 
-  - [ ] Course Couponz
+  - [x] Course Couponz
   - [x] Easy Learn
   - [x] IDownloadCoupon
+  - [x] InventHigh
 
+- [ ] Prevent GUI driver from starting when no new Udemy links are available
 - [ ] Automatically detect the browser major version
+- [ ] Fix false-negative enrollment status in Udemy bot
 - [ ] Package Udemate and publish to PyPI
 
 See the [open issues](https://github.com/muhammadazzazy/udemate/issues) for a full list of proposed features (and known issues).
