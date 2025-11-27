@@ -1,5 +1,6 @@
 """Scrape Udemy links with coupons from Easy Learning."""
 import requests
+from requests.exceptions import RequestException
 
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from bs4 import BeautifulSoup
@@ -12,16 +13,25 @@ class EasyLearning(Spider):
 
     def transform(self, url: str) -> str | None:
         """Return Udemy link from Easy Learning link."""
-        response: requests.Response = requests.get(url, timeout=self.timeout)
-        html: str = response.text
-        soup = BeautifulSoup(html, 'html.parser')
-        btn = soup.select_one('a.purple-button')
-        if not btn:
-            return None
-        href = btn.get('href')
-        udemy_url: str | None = self.clean(href)
-        self.logger.info('%s ==> %s', url, udemy_url)
-        return udemy_url
+        for i in range(self.retries):
+            try:
+                response: requests.Response = requests.get(
+                    url, timeout=self.timeout)
+                html: str = response.text
+                soup: BeautifulSoup = BeautifulSoup(html, 'html.parser')
+                btn = soup.select_one('a.purple-button')
+                href: str = btn.get('href')
+                if not href:
+                    continue
+                udemy_url: str | None = self.clean(href)
+                self.logger.info('%s ==> %s', url, udemy_url)
+                return udemy_url
+            except RequestException as e:
+                self.logger.error(
+                    'Attempt %d: Error fetching %s: %s', i+1, url, str(e)
+                )
+                continue
+        return None
 
     def run(self) -> list[str]:
         """Return list of Udemy links extracted from Easy Learning."""

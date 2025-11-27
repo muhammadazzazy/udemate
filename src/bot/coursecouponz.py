@@ -11,17 +11,27 @@ class CourseCouponz(Spider):
 
     def transform(self, url: str) -> str | None:
         """Return Udemy link from CourseCouponz link."""
-        response: requests.Response = requests.get(url, timeout=self.timeout)
-        html: str = response.text
-        soup: BeautifulSoup = BeautifulSoup(html, 'html.parser')
-        elements = soup.select(
-            'a.elementor-button.elementor-button-link.elementor-size-sm')
-        btn = elements[-1] if elements else None
-        if not btn:
-            return None
-        href: str = btn.get('href')
-        udemy_url: str = self.clean(href)
-        return udemy_url
+        for i in range(self.retries):
+            try:
+                response: requests.Response = requests.get(
+                    url, timeout=self.timeout)
+                html: str = response.text
+                soup: BeautifulSoup = BeautifulSoup(html, 'html.parser')
+                elements = soup.select(
+                    'a.elementor-button.elementor-button-link.elementor-size-sm')
+                btn = elements[-1] if elements else None
+                href: str = btn.get('href')
+                if not href:
+                    continue
+                udemy_url: str = self.clean(href)
+                self.logger.info('%s ==> %s', url, udemy_url)
+                return udemy_url
+            except requests.RequestException as e:
+                self.logger.error(
+                    'Attempt %d: Error fetching %s: %s', i+1, url, str(e)
+                )
+                continue
+        return None
 
     def run(self) -> list[str]:
         """Return list of Udemy links extracted from CourseCouponz."""

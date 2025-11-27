@@ -122,8 +122,6 @@ class Udemate:
                         )
                     )
                 case 'idownloadcoupon':
-                    headless_driver: uc.Chrome = self.browser.setup(
-                        headless=True)
                     spiders[middleman] = IDownloadCoupon(
                         urls=urls,
                         gotify=self.gotify,
@@ -134,10 +132,7 @@ class Udemate:
                         )
                     )
                 case 'inventhigh':
-                    headless_driver: uc.Chrome = self.browser.setup(
-                        headless=True)
                     spiders[middleman] = InventHigh(
-                        driver=headless_driver,
                         urls=urls,
                         gotify=self.gotify,
                         config=SpiderConfig(
