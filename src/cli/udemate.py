@@ -194,6 +194,9 @@ class Udemate:
     def autoenroll(self, udemy_urls: list[str]) -> None:
         """Autoenroll into free Udemy courses using GUI browser."""
         udemy_urls: list[str] = self.cache.filter_urls('udemy')
+        if not udemy_urls:
+            self.logger.info('No new Udemy links to process. Exiting...')
+            return
         gui_driver: uc.Chrome = self.browser.setup(headless=False)
         udemy: Udemy = Udemy(
             driver=gui_driver,
