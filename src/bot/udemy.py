@@ -25,7 +25,8 @@ class Udemy:
         self.config = config
         self.urls = urls
         self.gotify = gotify
-        self.patterns = {'paid': 'cart/success', 'free': 'cart/subscribe'}
+        self.patterns = {'enroll': 'payment/checkout',
+                         'confirm': 'cart/success', 'free': 'cart/subscribe'}
 
     def enter_email(self, wait: WebDriverWait, email: str) -> None:
         """Enter email address into login form."""
@@ -106,10 +107,12 @@ class Udemy:
                     text='Enroll now')
                 enroll_button.click()
                 time.sleep(random.uniform(2, 4))
-                self.logger.info('Attempt %d/%d succeeded!',
-                                 attempt+1,
-                                 self.config.retries)
-                return True
+                if self.patterns['enroll'] in self.driver.current_url:
+                    self.logger.info('Attempt %d/%d succeeded!',
+                                     attempt+1,
+                                     self.config.retries)
+                    return True
+                raise WebDriverException
             except WebDriverException:
                 self.logger.warning('Attempt %d/%d failed.',
                                     attempt+1,
@@ -131,11 +134,12 @@ class Udemy:
                 )))
                 confirm_button.click()
                 time.sleep(random.uniform(2, 4))
-                if self.patterns['paid'] in self.driver.current_url:
+                if self.patterns['confirm'] in self.driver.current_url:
                     self.logger.info('Attempt %d/%d succeeded!',
                                      attempt+1,
                                      self.config.retries)
                     return True
+                raise WebDriverException
             except WebDriverException:
                 self.logger.warning('Attempt %d/%d failed.',
                                     attempt+1,
