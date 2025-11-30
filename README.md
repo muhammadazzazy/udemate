@@ -291,14 +291,14 @@ Udemate was tested on Windows 11.
 - [x] Add functionality to generate JSON files containing middleman links grouped by hostname
 - [x] Scrape intermediate links from the following middlemen:
 
-  - [x] CourseCouponz
-  - [x] Course Treat
-  - [x] Easy Learning
-  - [x] Freewebcart
-  - [x] IDownloadCoupon
-  - [x] Invent High
+  - [x] [CourseCouponz](https://www.coursecouponz.com)
+  - [x] [Course Treat](https://coursetreat.com)
+  - [x] [Easy Learning](https://easylearn.ing)
+  - [x] [Freewebcart](https://freewebcart.com)
+  - [x] [IDownloadCoupon](https://idownloadcoupon.com)
+  - [x] [Invent High](https://inventhigh.com)
   - [x] Line51
-  - [x] WebHelperApp
+  - [x] [WebHelperApp](https://webhelperapp.com)
 
 - [x] Automate enrollment into Udemy courses
 - [x] Implement caching mechanism for middleman and Udemy links
@@ -335,8 +335,8 @@ Udemate was tested on Windows 11.
   - [x] InventHigh
 
 - [x] Prevent GUI driver from starting when no new Udemy links are available
+- [x] Fix enrollment issues in Udemy bot by checking string patterns in the current URL
 - [ ] Automatically detect the browser major version
-- [ ] Fix false-negative enrollment status in Udemy bot
 - [ ] Package Udemate and publish to PyPI
 
 See the [open issues](https://github.com/muhammadazzazy/udemate/issues) for a full list of proposed features (and known issues).
