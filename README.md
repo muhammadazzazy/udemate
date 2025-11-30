@@ -101,7 +101,7 @@ An automation tool that reads Reddit posts from [r/udemyfreebies](https://www.re
 
 #### Option 1: Run from Source (Recommended for Full Automation)
 
-- [Python 3.13+](https://www.python.org/downloads)
+- [Python >= 3.10](https://www.python.org/downloads)
 
 - [Brave Browser](https://brave.com/) OR [Google Chrome](https://www.google.com/chrome/)
 
