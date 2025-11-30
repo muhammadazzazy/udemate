@@ -148,6 +148,21 @@ class Udemy:
                 continue
         return False
 
+    def display_stats(self, count: dict[str, int]) -> None:
+        """Display enrollment statistics."""
+        self.logger.info(
+            'Encountered %d already owned courses.',
+            count['owned']
+        )
+        self.logger.info(
+            'Encountered %d paid courses.',
+            count['paid']
+        )
+        self.logger.info(
+            'Enrolled into %d free courses.',
+            count['enrolled']
+        )
+
     def run(self, email: str) -> None:
         """Orchestrate automatic enrollment into Udemy courses."""
         self.logger.info('Udemy bot starting...')
@@ -187,15 +202,4 @@ class Udemy:
                     self.logger.info('Failed to enroll into %s', course_name)
             else:
                 self.logger.info('Course is unavailable. Skipping...')
-        self.logger.info(
-            'Encountered %d already owned courses.',
-            count['owned']
-        )
-        self.logger.info(
-            'Encountered %d paid courses.',
-            count['paid']
-        )
-        self.logger.info(
-            'Enrolled into %d free courses.',
-            count['enrolled']
-        )
+        self.display_stats(count)
