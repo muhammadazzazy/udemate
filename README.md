@@ -329,8 +329,8 @@ Udemate was tested on Windows 11.
 - [x] Replace Undetected Chromedriver with Requests + Beautiful Soup for Easy Learn spider
 - [x] Add threads to improve performance for the following middleman spiders:
 
-  - [x] Course Couponz
-  - [x] Easy Learn
+  - [x] CourseCouponz
+  - [x] Easy Learning
   - [x] IDownloadCoupon
   - [x] InventHigh
 
