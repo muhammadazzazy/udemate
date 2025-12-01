@@ -14,7 +14,8 @@ def setup_logging() -> logging.Logger:
     logs_dir.mkdir(parents=True, exist_ok=True)
     if not logger.hasHandlers():
         file_handler: FileHandler = logging.FileHandler(
-            logs_dir / 'udemate.log')
+            logs_dir / 'udemate.log',
+            encoding='utf-8')
         stream_handler: StreamHandler = logging.StreamHandler()
         logger.setLevel(logging.DEBUG)
         file_handler.setLevel(logging.DEBUG)
