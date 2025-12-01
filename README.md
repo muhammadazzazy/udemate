@@ -336,6 +336,7 @@ Udemate was tested on Windows 11.
 
 - [x] Prevent GUI driver from starting when no new Udemy links are available
 - [x] Fix enrollment issues in Udemy bot by checking string patterns in the current URL
+- [x] Enhance logging reliability (UTF-8 support for Windows)
 - [ ] Automatically detect the browser major version
 - [ ] Package Udemate and publish to PyPI
 
