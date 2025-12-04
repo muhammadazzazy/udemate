@@ -106,7 +106,7 @@ class Udemy:
                 enroll_button: uc.WebElement = self.get_first_button(
                     text='Enroll now')
                 enroll_button.click()
-                time.sleep(random.uniform(2, 4))
+                time.sleep(random.uniform(5, 10))
                 if self.patterns['enroll'] in self.driver.current_url:
                     self.logger.info('Attempt %d/%d succeeded!',
                                      attempt+1,
@@ -117,7 +117,7 @@ class Udemy:
                 self.logger.warning('Attempt %d/%d failed.',
                                     attempt+1,
                                     self.config.retries)
-                time.sleep(random.uniform(2, 4))
+                time.sleep(random.uniform(5, 10))
                 continue
         return False
 
@@ -133,7 +133,7 @@ class Udemy:
                     xp
                 )))
                 confirm_button.click()
-                time.sleep(random.uniform(2, 4))
+                time.sleep(random.uniform(5, 10))
                 if self.patterns['confirm'] in self.driver.current_url:
                     self.logger.info('Attempt %d/%d succeeded!',
                                      attempt+1,
@@ -144,7 +144,7 @@ class Udemy:
                 self.logger.warning('Attempt %d/%d failed.',
                                     attempt+1,
                                     self.config.retries)
-                time.sleep(random.uniform(2, 4))
+                time.sleep(random.uniform(5, 10))
                 continue
         return False
 

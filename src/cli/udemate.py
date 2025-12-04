@@ -32,12 +32,12 @@ class Udemate:
     def __init__(self, *, config: Config, gotify: GotifyClient, logger: Logger) -> None:
         if 'brave' in config.user_data_dir.lower():
             self.browser = Brave(
-                major_version=141,
+                major_version=142,
                 user_data_dir=config.user_data_dir,
                 logger=logger)
         elif 'chrome' in config.user_data_dir.lower():
             self.browser = GoogleChrome(
-                major_version=141,
+                major_version=142,
                 user_data_dir=config.user_data_dir,
                 logger=logger)
         self.cache = Cache()
