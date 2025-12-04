@@ -44,106 +44,110 @@ class Config(BaseSettings):
     reddit_username: str = Field(
         description='Username of Reddit account')
 
-    user_data_dir: Optional[str] = Field(
+    browser_major_version: int = Field(
+        description='Major version of the browser to be automated',
+        default=142
+    )
+    user_data_dir: str = Field(
         description='Path to Brave Browser user data directory'
     )
 
-    coursecouponz_retries: Optional[int] = Field(
+    coursecouponz_retries: int = Field(
         description='Maximum number of retries for Course Couponz requests',
         default=BOT_DEFAULTS['coursecouponz']['retries']
     )
-    coursecouponz_threads: Optional[int] = Field(
+    coursecouponz_threads: int = Field(
         description='Number of threads for Course Couponz requests',
         default=BOT_DEFAULTS['coursecouponz']['threads']
     )
-    coursecouponz_timeout: Optional[int] = Field(
+    coursecouponz_timeout: int = Field(
         description='Timeout (in seconds) for Course Couponz requests',
         default=BOT_DEFAULTS['coursecouponz']['timeout']
     )
 
-    coursetreat_retries: Optional[int] = Field(
+    coursetreat_retries: int = Field(
         description='Maximum number of retries for Course Treat requests',
         default=BOT_DEFAULTS['coursetreat']['retries']
     )
-    coursetreat_threads: Optional[int] = Field(
+    coursetreat_threads: int = Field(
         description='Number of threads for Course Treat requests',
         default=BOT_DEFAULTS['coursetreat']['threads']
     )
-    coursetreat_timeout: Optional[int] = Field(
+    coursetreat_timeout: int = Field(
         description='Timeout (in seconds) for Course Treat requests',
         default=BOT_DEFAULTS['coursetreat']['timeout']
     )
 
-    easylearn_retries: Optional[int] = Field(
+    easylearn_retries: int = Field(
         description='Maximum number of retries for Easy Learning requests',
         default=BOT_DEFAULTS['easylearn']['retries']
     )
-    easylearn_threads: Optional[int] = Field(
+    easylearn_threads: int = Field(
         description='Number of threads for Easy Learning requests',
         default=BOT_DEFAULTS['easylearn']['threads']
     )
-    easylearn_timeout: Optional[int] = Field(
+    easylearn_timeout: int = Field(
         description='Timeout (in seconds) for Easy Learning requests and actions',
         default=BOT_DEFAULTS['easylearn']['timeout']
     )
 
-    freewebcart_retries: Optional[int] = Field(
+    freewebcart_retries: int = Field(
         description='Maximum number of retries for Freewebcart requests and actions',
         default=BOT_DEFAULTS['freewebcart']['retries']
     )
-    freewebcart_threads: Optional[int] = Field(
+    freewebcart_threads: int = Field(
         description='Number of threads for Freewebcart requests and actions',
         default=BOT_DEFAULTS['freewebcart']['threads']
     )
-    freewebcart_timeout: Optional[int] = Field(
+    freewebcart_timeout: int = Field(
         description='Timeout (in seconds) for Freewebcart web requests and actions',
         default=BOT_DEFAULTS['freewebcart']['timeout']
     )
 
-    idc_retries: Optional[int] = Field(
+    idc_retries: int = Field(
         description='Maximum number of retries for iDC requests',
         default=BOT_DEFAULTS['idc']['retries']
     )
-    idc_threads: Optional[int] = Field(
+    idc_threads: int = Field(
         description='Number of threads for iDC requests',
         default=BOT_DEFAULTS['idc']['threads']
     )
-    idc_timeout: Optional[int] = Field(
+    idc_timeout: int = Field(
         description='Timeout (in seconds) for iDC requests',
         default=BOT_DEFAULTS['idc']['timeout']
     )
 
-    inventhigh_retries: Optional[int] = Field(
+    inventhigh_retries: int = Field(
         description='Maximum number of retries for InventHigh requests and actions',
         default=BOT_DEFAULTS['inventhigh']['retries']
     )
-    inventhigh_threads: Optional[int] = Field(
+    inventhigh_threads: int = Field(
         description='Number of threads for InventHigh requests and actions',
         default=BOT_DEFAULTS['inventhigh']['threads']
     )
-    inventhigh_timeout: Optional[int] = Field(
+    inventhigh_timeout: int = Field(
         description='Timeout (in seconds) for InventHigh requests and actions',
         default=BOT_DEFAULTS['inventhigh']['timeout']
     )
 
-    line51_retries: Optional[int] = Field(
+    line51_retries: int = Field(
         description='Maximum number of retries for Line51 requests and actions',
         default=BOT_DEFAULTS['line51']['retries']
     )
-    line51_threads: Optional[int] = Field(
+    line51_threads: int = Field(
         description='Number of threads for Line51 requests and actions',
         default=2
     )
-    line51_timeout: Optional[int] = Field(
+    line51_timeout: int = Field(
         description='Timeout (in seconds) for Line51 requests and actions',
         default=BOT_DEFAULTS['line51']['timeout']
     )
 
-    webhelperapp_retries: Optional[int] = Field(
+    webhelperapp_retries: int = Field(
         description='Maximum number of retries for WebHelperApp requests and actions',
         default=BOT_DEFAULTS['webhelperapp']['retries']
     )
-    webhelperapp_threads: Optional[int] = Field(
+    webhelperapp_threads: int = Field(
         description='Number of threads for WebHelperApp requests and actions',
         default=BOT_DEFAULTS['webhelperapp']['threads']
     )
@@ -152,26 +156,23 @@ class Config(BaseSettings):
         default=BOT_DEFAULTS['webhelperapp']['timeout']
     )
 
-    udemy_email: Optional[str] = Field(
+    udemy_email: str = Field(
         description='Email address for Udemy account',
-        default=None
     )
-    udemy_retries: Optional[int] = Field(
+    udemy_retries: int = Field(
         description='Maximum number of retries for web actions such as enrollments',
         default=BOT_DEFAULTS['udemy']['retries']
     )
-    udemy_timeout: Optional[int] = Field(
+    udemy_timeout: int = Field(
         description='Timeout (in seconds) for web actions such as enrollments',
         default=BOT_DEFAULTS['udemy']['timeout']
     )
 
-    gotify_base_url: Optional[str] = Field(
-        description='Base URL of Gotify server',
-        default=None
+    gotify_base_url: str = Field(
+        description='Base URL of Gotify server'
     )
-    gotify_app_token: Optional[str] = Field(
-        description='Application token for Gotify notifications',
-        default=None
+    gotify_app_token: str = Field(
+        description='Application token for Gotify notifications'
     )
 
 

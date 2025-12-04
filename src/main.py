@@ -24,6 +24,12 @@ def parse_arguments() -> Namespace:
         type=str,
         default=None
     )
+
+    parser.add_argument(
+        '--browser-major-version',
+        type=int,
+        default=None
+    )
     bots: list[str] = ['coursecouponz', 'easylearn',
                        'freewebcart', 'idc',
                        'inventhigh', 'line51', 'webhelperapp', 'udemy']
