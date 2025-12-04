@@ -51,7 +51,7 @@ class Udemy:
                     'Log in'
                 )))
                 login_button.click()
-                time.sleep(random.uniform(2, 4))
+                time.sleep(random.uniform(10, 15))
                 self.enter_email(wait, email)
                 self.logger.info('Entered email address successfully.')
                 _user_input: str = input(
@@ -62,7 +62,7 @@ class Udemy:
                 self.logger.warning('Login attempt %d/%d failed.',
                                     retry+1,
                                     self.config.retries)
-                time.sleep(random.uniform(2, 4))
+                time.sleep(random.uniform(10, 15))
                 continue
         return False
 
@@ -106,7 +106,7 @@ class Udemy:
                 enroll_button: uc.WebElement = self.get_first_button(
                     text='Enroll now')
                 enroll_button.click()
-                time.sleep(random.uniform(5, 10))
+                time.sleep(random.uniform(10, 15))
                 if self.patterns['enroll'] in self.driver.current_url:
                     self.logger.info('Attempt %d/%d succeeded!',
                                      attempt+1,
@@ -117,7 +117,7 @@ class Udemy:
                 self.logger.warning('Attempt %d/%d failed.',
                                     attempt+1,
                                     self.config.retries)
-                time.sleep(random.uniform(5, 10))
+                time.sleep(random.uniform(10, 15))
                 continue
         return False
 
@@ -133,7 +133,7 @@ class Udemy:
                     xp
                 )))
                 confirm_button.click()
-                time.sleep(random.uniform(5, 10))
+                time.sleep(random.uniform(10, 15))
                 if self.patterns['confirm'] in self.driver.current_url:
                     self.logger.info('Attempt %d/%d succeeded!',
                                      attempt+1,
@@ -144,7 +144,7 @@ class Udemy:
                 self.logger.warning('Attempt %d/%d failed.',
                                     attempt+1,
                                     self.config.retries)
-                time.sleep(random.uniform(5, 10))
+                time.sleep(random.uniform(10, 15))
                 continue
         return False
 
