@@ -103,7 +103,9 @@ An automation tool that reads Reddit posts from [r/udemyfreebies](https://www.re
 
 - [Python >= 3.10](https://www.python.org/downloads)
 
-- [Brave Browser](https://brave.com/) OR [Google Chrome](https://www.google.com/chrome/)
+- A Chromium-based browser (sorted from best-supported to least):
+  - [Google Chrome](https://www.google.com/chrome/) is fully supported and recommended.
+  - [Brave Browser](https://brave.com/) works but might break with newer Brave versions.
 
 #### Option 2: Run in Docker (Headless Mode Only)
 
@@ -158,7 +160,7 @@ Udemate was tested on Windows 11.
 
    # Browser config
    # Required if you want to enroll in courses with a user profile.
-   USER_DATA_DIR="C:\\Users\\username\\AppData\\Local\\BraveSoftware\\Brave-Browser\\User Data\\Udemate"
+   USER_DATA_DIR="C:\\Users\\username\\AppData\\Local\\Google\\Chrome\\User Data\\Udemate"
 
    # Gotify config
    GOTIFY_BASE_URL=""
