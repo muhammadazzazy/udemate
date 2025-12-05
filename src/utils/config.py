@@ -10,12 +10,14 @@ DEFAULT_LIMIT: Final[int] = 500
 MIN_LIMIT: Final[int] = 1
 MAX_LIMIT: Final[int] = 1000
 
+DEFAULT_BROWSER_MAJOR_VERSION: Final[int] = 142
+
 BOT_DEFAULTS: Final[dict[str, dict[str, int]]] = {
     'coursecouponz': {'retries': 3, 'threads': 2, 'timeout': 30},
     'coursetreat': {'retries': 3, 'threads': 2, 'timeout': 30},
     'easylearn': {'retries': 3, 'threads': 10, 'timeout': 30},
     'freewebcart': {'retries': 3, 'threads': 2, 'timeout': 30},
-    'idc': {'retries': 3, 'threads': 25, 'timeout': 30},
+    'idownloadcoupon': {'retries': 3, 'threads': 25, 'timeout': 30},
     'inventhigh': {'retries': 3, 'threads': 2, 'timeout': 30},
     'line51': {'retries': 3, 'threads': 2, 'timeout': 30},
     'webhelperapp': {'retries': 3, 'threads': 2, 'timeout': 30},
@@ -46,7 +48,7 @@ class Config(BaseSettings):
 
     browser_major_version: int = Field(
         description='Major version of the browser to be automated',
-        default=142
+        default=DEFAULT_BROWSER_MAJOR_VERSION
     )
     user_data_dir: str = Field(
         description='Path to Brave Browser user data directory'
@@ -104,17 +106,17 @@ class Config(BaseSettings):
         default=BOT_DEFAULTS['freewebcart']['timeout']
     )
 
-    idc_retries: int = Field(
-        description='Maximum number of retries for iDC requests',
-        default=BOT_DEFAULTS['idc']['retries']
+    idownloadcoupon_retries: int = Field(
+        description='Maximum number of retries for IDownloadCoupon requests',
+        default=BOT_DEFAULTS['idownloadcoupon']['retries']
     )
-    idc_threads: int = Field(
-        description='Number of threads for iDC requests',
-        default=BOT_DEFAULTS['idc']['threads']
+    idownloadcoupon_threads: int = Field(
+        description='Number of threads for IDownloadCoupon requests',
+        default=BOT_DEFAULTS['idownloadcoupon']['threads']
     )
-    idc_timeout: int = Field(
-        description='Timeout (in seconds) for iDC requests',
-        default=BOT_DEFAULTS['idc']['timeout']
+    idownloadcoupon_timeout: int = Field(
+        description='Timeout (in seconds) for IDownloadCoupon requests',
+        default=BOT_DEFAULTS['idownloadcoupon']['timeout']
     )
 
     inventhigh_retries: int = Field(

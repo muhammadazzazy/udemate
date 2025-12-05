@@ -126,9 +126,9 @@ class Udemate:
                         urls=urls,
                         gotify=self.gotify,
                         config=SpiderConfig(
-                            retries=self.config.idc_retries,
-                            threads=self.config.idc_threads,
-                            timeout=self.config.idc_timeout
+                            retries=self.config.idownloadcoupon_retries,
+                            threads=self.config.idownloadcoupon_threads,
+                            timeout=self.config.idownloadcoupon_timeout
                         )
                     )
                 case 'inventhigh':

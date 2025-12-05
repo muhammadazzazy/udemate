@@ -31,7 +31,7 @@ def parse_arguments() -> Namespace:
         default=None
     )
     bots: list[str] = ['coursecouponz', 'easylearn',
-                       'freewebcart', 'idc',
+                       'freewebcart', 'idownloadcoupon',
                        'inventhigh', 'line51', 'webhelperapp', 'udemy']
     for bot in bots:
         parser.add_argument(

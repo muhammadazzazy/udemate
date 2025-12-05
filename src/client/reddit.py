@@ -1,7 +1,10 @@
 """Configure Reddit PRAW for r/udemyfreebies, fetch posts on subreddit, and extract hostnames."""
+from urllib.parse import urlparse
+
 import praw
 from prawcore.exceptions import RequestException
 from praw.models.reddit.submission import Submission
+
 
 from utils.config import Config
 from utils.logger import setup_logging
@@ -45,11 +48,18 @@ class RedditClient:
         """Return list of detected middlemen hostnames."""
         middlemen: list[str] = []
         for submission in self.submissions:
+            result = urlparse(submission.url)
+            flag: bool = all(
+                [result.scheme, result.netloc]
+            )
+            if not flag:
+                continue
             standard_url: str = self.clean(submission.url)
             hostname: str = standard_url.split('/')[2]
             middleman: str = hostname.split('.')[0]
             if middleman not in middlemen:
                 middlemen.append(middleman)
+
         return middlemen
 
     def get_middleman_urls(self, middlemen: list[str]) -> dict[str, list[str]]:
