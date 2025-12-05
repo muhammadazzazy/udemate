@@ -221,7 +221,7 @@ Udemate was tested on Windows 11.
    python -m venv .venv
 
    # Linux
-   python3.12 -m venv .venv
+   python3.10 -m venv .venv
    ```
 
 5. Activate the virtual environment
@@ -247,7 +247,7 @@ Udemate was tested on Windows 11.
     python .\src\main.py --mode headless
 
     # Linux
-    python3 src/main.py --mode headless
+    python3.10 src/main.py --mode headless
    ```
 
 8. Run the tool in GUI mode to automate course enrollment
@@ -257,7 +257,7 @@ Udemate was tested on Windows 11.
    python .\src\main.py --mode gui
 
    # Linux
-   python3 src/main.py --mode gui
+   python3.10 src/main.py --mode gui
    ```
 
 > Note the following:
@@ -265,7 +265,6 @@ Udemate was tested on Windows 11.
 > 1. Command-line arguments override the corresponding environment variables.
 > 2. All command-line arguments are optional.
 > 3. The default mode is hybrid.
-> 4. For testing, logging in with Google/Facebook/Apple is recommended. Udemy may temporarily lock your account if you repeatedly log in using verification codes sent via email.
 
 #### Option 2: Run in Docker
 
@@ -339,7 +338,6 @@ Udemate was tested on Windows 11.
 - [x] Prevent GUI driver from starting when no new Udemy links are available
 - [x] Fix enrollment issues in Udemy bot by checking string patterns in the current URL
 - [x] Enhance logging reliability (UTF-8 support for Windows)
-- [ ] Automatically detect the browser major version
 - [ ] Package Udemate and publish to PyPI
 
 See the [open issues](https://github.com/muhammadazzazy/udemate/issues) for a full list of proposed features (and known issues).
