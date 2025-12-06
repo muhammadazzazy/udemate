@@ -159,6 +159,7 @@ Udemate was tested on Windows 11.
    REDDIT_LIMIT=1000
 
    # Browser config
+   BROWSER_MAJOR_VERSION=142
    # Required if you want to enroll in courses with a user profile.
    USER_DATA_DIR="C:\\Users\\username\\AppData\\Local\\Google\\Chrome\\User Data\\Udemate"
 
