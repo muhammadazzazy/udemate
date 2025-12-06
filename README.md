@@ -219,7 +219,7 @@ Udemate was tested on Windows 11.
 
    ```sh
    # Windows
-   python -m venv .venv
+   py -3.10 -m venv .venv
 
    # Linux
    python3.10 -m venv .venv
