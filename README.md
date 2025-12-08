@@ -164,6 +164,7 @@ Udemate was tested on Windows 11.
    USER_DATA_DIR="C:\\Users\\username\\AppData\\Local\\Google\\Chrome\\User Data\\Udemate"
 
    # Gotify config
+   # Required for receiving push notifications when major events occur.
    GOTIFY_BASE_URL=""
    GOTIFY_APP_TOKEN=""
 
@@ -339,6 +340,7 @@ Udemate was tested on Windows 11.
 - [x] Prevent GUI driver from starting when no new Udemy links are available
 - [x] Fix enrollment issues in Udemy bot by checking string patterns in the current URL
 - [x] Enhance logging reliability (UTF-8 support for Windows)
+- [ ] Fix intermittent enrollment failures by implementing robust detection and clicking logic for Udemy “Enroll now” buttons
 - [ ] Package Udemate and publish to PyPI
 
 See the [open issues](https://github.com/muhammadazzazy/udemate/issues) for a full list of proposed features (and known issues).
