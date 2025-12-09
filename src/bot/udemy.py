@@ -82,6 +82,17 @@ class Udemy:
             (b for b in buttons if b.is_displayed() and b.is_enabled()), None)
         return button
 
+    def get_second_button(self) -> uc.WebElement | None:
+        """Get the second enroll button that is clickable."""
+        xp: str = '//*[@id="udemy"]/div[1]/div[2]/div/div/div/aside/div/div/div[2]/div[2]/button[1]'
+        wait: WebDriverWait = WebDriverWait(
+            self.driver, timeout=self.config.timeout)
+        confirm_button: uc.WebElement = wait.until(EC.element_to_be_clickable((
+            By.XPATH,
+            xp
+        )))
+        return confirm_button
+
     def is_owned(self) -> bool:
         """Return a flag indicating whether a course is owned."""
         try:
@@ -106,79 +117,100 @@ class Udemy:
                 enroll_button: uc.WebElement = self.get_first_button(
                     text='Enroll now')
                 enroll_button.click()
-                time.sleep(random.uniform(10, 15))
-                if self.patterns['enroll'] in self.driver.current_url:
-                    self.logger.info('Attempt %d/%d succeeded!',
-                                     attempt+1,
-                                     self.config.retries)
-                    return True
-                raise WebDriverException
+                wait: WebDriverWait = WebDriverWait(
+                    self.driver, timeout=self.config.timeout)
+                wait.until(
+                    EC.url_contains(self.patterns['enroll'])
+                )
+                self.logger.info('Attempt %d/%d succeeded!',
+                                 attempt+1,
+                                 self.config.retries)
+                time.sleep(random.uniform(15, 20))
+                return True
             except WebDriverException:
                 self.logger.warning('Attempt %d/%d failed.',
                                     attempt+1,
                                     self.config.retries)
-                time.sleep(random.uniform(10, 15))
+                time.sleep(random.uniform(15, 20))
                 continue
         return False
 
     def confirm(self) -> bool:
         """Scan for final 'Enroll now' button and click on it."""
-        xp: str = '//*[@id="udemy"]/div[1]/div[2]/div/div/div/aside/div/div/div[2]/div[2]/button[1]'
         for attempt in range(self.config.retries):
             try:
+                confirm_button: uc.WebElement = self.get_second_button()
+                confirm_button.click()
                 wait: WebDriverWait = WebDriverWait(
                     self.driver, timeout=self.config.timeout)
-                confirm_button: uc.WebElement = wait.until(EC.element_to_be_clickable((
-                    By.XPATH,
-                    xp
-                )))
-                confirm_button.click()
-                time.sleep(random.uniform(10, 15))
-                if self.patterns['confirm'] in self.driver.current_url:
-                    self.logger.info('Attempt %d/%d succeeded!',
-                                     attempt+1,
-                                     self.config.retries)
-                    return True
-                raise WebDriverException
+                wait.until(
+                    EC.url_contains(self.patterns['confirm'])
+                )
+                self.logger.info('Attempt %d/%d succeeded!',
+                                 attempt+1,
+                                 self.config.retries)
+                return True
             except WebDriverException:
                 self.logger.warning('Attempt %d/%d failed.',
                                     attempt+1,
                                     self.config.retries)
-                time.sleep(random.uniform(10, 15))
+                time.sleep(random.uniform(15, 20))
                 continue
         return False
 
-    def display_stats(self, count: dict[str, int]) -> None:
+    def display_stats(self, courses: dict[str, list[str]]) -> None:
         """Display enrollment statistics."""
         self.logger.info(
             'Encountered %d already owned courses.',
-            count['owned']
+            len(courses['owned'])
         )
         self.logger.info(
             'Encountered %d paid courses.',
-            count['paid']
+            len(courses['paid'])
         )
         self.logger.info(
             'Enrolled into %d free courses.',
-            count['enrolled']
+            len(courses['enrolled'])
         )
+
+    def get_course_slug(self, udemy_url: str) -> str | None:
+        """Extract and return course slug from Udemy URL."""
+        url_parts = udemy_url.split('/')
+        if len(url_parts) <= 4:
+            self.logger.warning(
+                'Malformed Udemy URL (too few segments): %s. Skipping...', udemy_url)
+            return None
+        course_slug: str = url_parts[4]
+        self.logger.debug('Course slug: %s', course_slug)
+        return course_slug
 
     def run(self, email: str) -> None:
         """Orchestrate automatic enrollment into Udemy courses."""
         self.logger.info('Udemy bot starting...')
-        count: dict[str, int] = {'owned': 0, 'paid': 0, 'enrolled': 0}
+        courses: dict[str, list[str]] = {
+            'owned': [],
+            'paid': [],
+            'enrolled': []
+        }
         self.login(email=email)
         for udemy_url in self.urls:
+            course_slug: str | None = self.get_course_slug(udemy_url)
+            if course_slug in courses['owned']:
+                self.logger.info(
+                    '%s is already owned. Skipping...', course_slug
+                )
+                continue
             self.logger.info('Visiting %s', udemy_url)
             self.driver.get(udemy_url)
+            self.cache.append_jsonl(
+                filename='udemy.jsonl', url=udemy_url)
             course_name: str = self.driver.title.removesuffix(' | Udemy')
-            self.cache.append_jsonl(filename='udemy.jsonl', url=udemy_url)
             if self.is_owned():
                 self.logger.info('%s is owned. Skipping...', course_name)
-                count['owned'] += 1
+                courses['owned'].append(course_slug)
             elif self.is_paid():
                 self.logger.info('%s is paid. Skipping...', course_name)
-                count['paid'] += 1
+                courses['paid'].append(course_slug)
             elif self.enroll():
                 self.logger.info('Enrolling into %s', course_name)
                 if self.patterns['free'] in self.driver.current_url:
@@ -188,7 +220,7 @@ class Udemy:
                         title='Udemy Enrollment Successful',
                         message=f'Enrolled into {course_name}',
                     )
-                    count['enrolled'] += 1
+                    courses['enrolled'].append(course_slug)
                     continue
                 if self.confirm():
                     self.logger.info('Successfully enrolled into %s.',
@@ -197,9 +229,9 @@ class Udemy:
                         title='Udemy Enrollment Successful',
                         message=f'Enrolled into {course_name}',
                     )
-                    count['enrolled'] += 1
+                    courses['enrolled'].append(course_slug)
                 else:
                     self.logger.info('Failed to enroll into %s', course_name)
             else:
                 self.logger.info('Course is unavailable. Skipping...')
-        self.display_stats(count)
+        self.display_stats(courses)
