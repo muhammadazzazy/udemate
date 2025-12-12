@@ -51,15 +51,9 @@
       <ul>
         <li><a href="#prerequisites">Prerequisites</a></li>
         <ul>
-          <li><a href="#option-1-run-from-source-recommended-for-full-automation">Option 1: Run from Source (Recommended for Full Automation)</a></li>
-          <li><a href="#option-2-run-in-docker-headless-mode-only">Option 2: Run in Docker (Headless Mode Only)</a></li>
           <li><a href="#reddit-bot-setup">Reddit Bot Setup</a></li>
         </ul>
         <li><a href="#installation">Installation</a></li>
-        <ul>
-          <li><a href="#option-1-run-from-source">Option 1: Run from Source</a></li>
-          <li><a href="#option-2-run-in-docker">Option 2: Run in Docker</li></a>
-        </ul>
       </ul>
     </li>
     <li><a href="#roadmap">Roadmap</a></li>
@@ -99,20 +93,11 @@ An automation tool that reads Reddit posts from [r/udemyfreebies](https://www.re
 
 ### Prerequisites
 
-#### Option 1: Run from Source (Recommended for Full Automation)
-
-- [Python >= 3.10](https://www.python.org/downloads)
+- [Python 3.10+](https://www.python.org/downloads)
 
 - A Chromium-based browser (sorted from best-supported to least):
   - [Google Chrome](https://www.google.com/chrome/) is fully supported and recommended.
   - [Brave Browser](https://brave.com/) works but might break with newer Brave versions.
-
-#### Option 2: Run in Docker (Headless Mode Only)
-
-- [Docker](https://docs.docker.com/get-docker/)
-- [Docker Buildx](https://github.com/docker/buildx)
-
-> Use this option only if you intend to run in headless mode. Non-headless and hybrid modes require prerequisites mentioned in [Option 1](#option-1-run-from-source-recommended-for-full-automation).
 
 #### Reddit Bot Setup
 
@@ -214,8 +199,6 @@ Udemate was tested on Windows 11.
    UDEMY_TIMEOUT=10
    ```
 
-#### Option 1: Run from Source
-
 4. Create a virtual environment
 
    ```sh
@@ -268,24 +251,6 @@ Udemate was tested on Windows 11.
 > 2. All command-line arguments are optional.
 > 3. The default mode is hybrid.
 
-#### Option 2: Run in Docker
-
-4. Build the Docker image
-
-   ```sh
-   docker build --build-arg USER_ID=$(id -u) --build-arg GROUP_ID=$(id -g) -f docker/Dockerfile -t udemate .
-   ```
-
-5. Run the docker image
-
-   ```sh
-   docker run --rm --env-file .env -v "$(pwd):/udemate" udemate
-   ```
-
-<p align="right">(<a href="#udemate">back to top</a>)</p>
-
-<!-- ROADMAP -->
-
 ## Roadmap
 
 - [x] Implement environment variable parsing
@@ -310,7 +275,6 @@ Udemate was tested on Windows 11.
 - [x] Add logging across modules
 - [x] Support Reddit accounts without 2FA enabled
 - [x] Add argument parsing for different modes (headless, non-headless, hybrid)
-- [x] Provide a docker image for headless mode to facilitate deployment
 - [x] Improve performance of Udemy bot by skipping owned and paid courses
 - [x] Migrate from Selenium webdriver to undetected-chromedriver to reduce detection by Cloudflare anti-bot checks
 - [x] Standardize & dedupe middleman links pre-crawl
@@ -340,7 +304,8 @@ Udemate was tested on Windows 11.
 - [x] Prevent GUI driver from starting when no new Udemy links are available
 - [x] Fix enrollment issues in Udemy bot by checking string patterns in the current URL
 - [x] Enhance logging reliability (UTF-8 support for Windows)
-- [ ] Fix intermittent enrollment failures by implementing robust detection and clicking logic for Udemy “Enroll now” buttons
+- [x] Fix intermittent enrollment failures by implementing robust detection and clicking logic for Udemy “Enroll now” buttons
+- [ ] Provide a docker image for headless mode to facilitate deployment
 - [ ] Package Udemate and publish to PyPI
 
 See the [open issues](https://github.com/muhammadazzazy/udemate/issues) for a full list of proposed features (and known issues).
