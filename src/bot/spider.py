@@ -1,4 +1,5 @@
 """Encapsulate common attributes and functionality between middleman spiders."""
+import re
 import urllib.parse as urlparse
 from abc import ABC, abstractmethod
 
@@ -24,13 +25,15 @@ class Spider(ABC):
         parsed = urlparse.urlparse(url)
         params = urlparse.parse_qs(parsed.query)
         udemy_url: str = params.get('u', [url])[0]
-        i: int = udemy_url.find('&im_ref')
-        if i != -1:
-            return udemy_url[:i]
-        j: int = udemy_url.find('?im_ref')
-        if j != -1:
-            return udemy_url[:j]
-        return udemy_url
+        match = re.search(r'couponCode=([^&]+)', udemy_url)
+        question_mark_idx: int = udemy_url.find('?')
+        if match:
+            coupon_code = match.group(1)
+            if question_mark_idx != -1:
+                udemy_url = udemy_url[:udemy_url.find(
+                    '?')+1] + 'couponCode=' + coupon_code
+                return udemy_url
+        return udemy_url[:question_mark_idx] if question_mark_idx != -1 else udemy_url
 
     @abstractmethod
     def transform(self, url: str) -> str | None:
