@@ -62,7 +62,8 @@ class Udemy:
                 self.logger.warning('Login attempt %d/%d failed.',
                                     retry+1,
                                     self.config.retries)
-                time.sleep(random.uniform(10, 15))
+                time.sleep(random.uniform(
+                    self.config.timeout/2, self.config.timeout))
                 continue
         return False
 
@@ -125,13 +126,15 @@ class Udemy:
                 self.logger.info('Attempt %d/%d succeeded!',
                                  attempt+1,
                                  self.config.retries)
-                time.sleep(random.uniform(15, 20))
+                time.sleep(random.uniform(
+                    self.config.timeout/2, self.config.timeout))
                 return True
             except WebDriverException:
                 self.logger.warning('Attempt %d/%d failed.',
                                     attempt+1,
                                     self.config.retries)
-                time.sleep(random.uniform(15, 20))
+                time.sleep(random.uniform(
+                    self.config.timeout/2, self.config.timeout))
                 continue
         return False
 
@@ -154,12 +157,13 @@ class Udemy:
                 self.logger.warning('Attempt %d/%d failed.',
                                     attempt+1,
                                     self.config.retries)
-                time.sleep(random.uniform(15, 20))
+                time.sleep(random.uniform(
+                    self.config.timeout/2, self.config.timeout))
                 continue
         return False
 
-    def display_stats(self, courses: dict[str, list[str]]) -> None:
-        """Display enrollment statistics."""
+    def summarize_stats(self, courses: dict[str, list[str]]) -> None:
+        """Summarize enrollment statistics."""
         self.logger.info(
             'Encountered %d already owned courses.',
             len(courses['owned'])
@@ -172,6 +176,14 @@ class Udemy:
             'Enrolled into %d free courses.',
             len(courses['enrolled'])
         )
+        self.gotify.create_message(
+            title='Udemy Enrollment Summary',
+            message=(
+                f"Enrolled: {len(courses['enrolled'])}\n"
+                f"Owned: {len(courses['owned'])}\n"
+                f"Paid: {len(courses['paid'])}\n"
+            )
+        )
 
     def get_course_slug(self, udemy_url: str) -> str | None:
         """Extract and return course slug from Udemy URL."""
@@ -181,7 +193,6 @@ class Udemy:
                 'Malformed Udemy URL (too few segments): %s. Skipping...', udemy_url)
             return None
         course_slug: str = url_parts[4]
-        self.logger.debug('Course slug: %s', course_slug)
         return course_slug
 
     def run(self, email: str) -> None:
@@ -192,10 +203,10 @@ class Udemy:
             'paid': [],
             'enrolled': []
         }
-        self.login(email=email)
+        self.login(email)
         for udemy_url in self.urls:
             course_slug: str | None = self.get_course_slug(udemy_url)
-            if course_slug in courses['owned']:
+            if course_slug in courses['enrolled'] + courses['owned']:
                 self.logger.info(
                     '%s is already owned. Skipping...', course_slug
                 )
@@ -232,6 +243,14 @@ class Udemy:
                     courses['enrolled'].append(course_slug)
                 else:
                     self.logger.info('Failed to enroll into %s', course_name)
+                    self.gotify.create_message(
+                        title='Udemy Enrollment Failed',
+                        message=f'Failed to enroll into {course_name}'
+                    )
             else:
                 self.logger.info('Course is unavailable. Skipping...')
-        self.display_stats(courses)
+                self.gotify.create_message(
+                    title='Udemy Enrollment Failed',
+                    message=f'Failed to enroll into {course_name}'
+                )
+        self.summarize_stats(courses)

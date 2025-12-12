@@ -64,4 +64,6 @@ class Cache:
         """Return list of unprocessed links associated with middleman scraper or Udemy bot."""
         filtered_urls: list[str] = sorted(set(self.read_json(
             f'{bot}.json')) - set(self.read_jsonl(f'{bot}.jsonl')))
+        self.logger.info(
+            'Found %d unprocessed links for %s bot.', len(filtered_urls), bot)
         return filtered_urls
