@@ -1,73 +1,58 @@
 """Encapsulate the Course Treat spider methods and attributes."""
+from concurrent.futures import ThreadPoolExecutor, as_completed
+
 import requests
-import undetected_chromedriver as uc
-from gotify import Gotify
+from bs4 import BeautifulSoup
 from requests.exceptions import RequestException
-from selenium.webdriver.common.by import By
-from selenium.common.exceptions import WebDriverException
-from urllib3.exceptions import ProtocolError, ReadTimeoutError
 
 from bot.spider import Spider
-from utils.config import BotConfig
 
 
 class CourseTreat(Spider):
     """Course Treat spider to get Udemy links with coupons."""
 
-    def __init__(self, urls: list[str], driver: uc.Chrome,
-                 gotify: Gotify, config: BotConfig) -> None:
-        self.driver = driver
-        super().__init__(urls=urls, config=config, gotify=gotify)
-
     def transform(self, url: str) -> str | None:
         """Return Udemy link from Course Treat link."""
-        self.driver.get(url)
-        enroll_url: str = self.driver.find_element(
-            By.CLASS_NAME, 'btn-couponbtn',
-        ).get_attribute('href')
-        response: requests.Response = requests.get(
-            enroll_url, timeout=self.timeout)
-        count: int = 0
-        while (count < self.retries) and ('coursetreat.com' in response.url):
-            response = requests.get(enroll_url, timeout=self.timeout)
-            count += 1
-        if 'coursetreat.com' in response.url:
-            return None
-        udemy_url: str = self.clean(response.url)
-        return udemy_url
+        for i in range(self.retries):
+            try:
+                response: requests.Response = requests.get(
+                    url, timeout=self.timeout)
+                html: str = response.text
+                soup: BeautifulSoup = BeautifulSoup(html, 'html.parser')
+                btn = soup.select_one('a.btn-couponbtn')
+                href: str = btn.get('href')
+                if not href:
+                    continue
+                udemy_url: str | None = self.clean(href)
+                self.logger.info('%s ==> %s', url, udemy_url)
+                return udemy_url
+            except RequestException as e:
+                self.logger.error(
+                    'Attempt %d: Error fetching %s: %s', i+1, url, str(e)
+                )
+                continue
+        return None
 
     def run(self) -> list[str]:
         """Return list of Udemy links extracted from Course Treat."""
-        self.logger.info('Processing %d intermediary links from Course Treat...',
+        self.logger.info('Processing %d links from Course Treat...',
                          len(self.urls))
         self.gotify.create_message(
             title='Course Treat spider started',
             message=f'Processing {len(self.urls)} intermediary links from Course Treat.'
         )
         udemy_urls: list[str] = []
-        for url in self.urls:
-            try:
-                udemy_url: str = self.transform(url)
-                if udemy_url:
-                    self.logger.info('%s ==> %s', url, udemy_url)
-                    udemy_urls.append(udemy_url)
-            except WebDriverException as e:
-                self.logger.error('Webdriver error for %s: %r', url, e)
-                continue
-            except ProtocolError as e:
-                self.logger.error('Protocol error for %s: %r', url, e)
-                continue
-            except ReadTimeoutError as e:
-                self.logger.error('Read timeout error for %s: %r', url, e)
-                continue
-            except RequestException as e:
-                self.logger.error('Request exception for %s: %r', url, e)
-                continue
+        with ThreadPoolExecutor(max_workers=self.threads) as executor:
+            futures = {executor.submit(
+                self.transform, url): url for url in self.urls}
+            for future in as_completed(futures):
+                result: str | None = future.result()
+                if result:
+                    udemy_urls.append(result)
         self.logger.info('Course Treat spider scraped %d Udemy links.',
                          len(udemy_urls))
         self.gotify.create_message(
             title='Course Treat spider finished',
             message=f'Scraped {len(udemy_urls)} Udemy links from Course Treat.'
         )
-        self.driver.quit()
         return sorted(set(udemy_urls))
