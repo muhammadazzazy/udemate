@@ -155,10 +155,7 @@ class Udemate:
                         )
                     )
                 case 'webhelperapp':
-                    headless_driver: uc.Chrome = self.browser.setup(
-                        headless=True)
                     spiders[middleman] = WebHelperApp(
-                        driver=headless_driver,
                         urls=urls,
                         gotify=self.gotify,
                         config=SpiderConfig(
