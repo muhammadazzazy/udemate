@@ -160,7 +160,7 @@ Udemate was tested on Windows 11.
 
    # Course Treat config
    COURSETREAT_RETRIES=3
-   COURSECOUPONZ_THREADS=2
+   COURSETREAT_THREADS=2
    COURSETREAT_TIMEOUT=30
 
    # Easy Learning config
@@ -206,7 +206,7 @@ Udemate was tested on Windows 11.
    py -3.10 -m venv .venv
 
    # Linux
-   python3.10 -m venv .venv
+   python3 -m venv .venv
    ```
 
 5. Activate the virtual environment
@@ -222,17 +222,17 @@ Udemate was tested on Windows 11.
 6. Install dependencies
 
    ```sh
-     pip install -r requirements.txt
+   pip install -r requirements.txt
    ```
 
 7. Run the automation tool in headless mode to scrape intermediate links
 
    ```sh
-    # Windows
-    python .\src\main.py --mode headless
+   # Windows
+   python .\src\main.py --mode headless
 
-    # Linux
-    python3.10 src/main.py --mode headless
+   # Linux
+   python3 src/main.py --mode headless
    ```
 
 8. Run the tool in GUI mode to automate course enrollment
@@ -242,7 +242,7 @@ Udemate was tested on Windows 11.
    python .\src\main.py --mode gui
 
    # Linux
-   python3.10 src/main.py --mode gui
+   python3 src/main.py --mode gui
    ```
 
 > Note the following:
