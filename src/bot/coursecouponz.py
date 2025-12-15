@@ -1,6 +1,7 @@
 """Scrape Udemy links with coupons from CourseCouponz."""
-import requests
 from concurrent.futures import ThreadPoolExecutor, as_completed
+
+import requests
 from bs4 import BeautifulSoup
 
 from bot.spider import Spider

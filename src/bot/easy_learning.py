@@ -1,9 +1,9 @@
 """Scrape Udemy links with coupons from Easy Learning."""
-import requests
-from requests.exceptions import RequestException
-
 from concurrent.futures import ThreadPoolExecutor, as_completed
+
+import requests
 from bs4 import BeautifulSoup
+from requests.exceptions import RequestException
 
 from bot.spider import Spider
 
