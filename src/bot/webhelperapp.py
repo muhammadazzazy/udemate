@@ -35,7 +35,7 @@ class WebHelperApp(Spider):
                 continue
         return None
 
-    def run(self) -> None:
+    def run(self) -> list[str]:
         """Return list of Udemy links extracted from WebHelperApp."""
         self.logger.info('Processing %d links from WebHelperApp...',
                          len(self.urls))

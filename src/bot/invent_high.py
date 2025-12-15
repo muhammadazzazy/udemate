@@ -33,7 +33,7 @@ class InventHigh(Spider):
                 continue
         return None
 
-    def run(self) -> None:
+    def run(self) -> list[str]:
         """Return list of Udemy links extracted from Invent High."""
         self.logger.info('Processing %d links from Invent High...',
                          len(self.urls))

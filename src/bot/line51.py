@@ -31,7 +31,7 @@ class Line51(Spider):
         udemy_url: str = self.clean(href)
         return udemy_url
 
-    def run(self) -> None:
+    def run(self) -> list[str]:
         """Return set of Udemy links extracted from Line51."""
         self.logger.info('Processing %d links from Line51...',
                          len(self.urls))
