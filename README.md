@@ -293,13 +293,15 @@ Udemate was tested on Windows 11.
 - [x] Add push notifications using Gotify for informing the user about events occurring during each run
 - [x] Delete the user data directory before the non-headless browser starts
 - [x] Automate Udemy login by clicking on **Log in** button and automating email entry
-- [x] Replace Undetected Chromedriver with Requests + Beautiful Soup for various middleman scrapers
+- [x] Replace Undetected Chromedriver with Requests + Beautiful Soup for all middleman spiders except Freewebcart
 - [x] Add threads to improve performance for the following middleman spiders:
 
   - [x] CourseCouponz
+  - [x] Course Treat
   - [x] Easy Learning
   - [x] IDownloadCoupon
   - [x] InventHigh
+  - [x] WebHelperApp
 
 - [x] Prevent GUI driver from starting when no new Udemy links are available
 - [x] Fix enrollment issues in Udemy bot by checking string patterns in the current URL
