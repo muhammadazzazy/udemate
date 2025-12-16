@@ -2,6 +2,7 @@
 from urllib.parse import urlparse
 
 import praw
+import re
 from prawcore.exceptions import RequestException
 from praw.models.reddit.submission import Submission
 
@@ -61,16 +62,31 @@ class RedditClient:
 
         return middlemen
 
+    def parse_markdown(self, markdown: str) -> list[str]:
+        """Return list of middleman URLs from Reddit post with multiple middleman links."""
+        pattern: str = r'\*\s+(.*?)\s+\[REDEEM OFFER\]\((https?://[^)]+)\)'
+        matches: list[tuple[str, str]] = re.findall(pattern, markdown)
+        middleman_urls: list[str] = []
+        for _title, url in matches:
+            middleman_urls.append(self.clean(url))
+        return sorted(set(middleman_urls))
+
     def get_middleman_urls(self, middlemen: list[str]) -> dict[str, list[str]]:
         """Return mapping between middlemen and submission links."""
         urls: dict[str, list[str]] = {}
         for middleman in middlemen:
             urls[middleman] = []
+        udemy_urls: list[str] = []
         for submission in self.submissions:
-            for middleman in middlemen:
-                if middleman in submission.url:
-                    urls[middleman].append(self.clean(submission.url))
-                    break
+            if submission.selftext:
+                udemy_urls.extend(self.parse_markdown(
+                    submission.selftext))
+            if submission.url:
+                udemy_urls.append(self.clean(submission.url))
+        for middleman in middlemen:
+            for url in udemy_urls:
+                if middleman in url:
+                    urls[middleman].append(url)
         for middleman in middlemen:
             urls[middleman] = sorted(set(urls[middleman]))
         return urls
