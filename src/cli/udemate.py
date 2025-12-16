@@ -86,10 +86,7 @@ class Udemate:
                         )
                     )
                 case 'coursetreat':
-                    headless_driver: uc.Chrome = self.browser.setup(
-                        headless=True)
                     spiders[middleman] = CourseTreat(
-                        driver=headless_driver,
                         urls=urls,
                         gotify=self.gotify,
                         config=SpiderConfig(
