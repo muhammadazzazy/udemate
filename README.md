@@ -307,6 +307,7 @@ Udemate was tested on Windows 11.
 - [x] Fix enrollment issues in Udemy bot by checking string patterns in the current URL
 - [x] Enhance logging reliability (UTF-8 support for Windows)
 - [x] Fix intermittent enrollment failures by implementing robust detection and clicking logic for Udemy “Enroll now” buttons
+- [x] Extract multiple middleman links from Reddit posts with markdown self-text
 - [ ] Provide a docker image for headless mode to facilitate deployment
 - [ ] Package Udemate and publish to PyPI
 
