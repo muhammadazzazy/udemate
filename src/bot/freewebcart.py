@@ -22,7 +22,7 @@ class Freewebcart(Spider):
     def transform(self, url: str) -> str:
         """Return Udemy link from Freewebcart link."""
         self.driver.get(url)
-        wait: WebDriverWait = WebDriverWait(self.driver, self.timeout)
+        wait: WebDriverWait = WebDriverWait(self.driver, self.config.timeout)
         link: uc.WebElement = wait.until(
             EC.visibility_of_element_located(
                 (By.XPATH, "//a[contains(text(), 'Get 100% OFF Coupon')]"))

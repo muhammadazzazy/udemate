@@ -1,22 +1,26 @@
 """Scrape Udemy links with coupons from Easy Learning."""
-from concurrent.futures import ThreadPoolExecutor, as_completed
-
 import requests
 from bs4 import BeautifulSoup
+from gotify import Gotify
 from requests.exceptions import RequestException
 
 from bot.spider import Spider
+from utils.config import SpiderConfig
 
 
 class EasyLearning(Spider):
     """Get Udemy links with coupons from Easy Learning."""
 
+    def __init__(self, *, config: SpiderConfig, gotify: Gotify, urls: list[str]) -> None:
+        self.session = requests.Session()
+        super().__init__(gotify=gotify, config=config, urls=urls)
+
     def transform(self, url: str) -> str | None:
         """Return Udemy link from Easy Learning link."""
-        for i in range(self.retries):
+        for attempt in range(self.config.retries):
             try:
-                response: requests.Response = requests.get(
-                    url, timeout=self.timeout)
+                response: requests.Response = self.session.get(
+                    url, timeout=self.config.timeout)
                 html: str = response.text
                 soup: BeautifulSoup = BeautifulSoup(html, 'html.parser')
                 btn = soup.select_one('a.purple-button')
@@ -28,32 +32,7 @@ class EasyLearning(Spider):
                 return udemy_url
             except RequestException as e:
                 self.logger.error(
-                    'Attempt %d: Error fetching %s: %s', i+1, url, str(e)
+                    'Attempt %d: Error fetching %s: %s', attempt+1, url, str(e)
                 )
                 continue
         return None
-
-    def run(self) -> list[str]:
-        """Return list of Udemy links extracted from Easy Learning."""
-        self.logger.info('Processing %d intermediary links from Easy Learning...',
-                         len(self.urls))
-        self.gotify.create_message(
-            title='Easy Learning spider started',
-            message=f'Processing {len(self.urls)} intermediary links from Easy Learning.'
-        )
-        udemy_urls: list[str] = []
-        with ThreadPoolExecutor(max_workers=self.threads) as executor:
-            futures = {executor.submit(
-                self.transform, url): url for url in self.urls}
-            for future in as_completed(futures):
-                result: str | None = future.result()
-                if result:
-                    udemy_urls.append(result)
-
-        self.logger.info('Easy Learning spider scraped %d Udemy links.',
-                         len(udemy_urls))
-        self.gotify.create_message(
-            title='Easy Learning spider finished',
-            message=f'Scraped {len(udemy_urls)} Udemy links from Easy Learning.'
-        )
-        return sorted(set(udemy_urls))
