@@ -2,7 +2,7 @@
 from typing import Final, Optional
 from datetime import datetime
 
-from pydantic import BaseModel, Field
+from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 DEFAULT_USER_AGENT: Final[str] = 'Udemate:v1.0.0 (by u/kemitche)'
@@ -27,7 +27,7 @@ BOT_DEFAULTS: Final[dict[str, dict[str, int]]] = {
 FORMATTED_DATE: Final[str] = datetime.today().strftime('%Y%m%d')
 
 
-class Config(BaseSettings):
+class Settings(BaseSettings):
     """Encapsulate and validate configuration attributes loaded from .env."""
     model_config = SettingsConfigDict(env_file='.env',
                                       env_file_encoding='utf-8',
@@ -176,18 +176,3 @@ class Config(BaseSettings):
     gotify_app_token: str = Field(
         description='Application token for Gotify notifications'
     )
-
-
-class BaseConfig(BaseModel):
-    """Encapsulate and validate base configuration attributes."""
-    retries: int
-    timeout: int
-
-
-class BotConfig(BaseConfig):
-    """Encapsulate and validate bot configuration attributes."""
-
-
-class SpiderConfig(BaseConfig):
-    """Encapsulate and validate spider configuration attributes."""
-    threads: int

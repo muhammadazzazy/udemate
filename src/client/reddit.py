@@ -5,8 +5,7 @@ import praw
 from prawcore.exceptions import RequestException
 from praw.models.reddit.submission import Submission
 
-
-from utils.config import Config
+from config.reddit import RedditConfig
 from utils.logger import setup_logging
 
 
@@ -14,23 +13,23 @@ class RedditClient:
     """Configure Reddit client for r/udemyfreebies subreddit,
     get subreddit posts, and map hostnames to submission links."""
 
-    def __init__(self, refresh_token: str | None = None) -> None:
-        self.config = Config()
+    def __init__(self, *, config: RedditConfig, refresh_token: str | None = None) -> None:
+        self.config = config
         if refresh_token:
             self.refresh_token = refresh_token
             self.reddit = praw.Reddit(
-                client_id=self.config.reddit_client_id,
-                client_secret=self.config.reddit_client_secret,
-                user_agent=self.config.reddit_user_agent,
-                refresh_token=refresh_token
+                client_id=self.config.client_id,
+                client_secret=self.config.client_secret,
+                user_agent=self.config.user_agent,
+                refresh_token=self.refresh_token
             )
         else:
             self.reddit = praw.Reddit(
-                client_id=self.config.reddit_client_id,
-                client_secret=self.config.reddit_client_secret,
-                password=self.config.reddit_password,
-                user_agent=self.config.reddit_user_agent,
-                username=self.config.reddit_username
+                client_id=self.config.client_id,
+                client_secret=self.config.client_secret,
+                password=self.config.password,
+                user_agent=self.config.user_agent,
+                username=self.config.username
             )
         self.submissions: list[Submission] = []
         self.logger = setup_logging()
@@ -39,7 +38,7 @@ class RedditClient:
         """Fill the list of Reddit posts."""
         try:
             subreddit = self.reddit.subreddit(subreddit)
-            for submission in subreddit.new(limit=self.config.reddit_limit):
+            for submission in subreddit.new(limit=self.config.limit):
                 self.submissions.append(submission)
         except RequestException as e:
             self.logger.error('Failed to fetch Reddit posts: %r', e)

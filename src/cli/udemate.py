@@ -21,7 +21,9 @@ from client.get_refresh_token import get_refresh_token
 from client.gotify import GotifyClient
 from client.reddit import RedditClient
 from utils.cache import Cache
-from utils.config import BotConfig, Config, SpiderConfig
+from config.bot import BotConfig, SpiderConfig
+from config.reddit import RedditConfig
+from config.settings import Settings
 from web.brave import Brave
 from web.google_chrome import GoogleChrome
 
@@ -29,29 +31,38 @@ from web.google_chrome import GoogleChrome
 class Udemate:
     """Control the flow of Udemate."""
 
-    def __init__(self, *, config: Config, gotify: GotifyClient, logger: Logger) -> None:
-        if 'brave' in config.user_data_dir.lower():
+    def __init__(self, *, settings: Settings, gotify: GotifyClient, logger: Logger) -> None:
+        if 'brave' in settings.user_data_dir.lower():
             self.browser = Brave(
-                major_version=config.browser_major_version,
-                user_data_dir=config.user_data_dir,
+                major_version=settings.browser_major_version,
+                user_data_dir=settings.user_data_dir,
                 logger=logger)
-        elif 'chrome' in config.user_data_dir.lower():
+        elif 'chrome' in settings.user_data_dir.lower():
             self.browser = GoogleChrome(
-                major_version=config.browser_major_version,
-                user_data_dir=config.user_data_dir,
+                major_version=settings.browser_major_version,
+                user_data_dir=settings.user_data_dir,
                 logger=logger)
         self.cache = Cache()
-        self.config = config
+        self.config = settings
         self.gotify = gotify
         self.logger = logger
 
     def setup_reddit_client(self) -> RedditClient:
         """Return Reddit client for r/udemyfreebies."""
+        reddit_config = RedditConfig(
+            client_id=self.config.reddit_client_id,
+            client_secret=self.config.reddit_client_secret,
+            password=self.config.reddit_password,
+            user_agent=self.config.reddit_user_agent,
+            username=self.config.reddit_username,
+            limit=self.config.reddit_limit
+        )
         if self.config.reddit_password:
-            reddit_client: RedditClient = RedditClient()
+            reddit_client: RedditClient = RedditClient(config=reddit_config)
         else:
-            refresh_token: str = get_refresh_token(self.config)
-            reddit_client: RedditClient = RedditClient(refresh_token)
+            refresh_token: str = get_refresh_token(reddit_config)
+            reddit_client: RedditClient = RedditClient(
+                config=reddit_config, refresh_token=refresh_token)
         return reddit_client
 
     def collect_middleman_links(self) -> dict[str, set[str]]:

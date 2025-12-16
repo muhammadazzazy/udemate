@@ -10,7 +10,7 @@ from selenium.webdriver.support import expected_conditions as EC
 
 from client.gotify import GotifyClient
 from utils.cache import Cache
-from utils.config import BotConfig
+from config.bot import BotConfig
 from utils.logger import setup_logging
 
 

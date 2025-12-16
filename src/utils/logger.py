@@ -4,7 +4,7 @@ import logging
 from logging import FileHandler, Formatter, Logger, StreamHandler
 from pathlib import Path
 
-from utils.config import FORMATTED_DATE
+from config.settings import FORMATTED_DATE
 
 
 def setup_logging() -> logging.Logger:

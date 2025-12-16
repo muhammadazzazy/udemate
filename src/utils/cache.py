@@ -3,7 +3,7 @@ import json
 from pathlib import Path
 
 from utils.logger import setup_logging
-from utils.config import FORMATTED_DATE
+from config.settings import FORMATTED_DATE
 
 
 class Cache:

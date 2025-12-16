@@ -8,14 +8,14 @@ from selenium.webdriver.support import expected_conditions as EC
 from urllib3.exceptions import ProtocolError, ReadTimeoutError
 
 from bot.spider import Spider
-from utils.config import BotConfig
+from config.bot import SpiderConfig
 
 
 class Freewebcart(Spider):
     """Get Udemy links with coupons from Freewebcart."""
 
     def __init__(self, *, driver: uc.Chrome, urls: list[str],
-                 gotify: Gotify, config: BotConfig) -> None:
+                 gotify: Gotify, config: SpiderConfig) -> None:
         self.driver = driver
         super().__init__(urls=urls, config=config, gotify=gotify)
 

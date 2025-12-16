@@ -11,7 +11,7 @@ import socket
 import praw
 from praw.reddit import Reddit
 
-from utils.config import Config
+from config.reddit import RedditConfig
 
 
 def receive_connection() -> socket.socket:
@@ -35,13 +35,13 @@ def send_message(client: socket.socket, message: str) -> None:
     client.close()
 
 
-def get_refresh_token(config: Config) -> str:
+def get_refresh_token(settings: RedditConfig) -> str:
     """Return refresh token."""
     reddit: Reddit = praw.Reddit(
-        client_id=config.client_id,
-        client_secret=config.client_secret,
+        client_id=settings.client_id,
+        client_secret=settings.client_secret,
         redirect_uri='http://localhost:8080',
-        user_agent=config.user_agent
+        user_agent=settings.user_agent
     )
     state: str = str(random.randint(0, 65000))
     url: str = reddit.auth.url(

@@ -6,7 +6,7 @@ from gotify import Gotify
 from requests.exceptions import RequestException
 
 from bot.spider import Spider
-from utils.config import SpiderConfig
+from config.bot import SpiderConfig
 
 
 class IDownloadCoupon(Spider):

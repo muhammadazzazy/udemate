@@ -5,7 +5,7 @@ from urllib.parse import ParseResult, urlparse, parse_qs, urlencode, urlunparse
 
 from gotify import Gotify
 
-from utils.config import SpiderConfig
+from config.bot import SpiderConfig
 from utils.logger import setup_logging
 
 

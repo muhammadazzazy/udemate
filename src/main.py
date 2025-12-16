@@ -7,7 +7,7 @@ from pydantic_settings import BaseSettings
 
 from cli.udemate import Udemate
 from client.gotify import GotifyClient
-from utils.config import Config
+from config.settings import Settings
 from utils.logger import setup_logging
 
 
@@ -57,9 +57,9 @@ def override_env_vars(args: Namespace) -> BaseSettings:
     cli_overrides: dict[str, int | str | None] = {
         k: v for k, v in vars(args).items() if v is not None
     }
-    config: Config = Config()
-    settings: BaseSettings = config.model_copy(update=cli_overrides)
-    return settings
+    settings: Settings = Settings()
+    base_settings: BaseSettings = settings.model_copy(update=cli_overrides)
+    return base_settings
 
 
 def main() -> None:
@@ -67,14 +67,14 @@ def main() -> None:
     logger: Logger = setup_logging()
     try:
         args: Namespace = parse_arguments()
-        settings: BaseSettings = override_env_vars(args)
+        base_settings: BaseSettings = override_env_vars(args)
         gotify_client: GotifyClient = GotifyClient(
-            base_url=settings.gotify_base_url,
-            app_token=settings.gotify_app_token,
+            base_url=base_settings.gotify_base_url,
+            app_token=base_settings.gotify_app_token,
             logger=logger
         )
         udemate: Udemate = Udemate(
-            config=settings,
+            settings=base_settings,
             gotify=gotify_client,
             logger=logger
         )

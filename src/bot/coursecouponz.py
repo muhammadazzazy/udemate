@@ -4,8 +4,8 @@ from bs4 import BeautifulSoup
 from gotify import Gotify
 from requests.exceptions import RequestException
 
+from config.bot import BotConfig
 from bot.spider import Spider
-from utils.config import BotConfig
 
 
 class CourseCouponz(Spider):

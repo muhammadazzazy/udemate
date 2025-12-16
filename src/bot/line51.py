@@ -8,21 +8,21 @@ from selenium.webdriver.support import expected_conditions as EC
 from urllib3.exceptions import ProtocolError, ReadTimeoutError
 
 from bot.spider import Spider
-from utils.config import BotConfig
+from config.bot import SpiderConfig
 
 
 class Line51(Spider):
     """Get Udemy links with coupons from Line51."""
 
     def __init__(self, *, driver: uc.Chrome, urls: list[str],
-                 gotify: Gotify, config: BotConfig) -> None:
+                 gotify: Gotify, config: SpiderConfig) -> None:
         self.driver = driver
         super().__init__(urls=urls, config=config, gotify=gotify)
 
     def transform(self, url: str) -> str:
         """Return Udemy link from Line51 link."""
         self.driver.get(url)
-        wait: WebDriverWait = WebDriverWait(self.driver, self.timeout)
+        wait: WebDriverWait = WebDriverWait(self.driver, self.config.timeout)
         link: uc.WebElement = wait.until(
             EC.visibility_of_element_located(
                 (By.XPATH, '//a[contains(text(), "Get Discount Now")]'))
