@@ -68,7 +68,7 @@
 
 ## About The Project
 
-An automation tool that reads Reddit posts from [r/udemyfreebies](https://www.reddit.com/r/udemyfreeebies/), extracts course links from middleman websites, converts them into direct Udemy links with coupons, and automates the enrollment process into free courses.
+An automation tool that reads Reddit posts from various relevant subreddits ([r/udemyfreebies](https://www.reddit.com/r/udemyfreebies/), [r/udemyfreeebies](https://www.reddit.com/r/udemyfreeebies/), [r/udemyfreecourses](https://www.reddit.com/r/udemyfreecourses/)), extracts course links from middleman websites, converts them into direct Udemy links with coupons, and automates the enrollment process into free courses.
 
 ### Built With
 
@@ -266,6 +266,7 @@ Udemate was tested on Windows 11.
   - [x] [IDownloadCoupon](https://idownloadcoupon.com)
   - [x] [Invent High](https://inventhigh.com)
   - [x] Line51
+  - [ ] [Real Discount](https://www.real.discount/)
   - [x] [WebHelperApp](https://webhelperapp.com)
 
 - [x] Automate enrollment into Udemy courses
@@ -300,7 +301,7 @@ Udemate was tested on Windows 11.
   - [x] Course Treat
   - [x] Easy Learning
   - [x] IDownloadCoupon
-  - [x] InventHigh
+  - [x] Invent High
   - [x] WebHelperApp
 
 - [x] Prevent GUI driver from starting when no new Udemy links are available
@@ -308,8 +309,13 @@ Udemate was tested on Windows 11.
 - [x] Enhance logging reliability (UTF-8 support for Windows)
 - [x] Fix intermittent enrollment failures by implementing robust detection and clicking logic for Udemy “Enroll now” buttons
 - [x] Extract multiple middleman links from Reddit posts with markdown self-text
+- [x] Support various subreddits including:
+
+  - [x] [r/udemyfreebies](https://www.reddit.com/r/udemyfreebies/)
+  - [x] [r/udemyfreeebies](https://www.reddit.com/r/udemyfreeebies/)
+  - [x] [r/udemyfreecourses](https://www.reddit.com/r/udemyfreecourses/)
+
 - [ ] Provide a docker image for headless mode to facilitate deployment
-- [ ] Package Udemate and publish to PyPI
 
 See the [open issues](https://github.com/muhammadazzazy/udemate/issues) for a full list of proposed features (and known issues).
 
