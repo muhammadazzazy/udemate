@@ -1,18 +1,25 @@
-"""Configure Reddit PRAW for r/udemyfreebies, fetch posts on subreddit, and extract hostnames."""
+"""
+Configure Reddit PRAW for r/udemyfreebies, r/udemyfreeebies, and r/udemyfreecourses subreddits,
+fetch posts on subreddit, and extract hostnames.
+"""
+import re
 from urllib.parse import urlparse
 
 import praw
-import re
 from prawcore.exceptions import RequestException
 from praw.models.reddit.submission import Submission
+from praw.models.reddit.subreddit import Subreddit
 
 from config.reddit import RedditConfig
 from utils.logger import setup_logging
 
 
 class RedditClient:
-    """Configure Reddit client for r/udemyfreebies subreddit,
-    get subreddit posts, and map hostnames to submission links."""
+    """
+    Configure Reddit client for r/udemyfreebies, r/udemyfreeebies,
+    and r/udemyfreecourses subreddits, get subreddit posts,
+    and map hostnames to submission links.
+    """
 
     def __init__(self, *, config: RedditConfig, refresh_token: str | None = None) -> None:
         self.config = config
@@ -41,12 +48,13 @@ class RedditClient:
             subreddit_names: list[str] = [
                 'udemyfreebies', 'udemyfreeebies', 'udemyfreecourses'
             ]
-            subreddits: list[praw.models.Subreddit] = [
+            subreddits: list[Subreddit] = [
                 self.reddit.subreddit(name) for name in subreddit_names
             ]
             for subreddit in subreddits:
                 for submission in subreddit.new(limit=self.config.limit):
                     self.submissions.append(submission)
+            self.logger.debug('Fetched %d Reddit posts', len(self.submissions))
         except RequestException as e:
             self.logger.error('Failed to fetch Reddit posts: %r', e)
 
