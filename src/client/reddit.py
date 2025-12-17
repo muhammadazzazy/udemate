@@ -35,12 +35,18 @@ class RedditClient:
         self.submissions: list[Submission] = []
         self.logger = setup_logging()
 
-    def populate_submissions(self, subreddit: str = 'udemyfreebies') -> None:
+    def populate_submissions(self) -> None:
         """Fill the list of Reddit posts."""
         try:
-            subreddit = self.reddit.subreddit(subreddit)
-            for submission in subreddit.new(limit=self.config.limit):
-                self.submissions.append(submission)
+            subreddit_names: list[str] = [
+                'udemyfreebies', 'udemyfreeebies', 'udemyfreecourses'
+            ]
+            subreddits: list[praw.models.Subreddit] = [
+                self.reddit.subreddit(name) for name in subreddit_names
+            ]
+            for subreddit in subreddits:
+                for submission in subreddit.new(limit=self.config.limit):
+                    self.submissions.append(submission)
         except RequestException as e:
             self.logger.error('Failed to fetch Reddit posts: %r', e)
 
