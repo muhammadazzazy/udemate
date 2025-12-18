@@ -141,7 +141,9 @@ Udemate was tested on Windows 11.
    # Required if 2FA is not enabled.
    REDDIT_USERNAME=""
    # Optional. Default is 500.
-   REDDIT_LIMIT=1000
+   UDEMY_FREEBIES_LIMIT=1000
+   UDEMY_FREEEBIES_LIMIT=0
+   UDEMY_FREE_COURSES_LIMIT=0
 
    # Browser config
    BROWSER_MAJOR_VERSION=142
@@ -315,6 +317,7 @@ Udemate was tested on Windows 11.
   - [x] [r/udemyfreeebies](https://www.reddit.com/r/udemyfreeebies/)
   - [x] [r/udemyfreecourses](https://www.reddit.com/r/udemyfreecourses/)
 
+- [x] Improve Reddit scraping flexibility with per-subreddit limits
 - [ ] Provide a docker image for headless mode to facilitate deployment
 
 See the [open issues](https://github.com/muhammadazzazy/udemate/issues) for a full list of proposed features (and known issues).
