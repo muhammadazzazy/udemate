@@ -6,9 +6,9 @@ from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 DEFAULT_USER_AGENT: Final[str] = 'Udemate:v1.0.0 (by u/kemitche)'
-DEFAULT_LIMIT: Final[int] = 500
-MIN_LIMIT: Final[int] = 1
-MAX_LIMIT: Final[int] = 1000
+DEFAULT_SUBREDDIT_LIMIT: Final[int] = 500
+MIN_SUBREDDIT_LIMIT: Final[int] = 0
+MAX_SUBREDDIT_LIMIT: Final[int] = 1000
 
 DEFAULT_BROWSER_MAJOR_VERSION: Final[int] = 142
 
@@ -37,14 +37,29 @@ class Settings(BaseSettings):
         description='Reddit script client secret')
     reddit_user_agent: str = Field(
         default=DEFAULT_USER_AGENT, description='Reddit script user agent')
-    reddit_limit: int = Field(DEFAULT_LIMIT,
-                              le=MAX_LIMIT,
-                              ge=MIN_LIMIT,
-                              description='Maximum number of posts parsed by Reddit script')
     reddit_password: str = Field(
         description='Password of Reddit account')
     reddit_username: str = Field(
         description='Username of Reddit account')
+
+    udemy_freebies_limit: int = Field(
+        default=DEFAULT_SUBREDDIT_LIMIT,
+        le=MAX_SUBREDDIT_LIMIT,
+        ge=MIN_SUBREDDIT_LIMIT,
+        description='Maximum number of posts parsed from r/udemyfreebies subreddit'
+    )
+    udemy_freeebies_limit: int = Field(
+        default=DEFAULT_SUBREDDIT_LIMIT,
+        le=MAX_SUBREDDIT_LIMIT,
+        ge=MIN_SUBREDDIT_LIMIT,
+        description='Maximum number of posts parsed from r/udemyfreeebies subreddit'
+    )
+    udemy_free_courses_limit: int = Field(
+        default=DEFAULT_SUBREDDIT_LIMIT,
+        le=MAX_SUBREDDIT_LIMIT,
+        ge=MIN_SUBREDDIT_LIMIT,
+        description='Maximum number of posts parsed from r/udemyfreecourses subreddit'
+    )
 
     browser_major_version: int = Field(
         description='Major version of the browser to be automated',

@@ -9,4 +9,9 @@ class RedditConfig(BaseModel):
     user_agent: str
     username: str
     password: str
+
+
+class SubredditConfig(BaseModel):
+    """Encapsulate and validate subreddit configuration attributes."""
+    name: str
     limit: int

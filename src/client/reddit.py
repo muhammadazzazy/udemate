@@ -10,7 +10,7 @@ from prawcore.exceptions import RequestException
 from praw.models.reddit.submission import Submission
 from praw.models.reddit.subreddit import Subreddit
 
-from config.reddit import RedditConfig
+from config.reddit import RedditConfig, SubredditConfig
 from utils.logger import setup_logging
 
 
@@ -21,23 +21,25 @@ class RedditClient:
     and map hostnames to submission links.
     """
 
-    def __init__(self, *, config: RedditConfig, refresh_token: str | None = None) -> None:
+    def __init__(self, *, config: RedditConfig, subreddit_configs: list[SubredditConfig],
+                 refresh_token: str | None = None) -> None:
         self.config = config
+        self.subreddit_configs = subreddit_configs
         if refresh_token:
             self.refresh_token = refresh_token
             self.reddit = praw.Reddit(
-                client_id=self.config.client_id,
-                client_secret=self.config.client_secret,
-                user_agent=self.config.user_agent,
-                refresh_token=self.refresh_token
+                client_id=config.client_id,
+                client_secret=config.client_secret,
+                user_agent=config.user_agent,
+                refresh_token=refresh_token
             )
         else:
             self.reddit = praw.Reddit(
-                client_id=self.config.client_id,
-                client_secret=self.config.client_secret,
-                password=self.config.password,
-                user_agent=self.config.user_agent,
-                username=self.config.username
+                client_id=config.client_id,
+                client_secret=config.client_secret,
+                password=config.password,
+                user_agent=config.user_agent,
+                username=config.username
             )
         self.submissions: list[Submission] = []
         self.logger = setup_logging()
@@ -45,16 +47,14 @@ class RedditClient:
     def populate_submissions(self) -> None:
         """Fill the list of Reddit posts."""
         try:
-            subreddit_names: list[str] = [
-                'udemyfreebies', 'udemyfreeebies', 'udemyfreecourses'
-            ]
             subreddits: list[Subreddit] = [
-                self.reddit.subreddit(name) for name in subreddit_names
+                self.reddit.subreddit(config.name) for config in self.subreddit_configs
             ]
-            for subreddit in subreddits:
-                for submission in subreddit.new(limit=self.config.limit):
+            for i, subreddit in enumerate(subreddits):
+                for submission in subreddit.new(
+                        limit=self.subreddit_configs[i].limit
+                ):
                     self.submissions.append(submission)
-            self.logger.debug('Fetched %d Reddit posts', len(self.submissions))
         except RequestException as e:
             self.logger.error('Failed to fetch Reddit posts: %r', e)
 

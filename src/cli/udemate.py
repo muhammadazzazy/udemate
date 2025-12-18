@@ -22,7 +22,7 @@ from client.gotify import GotifyClient
 from client.reddit import RedditClient
 from utils.cache import Cache
 from config.bot import BotConfig, SpiderConfig
-from config.reddit import RedditConfig
+from config.reddit import RedditConfig, SubredditConfig
 from config.settings import Settings
 from web.brave import Brave
 from web.google_chrome import GoogleChrome
@@ -54,15 +54,28 @@ class Udemate:
             client_secret=self.config.reddit_client_secret,
             password=self.config.reddit_password,
             user_agent=self.config.reddit_user_agent,
-            username=self.config.reddit_username,
-            limit=self.config.reddit_limit
+            username=self.config.reddit_username
         )
+        subreddit_configs: list[SubredditConfig] = [
+            SubredditConfig(
+                name='udemyfreebies',
+                limit=self.config.udemy_freebies_limit),
+            SubredditConfig(
+                name='udemyfreeebies',
+                limit=self.config.udemy_freeebies_limit),
+            SubredditConfig(
+                name='udemyfreecourses',
+                limit=self.config.udemy_free_courses_limit)
+        ]
         if self.config.reddit_password:
-            reddit_client: RedditClient = RedditClient(config=reddit_config)
+            reddit_client: RedditClient = RedditClient(
+                config=reddit_config, subreddit_configs=subreddit_configs)
         else:
             refresh_token: str = get_refresh_token(reddit_config)
             reddit_client: RedditClient = RedditClient(
-                config=reddit_config, refresh_token=refresh_token)
+                config=reddit_config, subreddit_configs=subreddit_configs,
+                refresh_token=refresh_token
+            )
         return reddit_client
 
     def collect_middleman_links(self) -> dict[str, set[str]]:
