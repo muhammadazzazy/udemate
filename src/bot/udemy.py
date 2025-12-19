@@ -203,7 +203,13 @@ class Udemy:
             'paid': [],
             'enrolled': []
         }
-        self.login(email)
+        if not self.login(email):
+            self.gotify.create_message(
+                title='Udemy Login Failed',
+                message='Failed to log into Udemy account.'
+            )
+            self.logger.error('Failed to log into Udemy. Exiting...')
+            return None
         for udemy_url in self.urls:
             course_slug: str | None = self.get_course_slug(udemy_url)
             if course_slug in courses['enrolled'] + courses['owned']:
