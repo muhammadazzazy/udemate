@@ -190,6 +190,11 @@ Udemate was tested on Windows 11.
    LINE51_THREADS=2
    LINE51_TIMEOUT=30
 
+   # Real Discount config
+   REAL_DISCOUNT_RETRIES=3
+   REAL_DISCOUNT_THREADS=1
+   REAL_DISCOUNT_TIMEOUT=30
+
    # WebHelperApp config
    WEBHELPERAPP_RETRIES=3
    WEBHELPERAPP_THREADS=2
@@ -268,7 +273,7 @@ Udemate was tested on Windows 11.
   - [x] [IDownloadCoupon](https://idownloadcoupon.com)
   - [x] [Invent High](https://inventhigh.com)
   - [x] Line51
-  - [ ] [Real Discount](https://www.real.discount/)
+  - [x] [Real Discount](https://www.real.discount/)
   - [x] [WebHelperApp](https://webhelperapp.com)
 
 - [x] Automate enrollment into Udemy courses
