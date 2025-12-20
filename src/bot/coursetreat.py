@@ -25,6 +25,9 @@ class CourseTreat(Spider):
                 soup: BeautifulSoup = BeautifulSoup(html, 'html.parser')
                 btn = soup.select_one('a.btn-couponbtn')
                 href: str = btn.get('href')
+                # Ignore expired Udemy coupons
+                if href == 'udemy':
+                    return None
                 if not href:
                     continue
                 udemy_url: str | None = self.clean(href)
