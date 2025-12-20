@@ -20,6 +20,7 @@ BOT_DEFAULTS: Final[dict[str, dict[str, int]]] = {
     'idownloadcoupon': {'retries': 3, 'threads': 25, 'timeout': 30},
     'inventhigh': {'retries': 3, 'threads': 2, 'timeout': 30},
     'line51': {'retries': 3, 'threads': 2, 'timeout': 30},
+    'realdiscount': {'retries': 3, 'threads': 2, 'timeout': 30},
     'webhelperapp': {'retries': 3, 'threads': 2, 'timeout': 30},
     'udemy': {'retries': 3, 'timeout': 10}
 }
@@ -158,6 +159,19 @@ class Settings(BaseSettings):
     line51_timeout: int = Field(
         description='Timeout (in seconds) for Line51 requests and actions',
         default=BOT_DEFAULTS['line51']['timeout']
+    )
+
+    real_discount_retries: int = Field(
+        description='Maximum number of retries for RealDiscount requests and actions',
+        default=BOT_DEFAULTS['realdiscount']['retries']
+    )
+    real_discount_threads: int = Field(
+        description='Number of threads for RealDiscount requests and actions',
+        default=BOT_DEFAULTS['realdiscount']['threads']
+    )
+    real_discount_timeout: Optional[int] = Field(
+        description='Timeout (in seconds) for RealDiscount requests and actions',
+        default=BOT_DEFAULTS['realdiscount']['timeout']
     )
 
     webhelperapp_retries: int = Field(

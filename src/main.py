@@ -32,7 +32,8 @@ def parse_arguments() -> Namespace:
     )
     bots: list[str] = ['coursecouponz', 'easylearn',
                        'freewebcart', 'idownloadcoupon',
-                       'inventhigh', 'line51', 'webhelperapp', 'udemy']
+                       'inventhigh', 'line51', 'realdiscount',
+                       'webhelperapp', 'udemy']
     for bot in bots:
         parser.add_argument(
             f'--{bot}-retries',

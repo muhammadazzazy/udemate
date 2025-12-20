@@ -15,6 +15,7 @@ from bot.freewebcart import Freewebcart
 from bot.idownloadcoupon import IDownloadCoupon
 from bot.invent_high import InventHigh
 from bot.line51 import Line51
+from bot.real_discount import RealDiscount
 from bot.webhelperapp import WebHelperApp
 from bot.udemy import Udemy
 from client.get_refresh_token import get_refresh_token
@@ -175,6 +176,19 @@ class Udemate:
                             timeout=self.config.line51_timeout
                         )
                     )
+                case 'real':
+                    headless_driver: uc.Chrome = self.browser.setup(
+                        headless=True)
+                    spiders[middleman] = RealDiscount(
+                        driver=headless_driver,
+                        urls=urls,
+                        gotify=self.gotify,
+                        config=SpiderConfig(
+                            retries=self.config.real_discount_retries,
+                            threads=self.config.real_discount_threads,
+                            timeout=self.config.real_discount_timeout
+                        )
+                    )
                 case 'webhelperapp':
                     spiders[middleman] = WebHelperApp(
                         urls=urls,
@@ -214,6 +228,10 @@ class Udemate:
         udemy_urls: list[str] = self.cache.filter_urls('udemy')
         if not udemy_urls:
             self.logger.info('No new Udemy links to process. Exiting...')
+            self.gotify.create_message(
+                title='No Udemy links found',
+                message='No new Udemy links found to process. Exiting...'
+            )
             return
         gui_driver: uc.Chrome = self.browser.setup(headless=False)
         udemy: Udemy = Udemy(
