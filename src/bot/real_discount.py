@@ -1,19 +1,18 @@
-"""Implements RealDiscount spider for converting middleman links to Udemy links."""
+"""Implements Real Discount spider for converting middleman links to Udemy links."""
 import requests
 import undetected_chromedriver as uc
 from gotify import Gotify
-from requests.exceptions import RequestException
+from selenium.common.exceptions import WebDriverException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
-
 
 from bot.spider import Spider
 from config.bot import SpiderConfig
 
 
 class RealDiscount(Spider):
-    """Encapsulates methods to scrape Udemy links from RealDiscount."""
+    """Encapsulates methods to scrape Udemy links from Real Discount."""
 
     def __init__(self, config: SpiderConfig, driver: uc.Chrome,
                  gotify: Gotify, urls: list[str]) -> None:
@@ -22,7 +21,7 @@ class RealDiscount(Spider):
         super().__init__(config=config, gotify=gotify, urls=urls)
 
     def transform(self, url: str) -> str | None:
-        """Return Udemy link from WebHelperApp link."""
+        """Return Udemy link from Real Discount link."""
         for attempt in range(self.config.retries):
             try:
                 self.driver.get(url)
@@ -37,7 +36,7 @@ class RealDiscount(Spider):
                 udemy_url: str | None = self.clean(href)
                 self.logger.info('%s ==> %s', url, udemy_url)
                 return udemy_url
-            except RequestException as e:
+            except WebDriverException as e:
                 self.logger.error(
                     'Attempt %d: Error fetching %s: %s', attempt+1, url, str(e)
                 )
