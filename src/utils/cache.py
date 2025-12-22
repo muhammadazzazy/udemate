@@ -65,5 +65,5 @@ class Cache:
         filtered_urls: list[str] = sorted(set(self.read_json(
             f'{bot}.json')) - set(self.read_jsonl(f'{bot}.jsonl')))
         self.logger.info(
-            'Found %d unprocessed links for %s bot.', len(filtered_urls), bot)
+            'Found %d unprocessed links for %s bot.', len(filtered_urls), bot.title())
         return filtered_urls

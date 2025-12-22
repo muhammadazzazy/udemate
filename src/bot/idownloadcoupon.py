@@ -1,4 +1,4 @@
-"""Fetch Udemy links with coupons from iDC."""
+"""Fetch Udemy links with coupons from IDownloadCoupon."""
 from urllib.parse import ParseResult, urlparse, parse_qs, unquote
 
 import requests
@@ -10,7 +10,7 @@ from config.bot import SpiderConfig
 
 
 class IDownloadCoupon(Spider):
-    """Get Udemy links with coupons from iDC."""
+    """Get Udemy links with coupons from IDownloadCoupon."""
 
     def __init__(self, *, config: SpiderConfig, urls: list[str],
                  gotify: Gotify) -> None:
@@ -18,7 +18,7 @@ class IDownloadCoupon(Spider):
         super().__init__(config=config, gotify=gotify, urls=urls)
 
     def transform(self, url: str) -> str | None:
-        """Convert iDC link to final Udemy link with coupon."""
+        """Convert IDownloadCoupon link to final Udemy link with coupon."""
         for attempt in range(self.config.retries):
             try:
                 response: requests.Response = self.session.get(
@@ -27,6 +27,10 @@ class IDownloadCoupon(Spider):
                     self.clean(response.url))
                 self.logger.info('%s ==> %s', url, udemy_url)
                 if 'idownloadcoupon' in udemy_url:
+                    self.logger.warning(
+                        'Attempt %d: Still an IDownloadCoupon link after fetching: %s',
+                        attempt+1, udemy_url
+                    )
                     continue
                 return udemy_url
             except RequestException as e:
