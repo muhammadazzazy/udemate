@@ -24,6 +24,8 @@ class EasyLearning(Spider):
                 html: str = response.text
                 soup: BeautifulSoup = BeautifulSoup(html, 'html.parser')
                 btn = soup.select_one('a.purple-button')
+                if not btn:
+                    continue
                 href: str = btn.get('href')
                 if not href:
                     continue
