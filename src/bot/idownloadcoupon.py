@@ -23,16 +23,16 @@ class IDownloadCoupon(Spider):
             try:
                 response: requests.Response = self.session.get(
                     url, allow_redirects=True, timeout=self.config.timeout)
-                udemy_url: str = self.extract_udemy_link(
+                clean_url: str = self.extract_udemy_link(
                     self.clean(response.url))
-                self.logger.info('%s ==> %s', url, udemy_url)
-                if 'idownloadcoupon' in udemy_url:
+                self.logger.info('%s ==> %s', url, clean_url)
+                if 'idownloadcoupon' in clean_url:
                     self.logger.warning(
                         'Attempt %d: Still an IDownloadCoupon link after fetching: %s',
-                        attempt+1, udemy_url
+                        attempt+1, clean_url
                     )
                     continue
-                return udemy_url
+                return clean_url
             except RequestException as e:
                 self.logger.error(
                     'Attempt %d: Error fetching %s: %s', attempt+1, url, str(e)

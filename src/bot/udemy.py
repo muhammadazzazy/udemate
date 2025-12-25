@@ -9,8 +9,8 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
 from client.gotify import GotifyClient
-from utils.cache import Cache
 from config.bot import BotConfig
+from utils.cache import Cache
 from utils.logger import setup_logging
 
 
@@ -51,12 +51,19 @@ class Udemy:
                     'Log in'
                 )))
                 login_button.click()
-                time.sleep(random.uniform(10, 15))
                 self.enter_email(wait, email)
                 self.logger.info('Entered email address successfully.')
+                continue_btn = wait.until(
+                    EC.element_to_be_clickable(
+                        (By.XPATH,
+                         "//button[.//span[normalize-space()='Continue']]")
+                    )
+                )
+                continue_btn.click()
+                self.logger.info('Clicked Continue button successfully.')
                 _user_input: str = input(
-                    'Click on the Continue button'
-                    ' and complete any additional steps, then press Enter to continue...')
+                    'Please complete any additional login steps and press Enter to continue...'
+                )
                 return True
             except WebDriverException:
                 self.logger.warning('Login attempt %d/%d failed.',
