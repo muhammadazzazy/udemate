@@ -28,31 +28,57 @@ class Udemy:
         self.patterns = {'enroll': 'payment/checkout',
                          'confirm': 'cart/success', 'free': 'cart/subscribe'}
 
-    def enter_email(self, wait: WebDriverWait, email: str) -> None:
+    def enter_email(self, wait: WebDriverWait, email: str) -> True:
         """Enter email address into login form."""
-        container = wait.until(
-            EC.element_to_be_clickable(
-                (By.CSS_SELECTOR, ".ud-compact-form-control-container")))
-        container.click()
-        email_input = wait.until(
-            EC.visibility_of_element_located((By.NAME, "email")))
-        email_input.clear()
-        email_input.send_keys(email)
-
-    def login(self, email: str) -> bool:
-        """Log into Udemy account."""
-        self.driver.get('https://www.udemy.com/')
         for retry in range(self.config.retries):
             try:
-                wait: WebDriverWait = WebDriverWait(
-                    self.driver, timeout=self.config.timeout)
+                container = wait.until(
+                    EC.element_to_be_clickable(
+                        (By.CSS_SELECTOR, ".ud-compact-form-control-container")))
+                container.click()
+                email_input = wait.until(
+                    EC.visibility_of_element_located((By.NAME, "email")))
+                email_input.clear()
+                email_input.send_keys(email)
+                self.logger.info('Entered email address successfully.')
+                return True
+            except WebDriverException as e:
+                self.logger.error(
+                    'Error entering email address (attempt %d/%d): %s',
+                    retry+1,
+                    self.config.retries,
+                    e
+                )
+                time.sleep(random.uniform(
+                    self.config.timeout/2, self.config.timeout))
+        return False
+
+    def click_login_btn(self, wait: WebDriverWait) -> bool:
+        """Click on the login button on Udemy homepage."""
+        for retry in range(self.config.retries):
+            try:
                 login_button: uc.WebElement = wait.until(EC.element_to_be_clickable((
                     By.LINK_TEXT,
                     'Log in'
                 )))
                 login_button.click()
-                self.enter_email(wait, email)
-                self.logger.info('Entered email address successfully.')
+                return True
+            except WebDriverException as e:
+                self.logger.error(
+                    'Error clicking login button (attempt %d/%d): %s',
+                    retry+1,
+                    self.config.retries,
+                    e
+                )
+                time.sleep(random.uniform(
+                    self.config.timeout/2, self.config.timeout
+                ))
+        return False
+
+    def click_continue_btn(self, wait: WebDriverWait) -> bool:
+        """Click on the Continue button after entering email."""
+        for retry in range(self.config.retries):
+            try:
                 continue_btn = wait.until(
                     EC.element_to_be_clickable(
                         (By.XPATH,
@@ -60,19 +86,41 @@ class Udemy:
                     )
                 )
                 continue_btn.click()
-                self.logger.info('Clicked Continue button successfully.')
-                _user_input: str = input(
-                    'Please complete any additional login steps and press Enter to continue...'
-                )
                 return True
-            except WebDriverException:
-                self.logger.warning('Login attempt %d/%d failed.',
-                                    retry+1,
-                                    self.config.retries)
+            except WebDriverException as e:
+                self.logger.error(
+                    'Error clicking Continue button (attempt %d/%d): %s',
+                    retry+1,
+                    self.config.retries,
+                    e
+                )
                 time.sleep(random.uniform(
-                    self.config.timeout/2, self.config.timeout))
-                continue
+                    self.config.timeout/2, self.config.timeout
+                ))
         return False
+
+    def login(self, email: str) -> bool:
+        """Log into Udemy account."""
+        self.driver.get('https://www.udemy.com/')
+        wait: WebDriverWait = WebDriverWait(
+            self.driver, timeout=self.config.timeout)
+        if not self.click_login_btn(wait):
+            self.logger.error('Failed to click login button.')
+            return False
+
+        if not self.enter_email(wait, email):
+            self.logger.error('Failed to enter email address.')
+            return False
+
+        if not self.click_continue_btn(wait):
+            self.logger.error('Failed to click Continue button.')
+            return False
+
+        self.logger.info('Clicked Continue button successfully.')
+        _user_input: str = input(
+            'Please complete any additional login steps and press Enter to continue...'
+        )
+        return True
 
     def get_first_button(self, text: str) -> uc.WebElement | None:
         """Get the first enroll button that is clickable."""
