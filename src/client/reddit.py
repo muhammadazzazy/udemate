@@ -99,7 +99,9 @@ class RedditClient:
                 udemy_urls.append(self.clean(submission.url))
         for middleman in middlemen:
             for url in udemy_urls:
-                if middleman in url:
+                hostname: str = url.split('/')[2]
+                intermediary: str = hostname.split('.')[0]
+                if intermediary == middleman:
                     urls[middleman].append(url)
         for middleman in middlemen:
             urls[middleman] = sorted(set(urls[middleman]))
