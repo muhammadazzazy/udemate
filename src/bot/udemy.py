@@ -3,11 +3,13 @@ import random
 import time
 
 import undetected_chromedriver as uc
+from pathlib import Path
 from selenium.common.exceptions import WebDriverException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
+from client.gmail import GmailClient
 from client.gotify import GotifyClient
 from config.bot import BotConfig
 from utils.cache import Cache
@@ -28,8 +30,8 @@ class Udemy:
         self.patterns = {'enroll': 'payment/checkout',
                          'confirm': 'cart/success', 'free': 'cart/subscribe'}
 
-    def enter_email(self, wait: WebDriverWait, email: str) -> True:
-        """Enter email address into login form."""
+    def enter_email(self, *, wait: WebDriverWait, email: str) -> True:
+        """Enter email into login form."""
         for retry in range(self.config.retries):
             try:
                 container = wait.until(
@@ -37,14 +39,14 @@ class Udemy:
                         (By.CSS_SELECTOR, ".ud-compact-form-control-container")))
                 container.click()
                 email_input = wait.until(
-                    EC.visibility_of_element_located((By.NAME, "email")))
+                    EC.visibility_of_element_located((By.NAME, 'email')))
                 email_input.clear()
                 email_input.send_keys(email)
-                self.logger.info('Entered email address successfully.')
+                self.logger.info('Entered email successfully.')
                 return True
             except WebDriverException as e:
                 self.logger.error(
-                    'Error entering email address (attempt %d/%d): %s',
+                    'Error entering email (attempt %d/%d): %s',
                     retry+1,
                     self.config.retries,
                     e
@@ -99,6 +101,34 @@ class Udemy:
                 ))
         return False
 
+    def enter_code(self, *, wait: WebDriverWait, code: str) -> True:
+        """Enter verification code into login form."""
+        for retry in range(self.config.retries):
+            try:
+                container = wait.until(
+                    EC.element_to_be_clickable(
+                        (By.CSS_SELECTOR, ".ud-compact-form-control-container")))
+                container.click()
+                code_input = wait.until(
+                    EC.visibility_of_element_located(
+                        (By.CSS_SELECTOR, 'input.ud-text-input.ud-text-input-medium.ud-text-sm.ud-compact-form-control'))
+                )
+                code_input.clear()
+                code_input.send_keys(code)
+                self.logger.info(
+                    'Entered 6-digit verification code successfully.')
+                return True
+            except WebDriverException as e:
+                self.logger.error(
+                    'Error entering 6-digit code (attempt %d/%d): %s',
+                    retry+1,
+                    self.config.retries,
+                    e
+                )
+                time.sleep(random.uniform(
+                    self.config.timeout/2, self.config.timeout))
+        return False
+
     def login(self, email: str) -> bool:
         """Log into Udemy account."""
         self.driver.get('https://www.udemy.com/')
@@ -108,7 +138,7 @@ class Udemy:
             self.logger.error('Failed to click login button.')
             return False
 
-        if not self.enter_email(wait, email):
+        if not self.enter_email(wait=wait, email=email):
             self.logger.error('Failed to enter email address.')
             return False
 
@@ -117,8 +147,20 @@ class Udemy:
             return False
 
         self.logger.info('Clicked Continue button successfully.')
-        _user_input: str = input(
-            'Please complete any additional login steps and press Enter to continue...'
+        gmail_client = GmailClient(
+            credentials_filename=Path('credentials.json'))
+        code = gmail_client.get_verification_code()
+        if not code:
+            self.logger.error(
+                'Failed to retrieve verification code from email.')
+            return False
+        self.logger.info('Retrieved verification code: %s', code)
+        if not self.enter_code(wait=wait, code=code):
+            self.logger.error('Failed to enter verification code.')
+            return False
+        self.logger.info('Entered verification code successfully.')
+        _ = input(
+            'Press Enter after completing any additional verification steps...'
         )
         return True
 
@@ -264,7 +306,6 @@ class Udemy:
                 message='Failed to log into Udemy account.'
             )
             self.logger.error('Failed to log into Udemy. Exiting...')
-            return None
         for udemy_url in self.urls:
             course_slug: str | None = self.get_course_slug(udemy_url)
             if course_slug in courses['enrolled'] + courses['owned']:
