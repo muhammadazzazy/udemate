@@ -190,6 +190,7 @@ class Udemy:
                 message='Failed to click final Log in button on Udemy.'
             )
             raise SystemExit('Exiting...')
+        time.sleep(self.config.timeout)
         self.logger.info('Logged into Udemy successfully.')
 
     def get_first_button(self, text: str) -> uc.WebElement | None:
