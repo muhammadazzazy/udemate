@@ -93,7 +93,7 @@ An automation tool that reads Reddit posts from various relevant subreddits ([r/
 
 ### Prerequisites
 
-- [Python 3.10+](https://www.python.org/downloads)
+- [Python 3.11+](https://www.python.org/downloads)
 
 - A Chromium-based browser (sorted from best-supported to least):
   - [Google Chrome](https://www.google.com/chrome/) is fully supported and recommended.
@@ -210,7 +210,7 @@ Udemate was tested on Windows 11.
 
    ```sh
    # Windows
-   py -3.10 -m venv .venv
+   python -m venv .venv
 
    # Linux
    python3 -m venv .venv
@@ -322,7 +322,14 @@ Udemate was tested on Windows 11.
   - [x] [r/udemyfreecourses](https://www.reddit.com/r/udemyfreecourses/)
 
 - [x] Improve Reddit scraping flexibility with per-subreddit limits
-- [ ] Automate Udemy login by clicking on **Log in** button, automating email entry, and fetching verification code from Gmail
+- [x] Automate Udemy login by following the steps below:
+
+  - [x] Click on **Log in** button
+  - [x] Automate email entry
+  - [x] Click on purple **Continue** button
+  - [x] Fetch verification code from Gmail
+  - [x] Click on purple **Log in** button
+
 - [ ] Provide a docker image for headless mode to facilitate deployment
 
 See the [open issues](https://github.com/muhammadazzazy/udemate/issues) for a full list of proposed features (and known issues).
