@@ -1,9 +1,9 @@
 """Automatically enroll into free Udemy courses."""
 import random
 import time
+from pathlib import Path
 
 import undetected_chromedriver as uc
-from pathlib import Path
 from selenium.common.exceptions import WebDriverException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -77,21 +77,22 @@ class Udemy:
                 ))
         return False
 
-    def click_continue_btn(self, wait: WebDriverWait) -> bool:
+    def click_purple_button(self, *, text: str, wait: WebDriverWait) -> bool:
         """Click on the Continue button after entering email."""
         for retry in range(self.config.retries):
             try:
                 continue_btn = wait.until(
                     EC.element_to_be_clickable(
                         (By.XPATH,
-                         "//button[.//span[normalize-space()='Continue']]")
+                         f"//button[.//span[normalize-space()='{text}']]")
                     )
                 )
                 continue_btn.click()
                 return True
             except WebDriverException as e:
                 self.logger.error(
-                    'Error clicking Continue button (attempt %d/%d): %s',
+                    'Error clicking %s button (attempt %d/%d): %s',
+                    text,
                     retry+1,
                     self.config.retries,
                     e
@@ -129,40 +130,67 @@ class Udemy:
                     self.config.timeout/2, self.config.timeout))
         return False
 
-    def login(self, email: str) -> bool:
+    def login(self, email: str) -> None:
         """Log into Udemy account."""
         self.driver.get('https://www.udemy.com/')
         wait: WebDriverWait = WebDriverWait(
             self.driver, timeout=self.config.timeout)
         if not self.click_login_btn(wait):
             self.logger.error('Failed to click login button.')
-            return False
+            self.gotify.create_message(
+                title='Udemy Login Failed',
+                message='Failed to click login button on Udemy homepage.'
+            )
+            raise SystemExit('Exiting...')
 
         if not self.enter_email(wait=wait, email=email):
             self.logger.error('Failed to enter email address.')
-            return False
+            self.gotify.create_message(
+                title='Udemy Login Failed',
+                message='Failed to enter email address on Udemy login form.'
+            )
+            raise SystemExit('Exiting...')
 
-        if not self.click_continue_btn(wait):
+        if not self.click_purple_button(text='Continue', wait=wait):
             self.logger.error('Failed to click Continue button.')
-            return False
+            self.gotify.create_message(
+                title='Udemy Login Failed',
+                message='Failed to click login button on Udemy homepage.'
+            )
+            raise SystemExit('Exiting...')
 
         self.logger.info('Clicked Continue button successfully.')
-        gmail_client = GmailClient(
-            credentials_filename=Path('credentials.json'))
-        code = gmail_client.get_verification_code()
+        gmail_client: GmailClient = GmailClient(
+            credentials_filename=Path('credentials.json')
+        )
+        time.sleep(self.config.timeout)
+        code: str = gmail_client.get_verification_code()
         if not code:
             self.logger.error(
                 'Failed to retrieve verification code from email.')
-            return False
+            self.gotify.create_message(
+                title='Udemy Login Failed',
+                message='Failed to retrieve verification code from email.'
+            )
+            raise SystemExit('Exiting...')
         self.logger.info('Retrieved verification code: %s', code)
         if not self.enter_code(wait=wait, code=code):
             self.logger.error('Failed to enter verification code.')
-            return False
+            self.gotify.create_message(
+                title='Udemy Login Failed',
+                message='Failed to retrieve verification code from email.'
+            )
+            raise SystemExit('Exiting...')
+
         self.logger.info('Entered verification code successfully.')
-        _ = input(
-            'Press Enter after completing any additional verification steps...'
-        )
-        return True
+        if not self.click_purple_button(text='Log in', wait=wait):
+            self.logger.error('Failed to click final Log in button.')
+            self.gotify.create_message(
+                title='Udemy Login Failed',
+                message='Failed to click final Log in button on Udemy.'
+            )
+            raise SystemExit('Exiting...')
+        self.logger.info('Logged into Udemy successfully.')
 
     def get_first_button(self, text: str) -> uc.WebElement | None:
         """Get the first enroll button that is clickable."""
@@ -300,12 +328,7 @@ class Udemy:
             'paid': [],
             'enrolled': []
         }
-        if not self.login(email):
-            self.gotify.create_message(
-                title='Udemy Login Failed',
-                message='Failed to log into Udemy account.'
-            )
-            self.logger.error('Failed to log into Udemy. Exiting...')
+        self.login(email)
         for udemy_url in self.urls:
             course_slug: str | None = self.get_course_slug(udemy_url)
             if course_slug in courses['enrolled'] + courses['owned']:
