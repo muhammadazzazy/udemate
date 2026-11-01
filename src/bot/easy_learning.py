@@ -1,7 +1,6 @@
 """Scrape Udemy links with coupons from Easy Learning."""
 import requests
 from bs4 import BeautifulSoup
-from gotify import Gotify
 from requests.exceptions import RequestException
 
 from bot.spider import Spider
@@ -11,9 +10,9 @@ from config.bot import SpiderConfig
 class EasyLearning(Spider):
     """Get Udemy links with coupons from Easy Learning."""
 
-    def __init__(self, *, config: SpiderConfig, gotify: Gotify, urls: list[str]) -> None:
+    def __init__(self, *, config: SpiderConfig, urls: list[str]) -> None:
         self.session = requests.Session()
-        super().__init__(gotify=gotify, config=config, urls=urls)
+        super().__init__(config=config, urls=urls)
 
     def transform(self, url: str) -> str | None:
         """Return Udemy link from Easy Learning link."""

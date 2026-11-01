@@ -3,8 +3,6 @@ from abc import ABC, abstractmethod
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from urllib.parse import ParseResult, urlparse, parse_qs, urlencode, urlunparse
 
-from gotify import Gotify
-
 from config.bot import SpiderConfig
 from utils.logger import setup_logging
 
@@ -12,9 +10,8 @@ from utils.logger import setup_logging
 class Spider(ABC):
     """Encapsulates shared attributes and abstract methods for intermediary scrapers."""
 
-    def __init__(self, *, config: SpiderConfig, gotify: Gotify, urls: list[str]) -> None:
+    def __init__(self, *, config: SpiderConfig, urls: list[str]) -> None:
         self.config = config
-        self.gotify = gotify
         self.urls = urls
         self.name = self.__class__.__name__
         self.logger = setup_logging()
@@ -42,10 +39,6 @@ class Spider(ABC):
         """Return list of Udemy links extracted from middleman website."""
         self.logger.info('Processing %d intermediary links from %s...',
                          len(self.urls), self.name)
-        self.gotify.create_message(
-            title=f'{self.name} spider started',
-            message=f'Processing {len(self.urls)} intermediary links from {self.name}.'
-        )
         udemy_urls: list[str] = []
         with ThreadPoolExecutor(max_workers=self.config.threads) as executor:
             futures = {executor.submit(
@@ -56,10 +49,6 @@ class Spider(ABC):
                     udemy_urls.append(result)
         self.logger.info('%s spider scraped %d Udemy links.',
                          self.name, len(udemy_urls))
-        self.gotify.create_message(
-            title=f'{self.name} spider finished',
-            message=f'Scraped {len(udemy_urls)} Udemy links from {self.name}.'
-        )
         return sorted(set(udemy_urls))
 
     @abstractmethod

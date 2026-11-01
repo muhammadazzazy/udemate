@@ -1,7 +1,6 @@
 """Scrape Udemy links with coupons from CourseCouponz."""
 import requests
 from bs4 import BeautifulSoup
-from gotify import Gotify
 from requests.exceptions import RequestException
 
 from config.bot import BotConfig
@@ -11,10 +10,9 @@ from bot.spider import Spider
 class CourseCouponz(Spider):
     """Get Udemy links with coupons from CourseCouponz."""
 
-    def __init__(self, *, config: BotConfig, urls: list[str],
-                 gotify: Gotify) -> None:
+    def __init__(self, *, config: BotConfig, urls: list[str]) -> None:
         self.session = requests.Session()
-        super().__init__(urls=urls, config=config, gotify=gotify)
+        super().__init__(urls=urls, config=config)
 
     def transform(self, url: str) -> str | None:
         """Return Udemy link from CourseCouponz link."""

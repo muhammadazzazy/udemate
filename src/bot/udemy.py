@@ -10,7 +10,6 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
 from client.gmail import GmailClient
-from client.gotify import GotifyClient
 from config.bot import BotConfig
 from utils.cache import Cache
 from utils.logger import setup_logging
@@ -20,13 +19,12 @@ class Udemy:
     """Autoenroll into free Udemy courses."""
 
     def __init__(self, *, driver: uc.Chrome, urls: list[str],
-                 config: BotConfig, gotify: GotifyClient) -> None:
+                 config: BotConfig) -> None:
         self.cache = Cache()
         self.driver = driver
         self.logger = setup_logging()
         self.config = config
         self.urls = urls
-        self.gotify = gotify
         self.patterns = {'enroll': 'payment/checkout',
                          'confirm': 'cart/success', 'free': 'cart/subscribe'}
 
@@ -137,58 +135,34 @@ class Udemy:
             self.driver, timeout=self.config.timeout)
         if not self.click_login_btn(wait):
             self.logger.error('Failed to click login button.')
-            self.gotify.create_message(
-                title='Udemy Login Failed',
-                message='Failed to click login button on Udemy homepage.'
-            )
             raise SystemExit('Exiting...')
 
         if not self.enter_email(wait=wait, email=email):
             self.logger.error('Failed to enter email address.')
-            self.gotify.create_message(
-                title='Udemy Login Failed',
-                message='Failed to enter email address on Udemy login form.'
-            )
             raise SystemExit('Exiting...')
 
         if not self.click_purple_button(text='Continue', wait=wait):
             self.logger.error('Failed to click Continue button.')
-            self.gotify.create_message(
-                title='Udemy Login Failed',
-                message='Failed to click login button on Udemy homepage.'
-            )
             raise SystemExit('Exiting...')
 
         self.logger.info('Clicked Continue button successfully.')
         gmail_client: GmailClient = GmailClient(
-            credentials_filename=Path('credentials.json')
+            client_secret=Path(self.config.gmail_client_secret)
         )
         time.sleep(self.config.timeout)
         code: str = gmail_client.get_verification_code()
         if not code:
             self.logger.error(
                 'Failed to retrieve verification code from email.')
-            self.gotify.create_message(
-                title='Udemy Login Failed',
-                message='Failed to retrieve verification code from email.'
-            )
             raise SystemExit('Exiting...')
         self.logger.info('Retrieved verification code: %s', code)
         if not self.enter_code(wait=wait, code=code):
             self.logger.error('Failed to enter verification code.')
-            self.gotify.create_message(
-                title='Udemy Login Failed',
-                message='Failed to retrieve verification code from email.'
-            )
             raise SystemExit('Exiting...')
 
         self.logger.info('Entered verification code successfully.')
         if not self.click_purple_button(text='Log in', wait=wait):
             self.logger.error('Failed to click final Log in button.')
-            self.gotify.create_message(
-                title='Udemy Login Failed',
-                message='Failed to click final Log in button on Udemy.'
-            )
             raise SystemExit('Exiting...')
         time.sleep(self.config.timeout)
         self.logger.info('Logged into Udemy successfully.')
@@ -236,6 +210,31 @@ class Udemy:
             return True
         except WebDriverException:
             return False
+
+    def click_radio_button(self) -> bool:
+        """Click on the radio button for free course enrollment."""
+        self.logger.info('Clicking radio button for free course enrollment...')
+        wait: WebDriverWait = WebDriverWait(
+            self.driver, timeout=self.config.timeout)
+        button_xpath: str = (
+            "//span[contains(text(), 'Buy individual course')]"
+        )
+        for attempt in range(self.config.retries):
+            try:
+                radio_button: uc.WebElement = wait.until(
+                    EC.element_to_be_clickable((By.XPATH, button_xpath))
+                )
+                radio_button.click()
+                self.logger.info('Clicked radio button successfully.')
+                return True
+            except WebDriverException:
+                self.logger.warning('Attempt %d/%d failed.',
+                                    attempt+1,
+                                    self.config.retries)
+                time.sleep(random.uniform(
+                    self.config.timeout/2, self.config.timeout))
+                continue
+        return False
 
     def enroll(self) -> bool:
         """Scan for first 'Enroll now' button and click on it."""
@@ -302,14 +301,6 @@ class Udemy:
             'Enrolled into %d free courses.',
             len(courses['enrolled'])
         )
-        self.gotify.create_message(
-            title='Udemy Enrollment Summary',
-            message=(
-                f"Enrolled: {len(courses['enrolled'])}\n"
-                f"Owned: {len(courses['owned'])}\n"
-                f"Paid: {len(courses['paid'])}\n"
-            )
-        )
 
     def get_course_slug(self, udemy_url: str) -> str | None:
         """Extract and return course slug from Udemy URL."""
@@ -348,35 +339,21 @@ class Udemy:
             elif self.is_paid():
                 self.logger.info('%s is paid. Skipping...', course_name)
                 courses['paid'].append(course_slug)
-            elif self.enroll():
-                self.logger.info('Enrolling into %s', course_name)
-                if self.patterns['free'] in self.driver.current_url:
-                    self.logger.info('Successfully enrolled into %s',
-                                     course_name)
-                    self.gotify.create_message(
-                        title='Udemy Enrollment Successful',
-                        message=f'Enrolled into {course_name}',
-                    )
-                    courses['enrolled'].append(course_slug)
-                    continue
-                if self.confirm():
-                    self.logger.info('Successfully enrolled into %s.',
-                                     course_name)
-                    self.gotify.create_message(
-                        title='Udemy Enrollment Successful',
-                        message=f'Enrolled into {course_name}',
-                    )
-                    courses['enrolled'].append(course_slug)
-                else:
-                    self.logger.info('Failed to enroll into %s', course_name)
-                    self.gotify.create_message(
-                        title='Udemy Enrollment Failed',
-                        message=f'Failed to enroll into {course_name}'
-                    )
+            elif self.click_radio_button():
+                if self.enroll():
+                    self.logger.info('Enrolling into %s', course_name)
+                    if self.patterns['free'] in self.driver.current_url:
+                        self.logger.info('Successfully enrolled into %s',
+                                         course_name)
+                        courses['enrolled'].append(course_slug)
+                        continue
+                    if self.confirm():
+                        self.logger.info('Successfully enrolled into %s.',
+                                         course_name)
+                        courses['enrolled'].append(course_slug)
+                    else:
+                        self.logger.info(
+                            'Failed to enroll into %s', course_name)
             else:
                 self.logger.info('Course is unavailable. Skipping...')
-                self.gotify.create_message(
-                    title='Udemy Enrollment Failed',
-                    message=f'Failed to enroll into {course_name}'
-                )
         self.summarize_stats(courses)

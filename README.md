@@ -50,9 +50,6 @@
       <a href="#getting-started">Getting Started</a>
       <ul>
         <li><a href="#prerequisites">Prerequisites</a></li>
-        <ul>
-          <li><a href="#reddit-bot-setup">Reddit Bot Setup</a></li>
-        </ul>
         <li><a href="#installation">Installation</a></li>
       </ul>
     </li>
@@ -83,9 +80,6 @@ An automation tool that reads Reddit posts from various relevant subreddits ([r/
 - <a href="https://www.crummy.com/software/BeautifulSoup/">
       <img src="https://www.crummy.com/software/BeautifulSoup/10.1.jpg" width="50" alt="BeautifulSoup" />
   </a>
-- <a href="https://gotify.net">
-    <img src="https://raw.githubusercontent.com/gotify/logo/master/gotify-logo.png" width="50" alt="gotify" />
-  </a>
 
 <!-- GETTING STARTED -->
 
@@ -105,12 +99,12 @@ Create a Reddit bot and get environment variables
 
 1. Visit [Third-party app authorizations](https://www.reddit.com/prefs/apps/)
 2. Click on **create another app** button at the bottom
-3. Set **name** to `Udemate`
+3. Set **name** to _Udemate_
 4. Select **script**
 5. Set **description** to an appropriate description (e.g. repo description)
-6. Set **redirect uri** to `http://localhost:8080`
+6. Set **redirect uri** to _http://localhost:8080_
 
-📝 Note: It is preferable to use a Reddit account that doesn't have 2FA configured. If you have 2FA enabled for your Reddit account, the script will provide you with a link that you need to click on to generate a Reddit refresh token and authorize access.
+Reddit no longer allows the creation of applications without submitting a ticket request. You can learn more from [this post](https://www.reddit.com/r/redditdev/s/BvANpYtdc4) on [r/redditdev](https://www.reddit.com/r/redditdev). Read more about the [Reddit Responsible Builder Policy](https://support.reddithelp.com/hc/en-us/articles/42728983564564-Responsible-Builder-Policy).
 
 ### Tested Environment
 
@@ -146,14 +140,9 @@ Udemate was tested on Windows 11.
    UDEMY_FREE_COURSES_LIMIT=0
 
    # Browser config
-   BROWSER_MAJOR_VERSION=142
+   BROWSER_MAJOR_VERSION=156
    # Required if you want to enroll in courses with a user profile.
    USER_DATA_DIR="C:\\Users\\username\\AppData\\Local\\Google\\Chrome\\User Data\\Udemate"
-
-   # Gotify config
-   # Required for receiving push notifications when major events occur.
-   GOTIFY_BASE_URL=""
-   GOTIFY_APP_TOKEN=""
 
    # CourseCouponz config
    COURSECOUPONZ_RETRIES=3
@@ -204,6 +193,9 @@ Udemate was tested on Windows 11.
    UDEMY_EMAIL=""
    UDEMY_RETRIES=3
    UDEMY_TIMEOUT=10
+
+   # Path to Gmail client secret JSON file for reading 2FA codes
+   GMAIL_CLIENT_SECRET=""
    ```
 
 4. Create a virtual environment
@@ -252,11 +244,7 @@ Udemate was tested on Windows 11.
    python3 src/main.py --mode gui
    ```
 
-> Note the following:
->
-> 1. Command-line arguments override the corresponding environment variables.
-> 2. All command-line arguments are optional.
-> 3. The default mode is hybrid.
+Command-line arguments are optional and they override the environment variables (higher precedence). Also, the default mode for running Udemate is hybrid mode.
 
 ## Roadmap
 
@@ -265,7 +253,6 @@ Udemate was tested on Windows 11.
 - [x] Implement refresh token authentication
 - [x] Add functionality to generate JSON files containing middleman links grouped by hostname
 - [x] Scrape intermediate links from the following middlemen:
-
   - [x] [CourseCouponz](https://www.coursecouponz.com)
   - [x] [Course Treat](https://coursetreat.com)
   - [x] [Easy Learning](https://easylearn.ing)
@@ -289,7 +276,6 @@ Udemate was tested on Windows 11.
 - [x] Remove affiliate marketing parts from Udemy links before caching the URLs and automatic enrollment
 - [x] Improve performance via per-domain concurrent spidering
 - [x] Add command-line arguments for specifying
-
   - [x] mode (hybrid, headless, or gui)
   - [x] timeout for each spider and enrollment bot (in seconds)
   - [x] retries for each spider and enrollment bot
@@ -302,7 +288,6 @@ Udemate was tested on Windows 11.
 - [x] Delete the user data directory before the non-headless browser starts
 - [x] Replace Undetected Chromedriver with Requests + Beautiful Soup for all middleman spiders except Freewebcart
 - [x] Add threads to improve performance for the following middleman spiders:
-
   - [x] CourseCouponz
   - [x] Course Treat
   - [x] Easy Learning
@@ -316,21 +301,18 @@ Udemate was tested on Windows 11.
 - [x] Fix intermittent enrollment failures by implementing robust detection and clicking logic for Udemy “Enroll now” buttons
 - [x] Extract multiple middleman links from Reddit posts with markdown self-text
 - [x] Support various subreddits including:
-
   - [x] [r/udemyfreebies](https://www.reddit.com/r/udemyfreebies/)
   - [x] [r/udemyfreeebies](https://www.reddit.com/r/udemyfreeebies/)
   - [x] [r/udemyfreecourses](https://www.reddit.com/r/udemyfreecourses/)
 
 - [x] Improve Reddit scraping flexibility with per-subreddit limits
 - [x] Automate Udemy login by following the steps below:
-
   - [x] Click on **Log in** button
   - [x] Automate email entry
   - [x] Click on purple **Continue** button
   - [x] Fetch verification code from Gmail
   - [x] Click on purple **Log in** button
-
-- [ ] Provide a docker image for headless mode to facilitate deployment
+- [x] Resolve radio button selection during free course enrollment
 
 See the [open issues](https://github.com/muhammadazzazy/udemate/issues) for a full list of proposed features (and known issues).
 
@@ -365,7 +347,7 @@ Distributed under the MIT License. See [LICENSE](LICENSE) for more information.
 
 ## Contact
 
-Muhammad Azzazy - [muhammadazzazy8@gmail.com](mailto:muhammadazzazy8@gmail.com)
+Muhammad Azzazy - [muhammad-azzazy@aucegypt.edu](mailto:muhammad-azzazy@aucegypt.edu)
 
 Project Link: [https://github.com/muhammadazzazy/udemate](https://github.com/muhammadazzazy/udemate)
 

@@ -19,7 +19,6 @@ from bot.real_discount import RealDiscount
 from bot.webhelperapp import WebHelperApp
 from bot.udemy import Udemy
 from client.get_refresh_token import get_refresh_token
-from client.gotify import GotifyClient
 from client.reddit import RedditClient
 from utils.cache import Cache
 from config.bot import BotConfig, SpiderConfig
@@ -32,7 +31,7 @@ from web.google_chrome import GoogleChrome
 class Udemate:
     """Control the flow of Udemate."""
 
-    def __init__(self, *, settings: Settings, gotify: GotifyClient, logger: Logger) -> None:
+    def __init__(self, *, settings: Settings, logger: Logger) -> None:
         if 'brave' in settings.user_data_dir.lower():
             self.browser = Brave(
                 major_version=settings.browser_major_version,
@@ -45,7 +44,6 @@ class Udemate:
                 logger=logger)
         self.cache = Cache()
         self.config = settings
-        self.gotify = gotify
         self.logger = logger
 
     def setup_reddit_client(self) -> RedditClient:
@@ -103,7 +101,6 @@ class Udemate:
                 case 'coursecouponz':
                     spiders[middleman] = CourseCouponz(
                         urls=urls,
-                        gotify=self.gotify,
                         config=SpiderConfig(
                             retries=self.config.coursecouponz_retries,
                             threads=self.config.coursecouponz_threads,
@@ -113,7 +110,6 @@ class Udemate:
                 case 'coursetreat':
                     spiders[middleman] = CourseTreat(
                         urls=urls,
-                        gotify=self.gotify,
                         config=SpiderConfig(
                             retries=self.config.coursetreat_retries,
                             threads=self.config.coursetreat_threads,
@@ -123,7 +119,6 @@ class Udemate:
                 case 'easylearn':
                     spiders[middleman] = EasyLearning(
                         urls=urls,
-                        gotify=self.gotify,
                         config=SpiderConfig(
                             retries=self.config.easylearn_retries,
                             threads=self.config.easylearn_threads,
@@ -136,7 +131,6 @@ class Udemate:
                     spiders[middleman] = Freewebcart(
                         driver=headless_driver,
                         urls=urls,
-                        gotify=self.gotify,
                         config=SpiderConfig(
                             retries=self.config.freewebcart_retries,
                             threads=self.config.freewebcart_threads,
@@ -146,7 +140,6 @@ class Udemate:
                 case 'idownloadcoupon':
                     spiders[middleman] = IDownloadCoupon(
                         urls=urls,
-                        gotify=self.gotify,
                         config=SpiderConfig(
                             retries=self.config.idownloadcoupon_retries,
                             threads=self.config.idownloadcoupon_threads,
@@ -156,7 +149,6 @@ class Udemate:
                 case 'inventhigh':
                     spiders[middleman] = InventHigh(
                         urls=urls,
-                        gotify=self.gotify,
                         config=SpiderConfig(
                             retries=self.config.inventhigh_retries,
                             threads=self.config.inventhigh_threads,
@@ -169,7 +161,6 @@ class Udemate:
                     spiders[middleman] = Line51(
                         driver=headless_driver,
                         urls=urls,
-                        gotify=self.gotify,
                         config=SpiderConfig(
                             retries=self.config.line51_retries,
                             threads=self.config.line51_threads,
@@ -182,7 +173,6 @@ class Udemate:
                     spiders[middleman] = RealDiscount(
                         driver=headless_driver,
                         urls=urls,
-                        gotify=self.gotify,
                         config=SpiderConfig(
                             retries=self.config.real_discount_retries,
                             threads=self.config.real_discount_threads,
@@ -192,7 +182,6 @@ class Udemate:
                 case 'webhelperapp':
                     spiders[middleman] = WebHelperApp(
                         urls=urls,
-                        gotify=self.gotify,
                         config=SpiderConfig(
                             retries=self.config.webhelperapp_retries,
                             threads=self.config.webhelperapp_threads,
@@ -214,10 +203,6 @@ class Udemate:
                 result: list[str] = future.result()
                 udemy_urls.extend(result)
         udemy_urls = sorted(set(udemy_urls))
-        self.gotify.create_message(
-            title='Scraping completed',
-            message=f'Spiders scraped a total of {len(udemy_urls)} Udemy links.'
-        )
         self.logger.info('Spiders scraped a total of %d Udemy links.',
                          len(udemy_urls))
         self.cache.write_json(data=udemy_urls, filename='udemy.json')
@@ -228,30 +213,22 @@ class Udemate:
         udemy_urls: list[str] = self.cache.filter_urls('udemy')
         if not udemy_urls:
             self.logger.info('No new Udemy links to process. Exiting...')
-            self.gotify.create_message(
-                title='No Udemy links found',
-                message='No new Udemy links found to process. Exiting...'
-            )
             return
         gui_driver: uc.Chrome = self.browser.setup(headless=False)
         udemy: Udemy = Udemy(
             driver=gui_driver,
             config=BotConfig(
                 retries=self.config.udemy_retries,
-                timeout=self.config.udemy_timeout
+                timeout=self.config.udemy_timeout,
+                gmail_client_secret=self.config.gmail_client_secret
             ),
             urls=udemy_urls,
-            gotify=self.gotify
         )
         udemy.run(email=self.config.udemy_email)
         gui_driver.quit()
 
     def run(self, mode: str) -> None:
         """Run Udemate based on command-line arguments passed."""
-        self.gotify.create_message(
-            title='Udemate started',
-            message=f'Udemate is starting in {mode} mode.'
-        )
         self.logger.info('Starting Udemate in %s mode...', mode)
         udemy_urls: list[str] = []
         if mode in ('headless', 'hybrid'):

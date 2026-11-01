@@ -2,7 +2,6 @@
 from urllib.parse import ParseResult, urlparse, parse_qs, unquote
 
 import requests
-from gotify import Gotify
 from requests.exceptions import RequestException
 
 from bot.spider import Spider
@@ -12,10 +11,9 @@ from config.bot import SpiderConfig
 class IDownloadCoupon(Spider):
     """Get Udemy links with coupons from IDownloadCoupon."""
 
-    def __init__(self, *, config: SpiderConfig, urls: list[str],
-                 gotify: Gotify) -> None:
+    def __init__(self, *, config: SpiderConfig, urls: list[str]) -> None:
         self.session = requests.Session()
-        super().__init__(config=config, gotify=gotify, urls=urls)
+        super().__init__(config=config, urls=urls)
 
     def transform(self, url: str) -> str | None:
         """Convert IDownloadCoupon link to final Udemy link with coupon."""

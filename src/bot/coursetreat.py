@@ -1,7 +1,6 @@
 """Encapsulate the Course Treat spider methods and attributes."""
 import requests
 from bs4 import BeautifulSoup
-from gotify import Gotify
 from requests.exceptions import RequestException
 
 from bot.spider import Spider
@@ -11,9 +10,9 @@ from config.bot import SpiderConfig
 class CourseTreat(Spider):
     """Course Treat spider to get Udemy links with coupons."""
 
-    def __init__(self, *, config: SpiderConfig, gotify: Gotify, urls: list[str]) -> None:
+    def __init__(self, *, config: SpiderConfig, urls: list[str]) -> None:
         self.session = requests.Session()
-        super().__init__(gotify=gotify, config=config, urls=urls)
+        super().__init__(config=config, urls=urls)
 
     def transform(self, url: str) -> str | None:
         """Return Udemy link from Course Treat link."""

@@ -10,6 +10,7 @@ class BaseConfig(BaseModel):
 
 class BotConfig(BaseConfig):
     """Encapsulate and validate bot configuration attributes."""
+    gmail_client_secret: str
 
 
 class SpiderConfig(BaseConfig):

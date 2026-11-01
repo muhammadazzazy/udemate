@@ -1,7 +1,6 @@
 """Implements Real Discount spider for converting middleman links to Udemy links."""
 import requests
 import undetected_chromedriver as uc
-from gotify import Gotify
 from selenium.common.exceptions import WebDriverException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
@@ -14,11 +13,10 @@ from config.bot import SpiderConfig
 class RealDiscount(Spider):
     """Encapsulates methods to scrape Udemy links from Real Discount."""
 
-    def __init__(self, config: SpiderConfig, driver: uc.Chrome,
-                 gotify: Gotify, urls: list[str]) -> None:
+    def __init__(self, config: SpiderConfig, driver: uc.Chrome, urls: list[str]) -> None:
         self.session = requests.Session()
         self.driver = driver
-        super().__init__(config=config, gotify=gotify, urls=urls)
+        super().__init__(config=config, urls=urls)
 
     def transform(self, url: str) -> str | None:
         """Return Udemy link from Real Discount link."""

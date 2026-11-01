@@ -1,16 +1,18 @@
 """Configure Udemate based on environment variables in .env file."""
-from typing import Final, Optional
 from datetime import datetime
+from pathlib import Path
+from typing import Final, Optional
 
 from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
+BASE_DIR: Final[str] = Path(__file__).resolve().parent.parent
 DEFAULT_USER_AGENT: Final[str] = 'Udemate:v1.0.0 (by u/kemitche)'
 DEFAULT_SUBREDDIT_LIMIT: Final[int] = 500
 MIN_SUBREDDIT_LIMIT: Final[int] = 0
 MAX_SUBREDDIT_LIMIT: Final[int] = 1000
 
-DEFAULT_BROWSER_MAJOR_VERSION: Final[int] = 142
+DEFAULT_BROWSER_MAJOR_VERSION: Final[int] = 156
 
 BOT_DEFAULTS: Final[dict[str, dict[str, int]]] = {
     'coursecouponz': {'retries': 3, 'threads': 2, 'timeout': 30},
@@ -122,6 +124,11 @@ class Settings(BaseSettings):
         default=BOT_DEFAULTS['freewebcart']['timeout']
     )
 
+    gmail_client_secret: str = Field(
+        description='Path to Gmail API credentials file',
+        default=BASE_DIR / 'sso' / 'client_secret.json'
+    )
+
     idownloadcoupon_retries: int = Field(
         description='Maximum number of retries for IDownloadCoupon requests',
         default=BOT_DEFAULTS['idownloadcoupon']['retries']
@@ -197,11 +204,4 @@ class Settings(BaseSettings):
     udemy_timeout: int = Field(
         description='Timeout (in seconds) for web actions such as enrollments',
         default=BOT_DEFAULTS['udemy']['timeout']
-    )
-
-    gotify_base_url: str = Field(
-        description='Base URL of Gotify server'
-    )
-    gotify_app_token: str = Field(
-        description='Application token for Gotify notifications'
     )

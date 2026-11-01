@@ -2,47 +2,44 @@
 import re
 import base64
 from pathlib import Path
-from typing import Any, Final
 
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 
-BASE_DIR: Final[Path] = Path(__file__).parent.parent.parent
-
-TOKEN_PATH: Final[Path] = BASE_DIR / 'sso' / 'token.json'
+from config.settings import BASE_DIR
 
 
 class GmailClient:
     """Gmail API client for authentication and service creation."""
 
-    def __init__(self, credentials_filename: Path) -> None:
+    def __init__(self, client_secret: Path) -> None:
         if not Path(BASE_DIR / 'sso').exists():
             Path(BASE_DIR / 'sso').mkdir(parents=True, exist_ok=True)
-        self.credentials_path = BASE_DIR / 'sso' / credentials_filename
+        self.client_secret = client_secret
+        self.credentials_file = BASE_DIR / 'sso' / 'credentials.json'
         self.scopes = ['https://www.googleapis.com/auth/gmail.readonly']
-        self.num_of_messages = 5
 
-    def setup_service(self) -> Any:
-        """Returns an authorized Gmail API service instance."""
+    def setup_service(self):
+        """Return Gmail API service object."""
         credentials: Credentials | None = None
-        if Path(TOKEN_PATH).exists():
+        if (BASE_DIR / 'sso' / 'token.json').exists():
             credentials = Credentials.from_authorized_user_file(
-                TOKEN_PATH, self.scopes
+                BASE_DIR / 'sso' / 'token.json', self.scopes
             )
         if not credentials or not credentials.valid:
             if credentials and credentials.expired and credentials.refresh_token:
                 credentials.refresh(Request())
             else:
-                flow = InstalledAppFlow.from_client_secrets_file(
-                    self.credentials_path, self.scopes
+                flow: InstalledAppFlow = InstalledAppFlow.from_client_secrets_file(
+                    self.client_secret, self.scopes
                 )
                 credentials = flow.run_local_server(port=0)
-
-        with open(TOKEN_PATH, 'w', encoding='utf-8') as token:
-            token.write(credentials.to_json())
-        return build('gmail', 'v1', credentials=credentials)
+            with open(self.credentials_file, 'w', encoding='utf-8') as token:
+                token.write(credentials.to_json())
+        service = build('gmail', 'v1', credentials=credentials)
+        return service
 
     def get_verification_code(self) -> str | None:
         """Return Udemy verification code from last email."""
