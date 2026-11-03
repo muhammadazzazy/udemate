@@ -189,12 +189,17 @@ class Udemy:
         except WebDriverException:
             return False
 
-    def is_not_accepting_enrollments(self) -> bool:
+    def is_unavailable(self) -> bool:
         """Return a flag indicating whether the course is not accepting enrollments."""
-        self.logger.info('Checking if course is not accepting enrollments...')
-        message_xpath = (
+        self.logger.info('Checking if course is unavailable...')
+        message_xpath: str = (
             "//h2[contains(normalize-space(), "
             "'Sorry, this course is no longer accepting enrollments.')]"
+            " | "
+            "//button["
+            "(@data-purpose='buy-now-button') "
+            "and normalize-space()='Unavailable'"
+            "]"
         )
         try:
             self.wait.until(EC.visibility_of_element_located(
@@ -298,7 +303,7 @@ class Udemy:
                 filename='udemy.jsonl',
                 url=udemy_url
             )
-            if self.is_not_accepting_enrollments():
+            if self.is_unavailable():
                 self.logger.info(
                     'Course is not accepting enrollments. Skipping...'
                 )
