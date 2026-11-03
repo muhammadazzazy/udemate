@@ -16,8 +16,7 @@ from utils.logger import setup_logging
 
 class RedditClient:
     """
-    Configure Reddit client for r/udemyfreebies, r/udemyfreeebies,
-    and r/udemyfreecourses subreddits, get subreddit posts,
+    Configure Reddit client for various subreddits, get subreddit posts,
     and map hostnames to submission links.
     """
 
@@ -51,9 +50,7 @@ class RedditClient:
                 self.reddit.subreddit(config.name) for config in self.subreddit_configs
             ]
             for i, subreddit in enumerate(subreddits):
-                for submission in subreddit.new(
-                        limit=self.subreddit_configs[i].limit
-                ):
+                for submission in subreddit.new(limit=self.subreddit_configs[i].limit):
                     self.submissions.append(submission)
         except RequestException as e:
             self.logger.error('Failed to fetch Reddit posts: %r', e)
@@ -77,7 +74,7 @@ class RedditClient:
         return middlemen
 
     def parse_markdown(self, markdown: str) -> list[str]:
-        """Return list of middleman URLs from Reddit post with multiple middleman links."""
+        """Return list of middleman URLs from Reddit post selftext."""
         pattern: str = r'\*\s+(.*?)\s+\[REDEEM OFFER\]\((https?://[^)]+)\)'
         matches: list[tuple[str, str]] = re.findall(pattern, markdown)
         middleman_urls: list[str] = []

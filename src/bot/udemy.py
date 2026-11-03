@@ -25,72 +25,65 @@ class Udemy:
         self.logger = setup_logging()
         self.config = config
         self.urls = urls
-        self.patterns = {'enroll': 'payment/checkout',
-                         'confirm': 'cart/success', 'free': 'cart/subscribe'}
+        self.patterns = {'confirm': 'cart/success', 'free': 'cart/subscribe'}
+        self.wait = WebDriverWait(self.driver, timeout=self.config.timeout)
 
-    def enter_email(self, *, wait: WebDriverWait, email: str) -> True:
+    def enter_email(self, email: str):
         """Enter email into login form."""
         for retry in range(self.config.retries):
             try:
-                container = wait.until(
+                container = self.wait.until(
                     EC.element_to_be_clickable(
                         (By.CSS_SELECTOR, ".ud-compact-form-control-container")))
                 container.click()
-                email_input = wait.until(
+                email_input = self.wait.until(
                     EC.visibility_of_element_located((By.NAME, 'email')))
                 email_input.clear()
                 email_input.send_keys(email)
                 self.logger.info('Entered email successfully.')
-                return True
-            except WebDriverException as e:
+                return
+            except WebDriverException:
                 self.logger.error(
-                    'Error entering email (attempt %d/%d): %s',
+                    'Error entering email (attempt %d/%d)',
                     retry+1,
-                    self.config.retries,
-                    e
+                    self.config.retries
                 )
                 time.sleep(random.uniform(
                     self.config.timeout/2, self.config.timeout))
-        return False
 
-    def click_login_btn(self, wait: WebDriverWait) -> bool:
+    def click_login_btn(self) -> None:
         """Click on the login button on Udemy homepage."""
         for retry in range(self.config.retries):
             try:
-                login_button: uc.WebElement = wait.until(EC.element_to_be_clickable((
+                login_button: uc.WebElement = self.wait.until(EC.element_to_be_clickable((
                     By.LINK_TEXT,
                     'Log in'
                 )))
                 login_button.click()
-                return True
-            except WebDriverException as e:
+            except WebDriverException:
                 self.logger.error(
-                    'Error clicking login button (attempt %d/%d): %s',
+                    'Error clicking login button (attempt %d/%d)',
                     retry+1,
-                    self.config.retries,
-                    e
+                    self.config.retries
                 )
                 time.sleep(random.uniform(
                     self.config.timeout/2, self.config.timeout
                 ))
-        return False
 
-    def click_purple_button(self, *, text: str, wait: WebDriverWait) -> bool:
+    def click_purple_button(self, text: str) -> None:
         """Click on the Continue button after entering email."""
         for retry in range(self.config.retries):
             try:
-                continue_btn = wait.until(
+                continue_btn = self.wait.until(
                     EC.element_to_be_clickable(
                         (By.XPATH,
                          f"//button[.//span[normalize-space()='{text}']]")
                     )
                 )
                 continue_btn.click()
-                return True
             except WebDriverException as e:
                 self.logger.error(
-                    'Error clicking %s button (attempt %d/%d): %s',
-                    text,
+                    f'Error clicking {text} button (attempt %d/%d): %s',
                     retry+1,
                     self.config.retries,
                     e
@@ -98,17 +91,16 @@ class Udemy:
                 time.sleep(random.uniform(
                     self.config.timeout/2, self.config.timeout
                 ))
-        return False
 
-    def enter_code(self, *, wait: WebDriverWait, code: str) -> True:
+    def enter_code(self, code: str) -> bool:
         """Enter verification code into login form."""
         for retry in range(self.config.retries):
             try:
-                container = wait.until(
+                container = self.wait.until(
                     EC.element_to_be_clickable(
                         (By.CSS_SELECTOR, ".ud-compact-form-control-container")))
                 container.click()
-                code_input = wait.until(
+                code_input = self.wait.until(
                     EC.visibility_of_element_located(
                         (By.CSS_SELECTOR, 'input.ud-text-input.ud-text-input-medium.ud-text-sm.ud-compact-form-control'))
                 )
@@ -131,21 +123,12 @@ class Udemy:
     def login(self, email: str) -> None:
         """Log into Udemy account."""
         self.driver.get('https://www.udemy.com/')
-        wait: WebDriverWait = WebDriverWait(
+        self.wait: WebDriverWait = WebDriverWait(
             self.driver, timeout=self.config.timeout)
-        if not self.click_login_btn(wait):
-            self.logger.error('Failed to click login button.')
-            raise SystemExit('Exiting...')
 
-        if not self.enter_email(wait=wait, email=email):
-            self.logger.error('Failed to enter email address.')
-            raise SystemExit('Exiting...')
-
-        if not self.click_purple_button(text='Continue', wait=wait):
-            self.logger.error('Failed to click Continue button.')
-            raise SystemExit('Exiting...')
-
-        self.logger.info('Clicked Continue button successfully.')
+        self.click_login_btn()
+        self.enter_email(email)
+        self.click_purple_button(text='Continue')
         gmail_client: GmailClient = GmailClient(
             client_secret=Path(self.config.gmail_client_secret)
         )
@@ -156,18 +139,13 @@ class Udemy:
                 'Failed to retrieve verification code from email.')
             raise SystemExit('Exiting...')
         self.logger.info('Retrieved verification code: %s', code)
-        if not self.enter_code(wait=wait, code=code):
-            self.logger.error('Failed to enter verification code.')
-            raise SystemExit('Exiting...')
-
+        self.enter_code(code)
         self.logger.info('Entered verification code successfully.')
-        if not self.click_purple_button(text='Log in', wait=wait):
-            self.logger.error('Failed to click final Log in button.')
-            raise SystemExit('Exiting...')
         time.sleep(self.config.timeout)
+        self.click_purple_button(text='Log in')
         self.logger.info('Logged into Udemy successfully.')
 
-    def get_first_button(self, text: str) -> uc.WebElement | None:
+    def get_enroll_button(self, text: str) -> uc.WebElement | None:
         """Get the first enroll button that is clickable."""
         button_xpath: str = (
             "//button[(@data-purpose='buy-now-button' or @data-purpose='buy-this-course-button')"
@@ -183,7 +161,7 @@ class Udemy:
             (b for b in buttons if b.is_displayed() and b.is_enabled()), None)
         return button
 
-    def get_second_button(self) -> uc.WebElement | None:
+    def get_confirm_button(self) -> uc.WebElement | None:
         """Get the second enroll button that is clickable."""
         xp: str = '//*[@id="udemy"]/div[1]/div[2]/div/div/div/aside/div/div/div[2]/div[2]/button[1]'
         wait: WebDriverWait = WebDriverWait(
@@ -197,7 +175,7 @@ class Udemy:
     def is_owned(self) -> bool:
         """Return a flag indicating whether a course is owned."""
         try:
-            _button: uc.WebElement | None = self.get_first_button(
+            _button: uc.WebElement | None = self.get_enroll_button(
                 text='Go to course')
             return True
         except WebDriverException:
@@ -206,12 +184,26 @@ class Udemy:
     def is_paid(self) -> bool:
         """Return a flag whether course is paid."""
         try:
-            _button: uc.WebElement = self.get_first_button(text='Buy now')
+            _button: uc.WebElement = self.get_enroll_button(text='Buy now')
             return True
         except WebDriverException:
             return False
 
-    def click_radio_button(self) -> bool:
+    def is_not_accepting_enrollments(self) -> bool:
+        """Return a flag indicating whether the course is not accepting enrollments."""
+        self.logger.info('Checking if course is not accepting enrollments...')
+        message_xpath = (
+            "//h2[contains(normalize-space(), "
+            "'Sorry, this course is no longer accepting enrollments.')]"
+        )
+        try:
+            self.wait.until(EC.visibility_of_element_located(
+                (By.XPATH, message_xpath)))
+            return True
+        except WebDriverException:
+            return False
+
+    def click_radio_button(self) -> None:
         """Click on the radio button for free course enrollment."""
         self.logger.info('Clicking radio button for free course enrollment...')
         wait: WebDriverWait = WebDriverWait(
@@ -226,34 +218,28 @@ class Udemy:
                 )
                 radio_button.click()
                 self.logger.info('Clicked radio button successfully.')
-                return True
+                return
             except WebDriverException:
                 self.logger.warning('Attempt %d/%d failed.',
                                     attempt+1,
                                     self.config.retries)
                 time.sleep(random.uniform(
                     self.config.timeout/2, self.config.timeout))
-                continue
-        return False
 
-    def enroll(self) -> bool:
+    def click_enroll_now(self) -> None:
         """Scan for first 'Enroll now' button and click on it."""
+        self.logger.info('Clicking first Enroll now button...')
         for attempt in range(self.config.retries):
             try:
-                enroll_button: uc.WebElement = self.get_first_button(
+                enroll_button: uc.WebElement = self.get_enroll_button(
                     text='Enroll now')
                 enroll_button.click()
-                wait: WebDriverWait = WebDriverWait(
-                    self.driver, timeout=self.config.timeout)
-                wait.until(
-                    EC.url_contains(self.patterns['enroll'])
-                )
                 self.logger.info('Attempt %d/%d succeeded!',
                                  attempt+1,
                                  self.config.retries)
                 time.sleep(random.uniform(
                     self.config.timeout/2, self.config.timeout))
-                return True
+                return
             except WebDriverException:
                 self.logger.warning('Attempt %d/%d failed.',
                                     attempt+1,
@@ -261,46 +247,36 @@ class Udemy:
                 time.sleep(random.uniform(
                     self.config.timeout/2, self.config.timeout))
                 continue
-        return False
 
-    def confirm(self) -> bool:
+    def confirm(self) -> None:
         """Scan for final 'Enroll now' button and click on it."""
         for attempt in range(self.config.retries):
             try:
-                confirm_button: uc.WebElement = self.get_second_button()
+                confirm_button: uc.WebElement = self.get_confirm_button()
                 confirm_button.click()
-                wait: WebDriverWait = WebDriverWait(
-                    self.driver, timeout=self.config.timeout)
-                wait.until(
-                    EC.url_contains(self.patterns['confirm'])
-                )
                 self.logger.info('Attempt %d/%d succeeded!',
                                  attempt+1,
                                  self.config.retries)
-                return True
+                return
             except WebDriverException:
                 self.logger.warning('Attempt %d/%d failed.',
                                     attempt+1,
                                     self.config.retries)
                 time.sleep(random.uniform(
                     self.config.timeout/2, self.config.timeout))
-                continue
-        return False
 
-    def summarize_stats(self, courses: dict[str, list[str]]) -> None:
-        """Summarize enrollment statistics."""
-        self.logger.info(
-            'Encountered %d already owned courses.',
-            len(courses['owned'])
-        )
-        self.logger.info(
-            'Encountered %d paid courses.',
-            len(courses['paid'])
-        )
-        self.logger.info(
-            'Enrolled into %d free courses.',
-            len(courses['enrolled'])
-        )
+    def enroll(self, course_name: str) -> None:
+        """Orchestrate enrollment flow for free Udemy course."""
+        self.logger.info('Enrolling into %s', course_name)
+        self.click_radio_button()
+        self.click_enroll_now()
+        if self.patterns['free'] in self.driver.current_url:
+            self.logger.info('Successfully enrolled into %s',
+                             course_name)
+            return
+        self.confirm()
+        if self.patterns['confirm'] in self.driver.current_url:
+            self.logger.info('Successfully enrolled into %s.', course_name)
 
     def get_course_slug(self, udemy_url: str) -> str | None:
         """Extract and return course slug from Udemy URL."""
@@ -314,46 +290,22 @@ class Udemy:
 
     def run(self, email: str) -> None:
         """Orchestrate automatic enrollment into Udemy courses."""
-        self.logger.info('Udemy bot starting...')
-        courses: dict[str, list[str]] = {
-            'owned': [],
-            'paid': [],
-            'enrolled': []
-        }
         self.login(email)
         for udemy_url in self.urls:
-            course_slug: str | None = self.get_course_slug(udemy_url)
-            if course_slug in courses['enrolled'] + courses['owned']:
-                self.logger.info(
-                    '%s is already owned. Skipping...', course_slug
-                )
-                continue
             self.logger.info('Visiting %s', udemy_url)
             self.driver.get(udemy_url)
             self.cache.append_jsonl(
-                filename='udemy.jsonl', url=udemy_url)
+                filename='udemy.jsonl',
+                url=udemy_url
+            )
             course_name: str = self.driver.title.removesuffix(' | Udemy')
             if self.is_owned():
                 self.logger.info('%s is owned. Skipping...', course_name)
-                courses['owned'].append(course_slug)
             elif self.is_paid():
                 self.logger.info('%s is paid. Skipping...', course_name)
-                courses['paid'].append(course_slug)
-            elif self.click_radio_button():
-                if self.enroll():
-                    self.logger.info('Enrolling into %s', course_name)
-                    if self.patterns['free'] in self.driver.current_url:
-                        self.logger.info('Successfully enrolled into %s',
-                                         course_name)
-                        courses['enrolled'].append(course_slug)
-                        continue
-                    if self.confirm():
-                        self.logger.info('Successfully enrolled into %s.',
-                                         course_name)
-                        courses['enrolled'].append(course_slug)
-                    else:
-                        self.logger.info(
-                            'Failed to enroll into %s', course_name)
+            elif self.is_not_accepting_enrollments():
+                self.logger.info(
+                    'Course is not accepting enrollments. Skipping...'
+                )
             else:
-                self.logger.info('Course is unavailable. Skipping...')
-        self.summarize_stats(courses)
+                self.enroll(course_name)

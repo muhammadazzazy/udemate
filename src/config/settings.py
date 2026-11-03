@@ -6,7 +6,7 @@ from typing import Final, Optional
 from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
-BASE_DIR: Final[str] = Path(__file__).resolve().parent.parent
+BASE_DIR: Final[str] = Path(__file__).resolve().parent.parent.parent
 DEFAULT_USER_AGENT: Final[str] = 'Udemate:v1.0.0 (by u/kemitche)'
 DEFAULT_SUBREDDIT_LIMIT: Final[int] = 500
 MIN_SUBREDDIT_LIMIT: Final[int] = 0
