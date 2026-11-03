@@ -298,14 +298,15 @@ class Udemy:
                 filename='udemy.jsonl',
                 url=udemy_url
             )
+            if self.is_not_accepting_enrollments():
+                self.logger.info(
+                    'Course is not accepting enrollments. Skipping...'
+                )
+                continue
             course_name: str = self.driver.title.removesuffix(' | Udemy')
             if self.is_owned():
                 self.logger.info('%s is owned. Skipping...', course_name)
             elif self.is_paid():
                 self.logger.info('%s is paid. Skipping...', course_name)
-            elif self.is_not_accepting_enrollments():
-                self.logger.info(
-                    'Course is not accepting enrollments. Skipping...'
-                )
             else:
                 self.enroll(course_name)
