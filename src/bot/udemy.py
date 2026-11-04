@@ -208,6 +208,20 @@ class Udemy:
         except WebDriverException:
             return False
 
+    def is_private(self) -> bool:
+        """Return a flag indicating whether the course is private."""
+        self.logger.info('Checking if course is private...')
+        message_xpath: str = (
+            "//h1[contains(normalize-space(), "
+            "'This is a private course.')]"
+        )
+        try:
+            self.wait.until(EC.visibility_of_element_located(
+                (By.XPATH, message_xpath)))
+            return True
+        except WebDriverException:
+            return False
+
     def click_radio_button(self) -> None:
         """Click on the radio button for free course enrollment."""
         self.logger.info('Clicking radio button for free course enrollment...')
@@ -306,6 +320,11 @@ class Udemy:
             if self.is_unavailable():
                 self.logger.info(
                     'Course is not accepting enrollments. Skipping...'
+                )
+                continue
+            if self.is_private():
+                self.logger.info(
+                    'Course is private. Skipping...'
                 )
                 continue
             course_name: str = self.driver.title.removesuffix(' | Udemy')
