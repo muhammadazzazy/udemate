@@ -30,6 +30,7 @@ class Udemy:
 
     def enter_email(self, email: str):
         """Enter email into login form."""
+        self.logger.info('Entering email...')
         for retry in range(self.config.retries):
             try:
                 container = self.wait.until(
@@ -52,7 +53,8 @@ class Udemy:
                     self.config.timeout/2, self.config.timeout))
 
     def click_login_btn(self) -> None:
-        """Click on the login button on Udemy homepage."""
+        """Click on the 'Log in' button on Udemy homepage."""
+        self.logger.info('Clicking Log in button...')
         for retry in range(self.config.retries):
             try:
                 login_button: uc.WebElement = self.wait.until(EC.element_to_be_clickable((
@@ -71,7 +73,7 @@ class Udemy:
                 ))
 
     def click_purple_button(self, text: str) -> None:
-        """Click on the Continue button after entering email."""
+        """Click on the 'Continue' button after entering email."""
         for retry in range(self.config.retries):
             try:
                 continue_btn = self.wait.until(
@@ -81,12 +83,11 @@ class Udemy:
                     )
                 )
                 continue_btn.click()
-            except WebDriverException as e:
+            except WebDriverException:
                 self.logger.error(
                     f'Error clicking {text} button (attempt %d/%d): %s',
                     retry+1,
-                    self.config.retries,
-                    e
+                    self.config.retries
                 )
                 time.sleep(random.uniform(
                     self.config.timeout/2, self.config.timeout
@@ -109,12 +110,11 @@ class Udemy:
                 self.logger.info(
                     'Entered 6-digit verification code successfully.')
                 return True
-            except WebDriverException as e:
+            except WebDriverException:
                 self.logger.error(
-                    'Error entering 6-digit code (attempt %d/%d): %s',
+                    'Error entering 6-digit code (attempt %d/%d)',
                     retry+1,
-                    self.config.retries,
-                    e
+                    self.config.retries
                 )
                 time.sleep(random.uniform(
                     self.config.timeout/2, self.config.timeout))
@@ -259,7 +259,7 @@ class Udemy:
                 time.sleep(random.uniform(
                     self.config.timeout/2, self.config.timeout))
                 return
-            except WebDriverException:
+            except (WebDriverException, AttributeError):
                 self.logger.warning('Attempt %d/%d failed.',
                                     attempt+1,
                                     self.config.retries)
