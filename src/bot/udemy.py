@@ -269,6 +269,7 @@ class Udemy:
 
     def confirm(self) -> None:
         """Scan for final 'Enroll now' button and click on it."""
+        self.logger.info('Clicking final Enroll now button...')
         for attempt in range(self.config.retries):
             try:
                 confirm_button: uc.WebElement = self.get_confirm_button()

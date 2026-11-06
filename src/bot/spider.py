@@ -45,7 +45,7 @@ class Spider(ABC):
                 self.transform, url): url for url in self.urls}
             for future in as_completed(futures):
                 result: str | None = future.result()
-                if result:
+                if result and not result.startswith('https://www.udemy.com/course/draft'):
                     udemy_urls.append(result)
         self.logger.info('%s spider scraped %d Udemy links.',
                          self.name, len(udemy_urls))
