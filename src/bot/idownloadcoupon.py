@@ -1,6 +1,7 @@
 """Fetch Udemy links with coupons from IDownloadCoupon."""
 from urllib.parse import ParseResult, urlparse, parse_qs, unquote
 
+from bs4 import BeautifulSoup
 import requests
 from requests.exceptions import RequestException
 
@@ -21,15 +22,25 @@ class IDownloadCoupon(Spider):
             try:
                 response: requests.Response = self.session.get(
                     url, allow_redirects=True, timeout=self.config.timeout)
+                soup: BeautifulSoup = BeautifulSoup(
+                    response.text,
+                    'html.parser'
+                )
+                not_found = soup.find(
+                    'h3',
+                    string=lambda text: text and text.strip() == '404 Page not found'
+                )
+                if not_found:
+                    self.logger.warning('404 Page not found for %s', url)
+                    return None
+
                 clean_url: str = self.extract_udemy_link(
                     self.clean(response.url))
-                self.logger.info('%s ==> %s', url, clean_url)
-                if 'idownloadcoupon' in clean_url:
-                    self.logger.warning(
-                        'Attempt %d: Still an IDownloadCoupon link after fetching: %s',
-                        attempt+1, clean_url
-                    )
+
+                if 'idownloadcoupon.com' in clean_url:
+                    self.logger.warning('No Udemy redirect for %s', url)
                     continue
+                self.logger.info('%s ==> %s', url, clean_url)
                 return clean_url
             except RequestException as e:
                 self.logger.error(
