@@ -120,6 +120,25 @@ class Udemy:
                     self.config.timeout/2, self.config.timeout))
         return False
 
+    def has_reached_max_resend_attempts(self) -> bool:
+        """Return True if email has reached maximum of resend attempts and False otherwise."""
+        self.logger.info(
+            'Checking if email has reached max resend attempts...'
+        )
+        # \\u2019 is the unicode representation of the right single quotation mark (’)
+        message_xpath: str = (
+            "//h2[contains(normalize-space(), "
+            "\"You\u2019ve reached the maximum number of resend attempts. "
+            "Please wait 15 minutes and retry.\") "
+            "or contains(normalize-space(), 'Sorry, something went wrong.')]"
+        )
+        try:
+            self.wait.until(EC.visibility_of_element_located(
+                (By.XPATH, message_xpath)))
+            return True
+        except WebDriverException:
+            return False
+
     def login(self, email: str) -> None:
         """Log into Udemy account."""
         self.driver.get('https://www.udemy.com/')
@@ -129,6 +148,12 @@ class Udemy:
         self.click_login_btn()
         self.enter_email(email)
         self.click_purple_button(text='Continue')
+        if self.has_reached_max_resend_attempts():
+            self.logger.error(
+                '%s has reached max resend attempts.',
+                email
+            )
+            raise SystemError('Exiting...')
         gmail_client: GmailClient = GmailClient(
             client_secret=Path(self.config.gmail_client_secret)
         )
