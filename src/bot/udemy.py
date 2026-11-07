@@ -85,7 +85,7 @@ class Udemy:
                 continue_btn.click()
             except WebDriverException:
                 self.logger.error(
-                    f'Error clicking {text} button (attempt %d/%d): %s',
+                    f'Error clicking {text} button (attempt %d/%d)',
                     retry+1,
                     self.config.retries
                 )
