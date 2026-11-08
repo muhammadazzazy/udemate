@@ -29,26 +29,6 @@ def parse_arguments() -> Namespace:
         type=int,
         default=None
     )
-    bots: list[str] = ['coursecouponz', 'easylearn',
-                       'freewebcart', 'idownloadcoupon',
-                       'inventhigh', 'line51', 'realdiscount',
-                       'webhelperapp', 'udemy']
-    for bot in bots:
-        parser.add_argument(
-            f'--{bot}-retries',
-            type=int,
-            default=None
-        )
-        parser.add_argument(
-            f'--{bot}-threads',
-            type=int,
-            default=None
-        )
-        parser.add_argument(
-            f'--{bot}-timeout',
-            type=int,
-            default=None
-        )
     return parser.parse_args()
 
 
