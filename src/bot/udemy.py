@@ -167,6 +167,7 @@ class Udemy:
         self.enter_code(code)
         self.logger.info('Entered verification code successfully.')
         time.sleep(self.config.timeout)
+        self.click_purple_button(text='Log in')
         self.logger.info('Logged into Udemy successfully.')
 
     def get_enroll_button(self, text: str) -> uc.WebElement | None:
