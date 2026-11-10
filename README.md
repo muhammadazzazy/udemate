@@ -300,17 +300,9 @@ Command-line arguments are optional and they override the environment variables 
   - [x] [r/udemyfreecourses](https://www.reddit.com/r/udemyfreecourses/)
 
 - [x] Improve Reddit scraping flexibility with per-subreddit limits
-- [x] Automate Udemy login by following the steps below:
-  - [x] Click on **Log in** button
-  - [x] Automate email entry
-  - [x] Click on purple **Continue** button
-  - [x] Fetch verification code from Gmail
-  - [x] Click on purple **Log in** button
+- [x] Automate Udemy login flow while detecting maximum resend attempts and maximum session count
 - [x] Resolve radio button selection during free course enrollment
-- [x] Detect maximum resend attempts
-- [x] Detect maximum session count
-- [x] Detect private courses
-- [x] Detect unavailable courses
+- [x] Detect private and unavailable courses
 - [x] Handle free courses
 
 See the [open issues](https://github.com/muhammadazzazy/udemate/issues) for a full list of proposed features (and known issues).
