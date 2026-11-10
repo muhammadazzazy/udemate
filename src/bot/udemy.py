@@ -141,6 +141,22 @@ class Udemy:
         except WebDriverException:
             return False
 
+    def has_reached_max_session_count(self) -> bool:
+        """Return True if email has reached maximum session count and False otherwise."""
+        self.logger.info(
+            'Checking if email has reached max session count...'
+        )
+        message_xpath: str = (
+            "//h2[contains(normalize-space(), "
+            "'You have reached the maximum session count for your account.')]"
+        )
+        try:
+            self.wait.until(EC.visibility_of_element_located(
+                (By.XPATH, message_xpath)))
+            return True
+        except WebDriverException:
+            return False
+
     def login(self, email: str) -> None:
         """Log into Udemy account."""
         self.driver.get('https://www.udemy.com/')
@@ -170,6 +186,12 @@ class Udemy:
         self.logger.info('Entered verification code successfully.')
         time.sleep(self.config.timeout)
         self.click_purple_button(text='Log in')
+        if self.has_reached_max_session_count():
+            self.logger.error(
+                '%s has reached max session count.',
+                email
+            )
+            raise SystemError('Exiting...')
         self.logger.info('Logged into Udemy successfully.')
 
     def get_enroll_button(self, text: str) -> uc.WebElement | None:
