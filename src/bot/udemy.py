@@ -25,7 +25,8 @@ class Udemy:
         self.logger = setup_logging()
         self.config = config
         self.urls = urls
-        self.patterns = {'confirm': 'cart/success', 'free': 'cart/subscribe'}
+        self.patterns = {'discounted': 'cart/success',
+                         'free': 'cart/subscribe'}
         self.wait = WebDriverWait(self.driver, timeout=self.config.timeout)
 
     def enter_email(self, email: str):
@@ -83,6 +84,7 @@ class Udemy:
                     )
                 )
                 continue_btn.click()
+                return
             except WebDriverException:
                 self.logger.error(
                     f'Error clicking {text} button (attempt %d/%d)',
@@ -139,6 +141,22 @@ class Udemy:
         except WebDriverException:
             return False
 
+    def has_reached_max_session_count(self) -> bool:
+        """Return True if email has reached maximum session count and False otherwise."""
+        self.logger.info(
+            'Checking if email has reached max session count...'
+        )
+        message_xpath: str = (
+            "//h2[contains(normalize-space(), "
+            "'You have reached the maximum session count for your account.')]"
+        )
+        try:
+            self.wait.until(EC.visibility_of_element_located(
+                (By.XPATH, message_xpath)))
+            return True
+        except WebDriverException:
+            return False
+
     def login(self, email: str) -> None:
         """Log into Udemy account."""
         self.driver.get('https://www.udemy.com/')
@@ -168,6 +186,12 @@ class Udemy:
         self.logger.info('Entered verification code successfully.')
         time.sleep(self.config.timeout)
         self.click_purple_button(text='Log in')
+        if self.has_reached_max_session_count():
+            self.logger.error(
+                '%s has reached max session count.',
+                email
+            )
+            raise SystemError('Exiting...')
         self.logger.info('Logged into Udemy successfully.')
 
     def get_enroll_button(self, text: str) -> uc.WebElement | None:
@@ -247,6 +271,20 @@ class Udemy:
         except WebDriverException:
             return False
 
+    def is_free(self) -> bool:
+        """Return a flag indicating whether a course is free."""
+        self.logger.info('Checking if course is free...')
+        free_course_xpath: str = (
+            "//span[(@class='ud-text-sm') and contains(normalize-space(), "
+            "'Free course')]"
+        )
+        try:
+            self.wait.until(EC.visibility_of_element_located(
+                (By.XPATH, free_course_xpath)))
+            return True
+        except WebDriverException:
+            return False
+
     def click_radio_button(self) -> None:
         """Click on the radio button for free course enrollment."""
         self.logger.info('Clicking radio button for free course enrollment...')
@@ -278,9 +316,6 @@ class Udemy:
                 enroll_button: uc.WebElement = self.get_enroll_button(
                     text='Enroll now')
                 enroll_button.click()
-                self.logger.info('Attempt %d/%d succeeded!',
-                                 attempt+1,
-                                 self.config.retries)
                 time.sleep(random.uniform(
                     self.config.timeout/2, self.config.timeout))
                 return
@@ -313,14 +348,15 @@ class Udemy:
     def enroll(self, course_name: str) -> None:
         """Orchestrate enrollment flow for free Udemy course."""
         self.logger.info('Enrolling into %s', course_name)
-        self.click_radio_button()
+        flag: bool = self.is_free()
+        if not flag:
+            self.click_radio_button()
         self.click_enroll_now()
-        if self.patterns['free'] in self.driver.current_url:
-            self.logger.info('Successfully enrolled into %s',
-                             course_name)
+        if flag and self.patterns['free'] in self.driver.current_url:
+            self.logger.info('Successfully enrolled into %s.', course_name)
             return
-        self.confirm()
-        if self.patterns['confirm'] in self.driver.current_url:
+        if not flag and self.patterns['discounted'] in self.driver.current_url:
+            self.confirm()
             self.logger.info('Successfully enrolled into %s.', course_name)
 
     def get_course_slug(self, udemy_url: str) -> str | None:
