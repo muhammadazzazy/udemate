@@ -13,13 +13,19 @@ class IDownloadCoupon(Spider):
     """Get Udemy links with coupons from IDownloadCoupon."""
 
     def __init__(self, *, config: SpiderConfig, urls: list[str]) -> None:
+        headers: dict[str, str] = {
+            'accept':
+            'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
+        }
         self.session = requests.Session()
+        self.session.headers.update(headers)
         super().__init__(config=config, urls=urls)
 
     def transform(self, url: str) -> str | None:
         """Convert IDownloadCoupon link to final Udemy link with coupon."""
         for attempt in range(self.config.retries):
             try:
+
                 response: requests.Response = self.session.get(
                     url, allow_redirects=True, timeout=self.config.timeout)
                 soup: BeautifulSoup = BeautifulSoup(
