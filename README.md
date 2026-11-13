@@ -65,15 +65,12 @@
 
 ## About The Project
 
-An automation tool that reads Reddit posts from various relevant subreddits ([r/udemyfreebies](https://www.reddit.com/r/udemyfreebies/), [r/udemyfreeebies](https://www.reddit.com/r/udemyfreeebies/), [r/udemyfreecourses](https://www.reddit.com/r/udemyfreecourses/)), extracts course links from middleman websites, converts them into direct Udemy links with coupons, and automates the enrollment process into free courses.
+An automation tool that reads Reddit posts from various relevant subreddits ([r/udemyfreebies](https://www.reddit.com/r/udemyfreebies/), [r/udemyfreeebies](https://www.reddit.com/r/udemyfreeebies/), and [r/udemyfreecourses](https://www.reddit.com/r/udemyfreecourses/)), extracts course links from middleman websites, converts them into direct Udemy links with coupons, and automates the enrollment process into free courses.
 
 ### Built With
 
 - [![Python][Python]][Python-url]
 - [![PRAW][PRAW]][PRAW-url]
-- <a href="https://github.com/SeleniumHQ/selenium">
-    <img src="https://raw.githubusercontent.com/SeleniumHQ/selenium/trunk/common/images/selenium_logo_mark_green.svg" width="50" alt="Selenium">
-  </a>
 - <a href="https://github.com/ultrafunkamsterdam/undetected-chromedriver">
     <img src="https://avatars.githubusercontent.com/u/21027969?v=4" width="50" alt="undetected-chromedriver">
   </a>
@@ -87,7 +84,7 @@ An automation tool that reads Reddit posts from various relevant subreddits ([r/
 
 ### Prerequisites
 
-- [Python 3.11+](https://www.python.org/downloads)
+- [Python 3.14](https://www.python.org/downloads)
 
 - A Chromium-based browser (sorted from best-supported to least):
   - [Google Chrome](https://www.google.com/chrome/) is fully supported and recommended.
@@ -104,11 +101,7 @@ Create a Reddit bot and get environment variables
 5. Set **description** to an appropriate description (e.g. repo description)
 6. Set **redirect uri** to _http://localhost:8080_
 
-Reddit no longer allows the creation of applications without submitting a ticket request. You can learn more from [this post](https://www.reddit.com/r/redditdev/s/BvANpYtdc4) on [r/redditdev](https://www.reddit.com/r/redditdev). Read more about the [Reddit Responsible Builder Policy](https://support.reddithelp.com/hc/en-us/articles/42728983564564-Responsible-Builder-Policy).
-
-### Tested Environment
-
-Udemate was tested on Windows 11.
+> Reddit no longer allows the creation of applications without submitting a ticket request. You can learn more from [this post](https://www.reddit.com/r/redditdev/s/BvANpYtdc4) on [r/redditdev](https://www.reddit.com/r/redditdev). Read more about the [Reddit Responsible Builder Policy](https://support.reddithelp.com/hc/en-us/articles/42728983564564-Responsible-Builder-Policy).
 
 ### Installation
 
@@ -120,7 +113,7 @@ Udemate was tested on Windows 11.
    ```sh
    cd udemate
    ```
-3. Create a .env file
+3. Create a `.env` file
 
    ```env
    # Reddit config
@@ -196,6 +189,12 @@ Udemate was tested on Windows 11.
 
    # Path to Gmail client secret JSON file for reading 2FA codes
    GMAIL_CLIENT_SECRET=""
+
+   # Path to logs directory
+   LOGS_DIR=""
+
+   # Path to data directory containing JSON and JSONL files
+   DATA_DIR=""
    ```
 
 4. Create a virtual environment
@@ -249,7 +248,7 @@ Command-line arguments are optional and they override the environment variables 
 ## Roadmap
 
 - [x] Implement environment variable parsing
-- [x] Add requirements.txt
+- [x] Add `requirements.txt`
 - [x] Implement refresh token authentication
 - [x] Add functionality to generate JSON files containing middleman links grouped by hostname
 - [x] Scrape intermediate links from the following middlemen:
@@ -363,7 +362,7 @@ Project Link: [https://github.com/muhammadazzazy/udemate](https://github.com/muh
 [linkedin-url]: https://linkedin.com/in/muhammad-azzazy
 [peerlist-shield]: https://img.shields.io/badge/Peerlist-00AA6C?style=for-the-badge&logo=peerlist&logoColor=white
 [peerlist-url]: https://peerlist.io/muhammadazzazy
-[Python]: https://img.shields.io/badge/python-000000?style=for-the-badge&logo=python
+[Python]: https://img.shields.io/badge/python-FFE873?style=for-the-badge&logo=python
 [Python-url]: https://python.org
 [PRAW]: https://avatars.githubusercontent.com/u/1696888?s=50&v=4
 [PRAW-url]: https://github.com/praw-dev/praw
