@@ -1,8 +1,8 @@
 <a id="udemate"></a>
 [![BuyMeACoffee][buymeacoffee-shield]][buymeacoffee-url]
 [![LinkedIn][linkedin-shield]][linkedin-url]
-[![Peerlist][peerlist-shield]][peerlist-url]
 [![X][x-shield]][x-url]
+[![Peerlist][peerlist-shield]][peerlist-url]
 
 <!-- PROJECT LOGO -->
 <br />
@@ -360,11 +360,11 @@ Project Link: [https://github.com/muhammadazzazy/udemate](https://github.com/muh
 [buymeacoffee-url]: https://www.buymeacoffee.com/muhammadazzazy
 [linkedin-shield]: https://img.shields.io/badge/LinkedIn-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white
 [linkedin-url]: https://linkedin.com/in/muhammad-azzazy
+[x-shield]: https://img.shields.io/badge/X-000000?style=for-the-badge&logo=x&logoColor=white
+[x-url]: https://x.com/Muhamma28153589
 [peerlist-shield]: https://img.shields.io/badge/Peerlist-00AA6C?style=for-the-badge&logo=peerlist&logoColor=white
 [peerlist-url]: https://peerlist.io/muhammadazzazy
 [Python]: https://img.shields.io/badge/python-FFE873?style=for-the-badge&logo=python
 [Python-url]: https://python.org
 [PRAW]: https://avatars.githubusercontent.com/u/1696888?s=50&v=4
 [PRAW-url]: https://github.com/praw-dev/praw
-[x-shield]: https://img.shields.io/badge/X-000000?style=for-the-badge&logo=x&logoColor=white
-[x-url]: https://x.com/Muhamma28153589
