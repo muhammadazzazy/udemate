@@ -1,9 +1,11 @@
 """Fetch Udemy links with coupons from IDownloadCoupon."""
+
+import requests
+from logging import Logger
+from requests.exceptions import RequestException
 from urllib.parse import ParseResult, urlparse, parse_qs, unquote
 
 from bs4 import BeautifulSoup
-import requests
-from requests.exceptions import RequestException
 
 from bot.spider import Spider
 from config.bot import SpiderConfig
@@ -12,14 +14,14 @@ from config.bot import SpiderConfig
 class IDownloadCoupon(Spider):
     """Get Udemy links with coupons from IDownloadCoupon."""
 
-    def __init__(self, *, config: SpiderConfig, urls: list[str]) -> None:
+    def __init__(self, *, config: SpiderConfig, urls: list[str], logger: Logger) -> None:
         headers: dict[str, str] = {
             'accept':
             'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
         }
         self.session = requests.Session()
         self.session.headers.update(headers)
-        super().__init__(config=config, urls=urls)
+        super().__init__(config=config, urls=urls, logger=logger)
 
     def transform(self, url: str) -> str | None:
         """Convert IDownloadCoupon link to final Udemy link with coupon."""

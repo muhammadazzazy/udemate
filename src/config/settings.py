@@ -30,8 +30,8 @@ BOT_DEFAULTS: Final[dict[str, dict[str, int]]] = {
 FORMATTED_DATE: Final[str] = datetime.today().strftime('%Y%m%d')
 
 
-class Settings(BaseSettings):
-    """Encapsulate and validate configuration attributes loaded from .env."""
+class HeadlessSettings(BaseSettings):
+    """Encapsulate and validate headless configuration attributes loaded from .env file."""
     model_config = SettingsConfigDict(env_file='.env',
                                       env_file_encoding='utf-8',
                                       case_sensitive=False)
@@ -51,12 +51,14 @@ class Settings(BaseSettings):
         ge=MIN_SUBREDDIT_LIMIT,
         description='Maximum number of posts parsed from r/udemyfreebies subreddit'
     )
+
     udemy_freeebies_limit: int = Field(
         default=DEFAULT_SUBREDDIT_LIMIT,
         le=MAX_SUBREDDIT_LIMIT,
         ge=MIN_SUBREDDIT_LIMIT,
         description='Maximum number of posts parsed from r/udemyfreeebies subreddit'
     )
+
     udemy_free_courses_limit: int = Field(
         default=DEFAULT_SUBREDDIT_LIMIT,
         le=MAX_SUBREDDIT_LIMIT,
@@ -69,7 +71,7 @@ class Settings(BaseSettings):
         default=DEFAULT_BROWSER_MAJOR_VERSION
     )
     user_data_dir: str = Field(
-        description='Path to Brave Browser user data directory'
+        description='Path to Chrome browser user data directory'
     )
 
     coursecouponz_retries: int = Field(
@@ -122,11 +124,6 @@ class Settings(BaseSettings):
     freewebcart_timeout: int = Field(
         description='Timeout (in seconds) for Freewebcart web requests and actions',
         default=BOT_DEFAULTS['freewebcart']['timeout']
-    )
-
-    gmail_client_secret: str = Field(
-        description='Path to Gmail API credentials file',
-        default=BASE_DIR / 'sso' / 'client_secret.json'
     )
 
     idownloadcoupon_retries: int = Field(
@@ -194,9 +191,25 @@ class Settings(BaseSettings):
         default=BOT_DEFAULTS['webhelperapp']['timeout']
     )
 
+    data_dir: Path = Field(
+        description='Directory for cached data'
+    )
+    logs_dir: Path = Field(
+        description='Directory for application logs'
+    )
+
+
+class Settings(HeadlessSettings):
+    """Encapsulate headless and GUI configuration attributes loaded from .env file."""
     udemy_email: str = Field(
         description='Email address for Udemy account',
     )
+
+    gmail_client_secret: str = Field(
+        description='Path to Gmail API credentials file',
+        default=BASE_DIR / 'sso' / 'client_secret.json'
+    )
+
     udemy_retries: int = Field(
         description='Maximum number of retries for web actions such as enrollments',
         default=BOT_DEFAULTS['udemy']['retries']

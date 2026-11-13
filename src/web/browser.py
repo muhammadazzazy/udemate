@@ -51,7 +51,9 @@ class Browser(ABC):
         headless_args: list[str] = [
             '--headless=new',
             '--disable-gpu',
-            '--disable-software-rasterizer'
+            '--disable-software-rasterizer',
+            '--no-sandbox',
+            '--disable-dev-shm-usage',
         ]
         gui_args: list[str] = []
         if platform.system() == 'Windows':

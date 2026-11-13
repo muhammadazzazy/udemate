@@ -6,12 +6,12 @@ import re
 from urllib.parse import urlparse
 
 import praw
+from logging import Logger
 from prawcore.exceptions import RequestException
 from praw.models.reddit.submission import Submission
 from praw.models.reddit.subreddit import Subreddit
 
 from config.reddit import RedditConfig, SubredditConfig
-from utils.logger import setup_logging
 
 
 class RedditClient:
@@ -21,9 +21,10 @@ class RedditClient:
     """
 
     def __init__(self, *, config: RedditConfig, subreddit_configs: list[SubredditConfig],
-                 refresh_token: str | None = None) -> None:
+                 refresh_token: str | None = None, logger: Logger) -> None:
         self.config = config
         self.subreddit_configs = subreddit_configs
+        self.logger = logger
         if refresh_token:
             self.refresh_token = refresh_token
             self.reddit = praw.Reddit(
@@ -41,7 +42,6 @@ class RedditClient:
                 username=config.username
             )
         self.submissions: list[Submission] = []
-        self.logger = setup_logging()
 
     def populate_submissions(self) -> None:
         """Fill the list of Reddit posts."""

@@ -1,6 +1,7 @@
 """Automatically enroll into free Udemy courses."""
 import random
 import time
+from logging import Logger
 from pathlib import Path
 
 import undetected_chromedriver as uc
@@ -12,17 +13,16 @@ from selenium.webdriver.support import expected_conditions as EC
 from client.gmail import GmailClient
 from config.bot import BotConfig
 from utils.cache import Cache
-from utils.logger import setup_logging
 
 
 class Udemy:
     """Autoenroll into free Udemy courses."""
 
-    def __init__(self, *, driver: uc.Chrome, urls: list[str],
-                 config: BotConfig) -> None:
-        self.cache = Cache()
+    def __init__(self, *, cache: Cache, driver: uc.Chrome, urls: list[str],
+                 config: BotConfig, logger: Logger) -> None:
+        self.cache = cache
         self.driver = driver
-        self.logger = setup_logging()
+        self.logger = logger
         self.config = config
         self.urls = urls
         self.patterns = {'discounted': 'cart/success',

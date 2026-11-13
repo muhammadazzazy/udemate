@@ -44,10 +44,10 @@ def override_env_vars(args: Namespace) -> BaseSettings:
 
 def main() -> None:
     """Configure and run the automation tool."""
-    logger: Logger = setup_logging()
     try:
         args: Namespace = parse_arguments()
         base_settings: BaseSettings = override_env_vars(args)
+        logger: Logger = setup_logging(base_settings.logs_dir)
         udemate: Udemate = Udemate(
             settings=base_settings,
             logger=logger

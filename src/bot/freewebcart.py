@@ -1,4 +1,6 @@
 """Scrape Udemy links with coupons from Freewebcart."""
+from logging import Logger
+
 import undetected_chromedriver as uc
 from selenium.common.exceptions import TimeoutException, WebDriverException
 from selenium.webdriver.common.by import By
@@ -13,9 +15,9 @@ from config.bot import SpiderConfig
 class Freewebcart(Spider):
     """Get Udemy links with coupons from Freewebcart."""
 
-    def __init__(self, *, driver: uc.Chrome, urls: list[str], config: SpiderConfig) -> None:
+    def __init__(self, *, driver: uc.Chrome, urls: list[str], config: SpiderConfig, logger: Logger) -> None:
         self.driver = driver
-        super().__init__(urls=urls, config=config)
+        super().__init__(urls=urls, config=config, logger=logger)
 
     def transform(self, url: str) -> str:
         """Return Udemy link from Freewebcart link."""

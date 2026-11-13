@@ -1,20 +1,20 @@
 """Encapsulate common attributes and functionality between middleman spiders."""
 from abc import ABC, abstractmethod
 from concurrent.futures import ThreadPoolExecutor, as_completed
+from logging import Logger
 from urllib.parse import ParseResult, urlparse, parse_qs, urlencode, urlunparse
 
 from config.bot import SpiderConfig
-from utils.logger import setup_logging
 
 
 class Spider(ABC):
     """Encapsulates shared attributes and abstract methods for intermediary scrapers."""
 
-    def __init__(self, *, config: SpiderConfig, urls: list[str]) -> None:
+    def __init__(self, *, config: SpiderConfig, urls: list[str], logger: Logger) -> None:
         self.config = config
         self.urls = urls
         self.name = self.__class__.__name__
-        self.logger = setup_logging()
+        self.logger = logger
 
     def clean(self, url: str) -> str:
         """Return clean Udemy link with coupon code."""

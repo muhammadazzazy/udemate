@@ -1,19 +1,18 @@
 """Improve performance by relying on cached Udemy links on startup."""
 import json
 from pathlib import Path
+from logging import Logger
 
-from utils.logger import setup_logging
 from config.settings import FORMATTED_DATE
 
 
 class Cache:
     """Read and write cached middleman and Udemy links to JSON files."""
 
-    def __init__(self) -> None:
-        self.json_dir = Path(__file__).parent.parent.parent / \
-            'data' / FORMATTED_DATE / 'json'
+    def __init__(self, data_dir: Path, logger: Logger) -> None:
+        self.json_dir = data_dir / FORMATTED_DATE / 'json'
         self.json_dir.mkdir(parents=True, exist_ok=True)
-        self.logger = setup_logging()
+        self.logger = logger
         self.urls = {}
 
     def read_json(self, filename: str) -> list[str]:

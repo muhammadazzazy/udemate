@@ -42,7 +42,7 @@ class Udemate:
                 major_version=settings.browser_major_version,
                 user_data_dir=settings.user_data_dir,
                 logger=logger)
-        self.cache = Cache()
+        self.cache = Cache(data_dir=settings.data_dir, logger=logger)
         self.config = settings
         self.logger = logger
 
@@ -68,12 +68,15 @@ class Udemate:
         ]
         if self.config.reddit_password:
             reddit_client: RedditClient = RedditClient(
-                config=reddit_config, subreddit_configs=subreddit_configs)
+                config=reddit_config,
+                subreddit_configs=subreddit_configs,
+                logger=self.logger
+            )
         else:
             refresh_token: str = get_refresh_token(reddit_config)
             reddit_client: RedditClient = RedditClient(
                 config=reddit_config, subreddit_configs=subreddit_configs,
-                refresh_token=refresh_token
+                refresh_token=refresh_token, logger=self.logger
             )
         return reddit_client
 
@@ -105,7 +108,7 @@ class Udemate:
                             retries=self.config.coursecouponz_retries,
                             threads=self.config.coursecouponz_threads,
                             timeout=self.config.coursecouponz_timeout
-                        )
+                        ), logger=self.logger
                     )
                 case 'coursetreat':
                     spiders[middleman] = CourseTreat(
@@ -114,7 +117,7 @@ class Udemate:
                             retries=self.config.coursetreat_retries,
                             threads=self.config.coursetreat_threads,
                             timeout=self.config.coursetreat_timeout
-                        )
+                        ), logger=self.logger
                     )
                 case 'easylearn':
                     spiders[middleman] = EasyLearning(
@@ -123,7 +126,7 @@ class Udemate:
                             retries=self.config.easylearn_retries,
                             threads=self.config.easylearn_threads,
                             timeout=self.config.easylearn_timeout
-                        )
+                        ), logger=self.logger
                     )
                 case 'freewebcart':
                     headless_driver: uc.Chrome = self.browser.setup(
@@ -135,7 +138,7 @@ class Udemate:
                             retries=self.config.freewebcart_retries,
                             threads=self.config.freewebcart_threads,
                             timeout=self.config.freewebcart_timeout
-                        )
+                        ), logger=self.logger
                     )
                 case 'idownloadcoupon':
                     spiders[middleman] = IDownloadCoupon(
@@ -144,7 +147,7 @@ class Udemate:
                             retries=self.config.idownloadcoupon_retries,
                             threads=self.config.idownloadcoupon_threads,
                             timeout=self.config.idownloadcoupon_timeout
-                        )
+                        ), logger=self.logger
                     )
                 case 'inventhigh':
                     spiders[middleman] = InventHigh(
@@ -153,7 +156,7 @@ class Udemate:
                             retries=self.config.inventhigh_retries,
                             threads=self.config.inventhigh_threads,
                             timeout=self.config.inventhigh_timeout
-                        )
+                        ), logger=self.logger
                     )
                 case 'line51':
                     headless_driver: uc.Chrome = self.browser.setup(
@@ -165,7 +168,7 @@ class Udemate:
                             retries=self.config.line51_retries,
                             threads=self.config.line51_threads,
                             timeout=self.config.line51_timeout
-                        )
+                        ), logger=self.logger
                     )
                 case 'real':
                     headless_driver: uc.Chrome = self.browser.setup(
@@ -177,7 +180,7 @@ class Udemate:
                             retries=self.config.real_discount_retries,
                             threads=self.config.real_discount_threads,
                             timeout=self.config.real_discount_timeout
-                        )
+                        ), logger=self.logger
                     )
                 case 'webhelperapp':
                     spiders[middleman] = WebHelperApp(
@@ -186,7 +189,7 @@ class Udemate:
                             retries=self.config.webhelperapp_retries,
                             threads=self.config.webhelperapp_threads,
                             timeout=self.config.webhelperapp_timeout
-                        )
+                        ), logger=self.logger
                     )
         return spiders
 
@@ -217,12 +220,14 @@ class Udemate:
         gui_driver: uc.Chrome = self.browser.setup(headless=False)
         udemy: Udemy = Udemy(
             driver=gui_driver,
+            cache=self.cache,
             config=BotConfig(
                 retries=self.config.udemy_retries,
                 timeout=self.config.udemy_timeout,
                 gmail_client_secret=self.config.gmail_client_secret
             ),
-            urls=udemy_urls,
+            logger=self.logger,
+            urls=udemy_urls
         )
         udemy.run(email=self.config.udemy_email)
         gui_driver.quit()
