@@ -223,6 +223,7 @@ class Udemy:
 
     def is_owned(self) -> bool:
         """Return a flag indicating whether a course is owned."""
+        self.logger.info('Checking if course is owned...')
         try:
             _button: uc.WebElement | None = self.get_enroll_button(
                 text='Go to course')
@@ -232,6 +233,7 @@ class Udemy:
 
     def is_paid(self) -> bool:
         """Return a flag whether course is paid."""
+        self.logger.info('Checking if course is paid...')
         try:
             _button: uc.WebElement = self.get_enroll_button(text='Buy now')
             return True
@@ -334,6 +336,11 @@ class Udemy:
             try:
                 confirm_button: uc.WebElement = self.get_confirm_button()
                 confirm_button.click()
+                if self.patterns['discounted'] not in self.driver.current_url:
+                    self.logger.warning(
+                        'Attempt %d/%d failed.', attempt+1, self.config.retries
+                    )
+                    continue
                 self.logger.info('Attempt %d/%d succeeded!',
                                  attempt+1,
                                  self.config.retries)
@@ -355,7 +362,7 @@ class Udemy:
         if flag and self.patterns['free'] in self.driver.current_url:
             self.logger.info('Successfully enrolled into %s.', course_name)
             return
-        if not flag and self.patterns['discounted'] in self.driver.current_url:
+        if not flag:
             self.confirm()
             self.logger.info('Successfully enrolled into %s.', course_name)
 
