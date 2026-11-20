@@ -134,7 +134,7 @@ Create a Reddit bot and get environment variables
    UDEMY_FREE_COURSES_LIMIT=0
 
    # Browser config
-   BROWSER_MAJOR_VERSION=156
+   BROWSER_MAJOR_VERSION=158
    # Required if you want to enroll in courses with a user profile.
    USER_DATA_DIR="C:\\Users\\username\\AppData\\Local\\Google\\Chrome\\User Data\\Udemate"
 
