@@ -25,9 +25,6 @@ class Udemy:
         self.logger = logger
         self.config = config
         self.urls = urls
-        self.patterns = {'discounted': 'cart/success',
-                         'free': 'cart/subscribe',
-                         'auth': 'join/passwordless-auth'}
         self.wait = WebDriverWait(self.driver, timeout=self.config.timeout)
 
     def enter_email(self, email: str):
@@ -65,7 +62,7 @@ class Udemy:
                 )))
                 login_button.click()
                 self.wait.until(
-                    lambda driver: self.patterns['auth'] in driver.current_url
+                    lambda driver: 'join/passwordless-auth' in driver.current_url
                 )
             except WebDriverException:
                 self.logger.error(
@@ -364,10 +361,10 @@ class Udemy:
         if not flag:
             self.click_radio_button()
         self.click_enroll_now()
-        if flag and self.patterns['free'] in self.driver.current_url:
+        if flag and 'cart/subscribe' in self.driver.current_url:
             self.logger.info('Successfully enrolled into %s.', course_name)
             return
-        if not flag:
+        if not flag and 'payment/checkout' in self.driver.current_url:
             self.confirm()
             self.logger.info('Successfully enrolled into %s.', course_name)
 
