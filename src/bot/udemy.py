@@ -202,10 +202,11 @@ class Udemy:
         )
         wait: WebDriverWait = WebDriverWait(
             self.driver, timeout=self.config.timeout)
-        buttons: list[uc.WebElement] = wait.until(lambda d: d.find_elements(
-            By.XPATH,
-            button_xpath
-        ))
+        buttons: list[uc.WebElement] = wait.until(
+            lambda driver: driver.find_elements(
+                By.XPATH,
+                button_xpath
+            ))
         button = next(
             (b for b in buttons if b.is_displayed() and b.is_enabled()), None)
         return button
@@ -336,11 +337,9 @@ class Udemy:
             try:
                 confirm_button: uc.WebElement = self.get_confirm_button()
                 confirm_button.click()
-                if self.patterns['discounted'] not in self.driver.current_url:
-                    self.logger.warning(
-                        'Attempt %d/%d failed.', attempt+1, self.config.retries
-                    )
-                    continue
+                self.wait.until(
+                    lambda driver: 'cart/success' in driver.current_url
+                )
                 self.logger.info('Attempt %d/%d succeeded!',
                                  attempt+1,
                                  self.config.retries)
