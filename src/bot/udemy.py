@@ -26,7 +26,8 @@ class Udemy:
         self.config = config
         self.urls = urls
         self.patterns = {'discounted': 'cart/success',
-                         'free': 'cart/subscribe'}
+                         'free': 'cart/subscribe',
+                         'auth': 'join/passwordless-auth'}
         self.wait = WebDriverWait(self.driver, timeout=self.config.timeout)
 
     def enter_email(self, email: str):
@@ -63,6 +64,9 @@ class Udemy:
                     'Log in'
                 )))
                 login_button.click()
+                self.wait.until(
+                    lambda driver: self.patterns['auth'] in driver.current_url
+                )
             except WebDriverException:
                 self.logger.error(
                     'Error clicking login button (attempt %d/%d)',
