@@ -1,10 +1,9 @@
-"""Fetch Udemy links with coupons from IDownloadCoupon."""
-
-import requests
+"""Convert IDownloadCoupon links to Udemy links."""
 from logging import Logger
-from requests.exceptions import RequestException
 from urllib.parse import ParseResult, urlparse, parse_qs, unquote
 
+import requests
+from requests.exceptions import RequestException
 from bs4 import BeautifulSoup
 
 from bot.spider import Spider

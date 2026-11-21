@@ -105,11 +105,13 @@ class Udemy:
             try:
                 container = self.wait.until(
                     EC.element_to_be_clickable(
-                        (By.CSS_SELECTOR, ".ud-compact-form-control-container")))
+                        (By.CSS_SELECTOR, '.ud-compact-form-control-container')))
                 container.click()
                 code_input = self.wait.until(
-                    EC.visibility_of_element_located(
-                        (By.CSS_SELECTOR, 'input.ud-text-input.ud-text-input-medium.ud-text-sm.ud-compact-form-control'))
+                    EC.visibility_of_element_located((
+                        By.CSS_SELECTOR,
+                        'input.ud-text-input.ud-text-input-medium.ud-text-sm.ud-compact-form-control')
+                    )
                 )
                 code_input.clear()
                 code_input.send_keys(code)

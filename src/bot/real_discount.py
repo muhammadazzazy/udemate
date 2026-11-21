@@ -1,6 +1,6 @@
-"""Implements Real Discount spider for converting middleman links to Udemy links."""
-import requests
+"""Convert Real Discount links to Udemy links."""
 from logging import Logger
+import requests
 
 import undetected_chromedriver as uc
 from selenium.common.exceptions import WebDriverException

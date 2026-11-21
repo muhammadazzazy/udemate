@@ -1,4 +1,4 @@
-"""Scrape Udemy links with coupons from Line51."""
+"""Convert Line51 links to Udemy links."""
 from logging import Logger
 
 import undetected_chromedriver as uc

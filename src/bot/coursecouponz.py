@@ -1,4 +1,4 @@
-"""Scrape Udemy links with coupons from CourseCouponz."""
+"""Convert CourseCouponz links to Udemy links."""
 import requests
 from logging import Logger
 from requests.exceptions import RequestException

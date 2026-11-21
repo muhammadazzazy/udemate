@@ -1,4 +1,4 @@
-"""Scrape Udemy links with coupons from Freewebcart."""
+"""Convert Freewebcart links to Udemy links."""
 from logging import Logger
 
 import undetected_chromedriver as uc

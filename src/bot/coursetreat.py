@@ -1,9 +1,9 @@
-"""Encapsulate the Course Treat spider methods and attributes."""
+"""Convert Course Treat links to Udemy links."""
+from logging import Logger
+
 import requests
 from bs4 import BeautifulSoup
-from logging import Logger
 from requests.exceptions import RequestException
-
 
 from bot.spider import Spider
 from config.bot import SpiderConfig
