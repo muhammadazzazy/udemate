@@ -3,10 +3,10 @@ Configure Reddit PRAW for r/udemyfreebies, r/udemyfreeebies, and r/udemyfreecour
 fetch posts on subreddit, and extract hostnames.
 """
 import re
+from logging import Logger
 from urllib.parse import urlparse
 
 import praw
-from logging import Logger
 from prawcore.exceptions import RequestException
 from praw.models.reddit.submission import Submission
 from praw.models.reddit.subreddit import Subreddit
@@ -105,7 +105,7 @@ class RedditClient:
         return urls
 
     def clean(self, url: str) -> str:
-        """Return cleaned middlemen link."""
+        """Return clean middlemen link."""
         parts: list[str] = url.split('/')
         while '' in parts:
             parts.remove('')
