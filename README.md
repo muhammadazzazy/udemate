@@ -20,8 +20,8 @@
     <a href="https://github.com/muhammadazzazy/udemate"><strong>Explore the docs »</strong></a>
     <br />
     <br />
-    <a href="https://github.com/muhammadazzazy/udemate">View Demo</a>
-    &middot;
+    <!-- <a href="https://github.com/muhammadazzazy/udemate">View Demo</a>
+    &middot; -->
     <a href="https://github.com/muhammadazzazy/udemate/issues/new?labels=bug&template=bug-report---.md">Report Bug</a>
     &middot;
     <a href="https://github.com/muhammadazzazy/udemate/issues/new?labels=enhancement&template=feature-request---.md">Request Feature</a>
@@ -42,7 +42,7 @@
   <summary>Table of Contents</summary>
   <ol>
     <li>
-      <a href="#about-the-project">About The Project</a>
+      <a href="#about-the-project">About the Project</a>
       <ul>
         <li><a href="#built-with">Built With</a></li>
       </ul>
@@ -64,9 +64,11 @@
 
 <!-- ABOUT THE PROJECT -->
 
-## About The Project
+## About the Project
 
 An automation tool that reads Reddit posts from various relevant subreddits ([r/udemyfreebies](https://www.reddit.com/r/udemyfreebies/), [r/udemyfreeebies](https://www.reddit.com/r/udemyfreeebies/), and [r/udemyfreecourses](https://www.reddit.com/r/udemyfreecourses/)), extracts course links from middleman websites, converts them into direct Udemy links with coupons, and automates the enrollment process into free courses.
+
+![Udemate Demo](./assets/images/udemate-demo.gif)
 
 ### Built With
 
