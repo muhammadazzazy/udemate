@@ -13,13 +13,10 @@ MIN_SUBREDDIT_LIMIT: Final[int] = 0
 MAX_SUBREDDIT_LIMIT: Final[int] = 1000
 
 BOT_DEFAULTS: Final[dict[str, dict[str, int]]] = {
-    'coursecouponz': {'retries': 3, 'threads': 2, 'timeout': 30},
-    'coursetreat': {'retries': 3, 'threads': 2, 'timeout': 30},
     'easylearn': {'retries': 3, 'threads': 10, 'timeout': 30},
     'freewebcart': {'retries': 3, 'threads': 2, 'timeout': 30},
     'idownloadcoupon': {'retries': 3, 'threads': 25, 'timeout': 30},
     'inventhigh': {'retries': 3, 'threads': 2, 'timeout': 30},
-    'line51': {'retries': 3, 'threads': 2, 'timeout': 30},
     'realdiscount': {'retries': 3, 'threads': 2, 'timeout': 30},
     'webhelperapp': {'retries': 3, 'threads': 2, 'timeout': 30},
     'udemy': {'retries': 3, 'timeout': 10}
@@ -66,32 +63,6 @@ class HeadlessSettings(BaseSettings):
 
     user_data_dir: str = Field(
         description='Path to Chrome browser user data directory'
-    )
-
-    coursecouponz_retries: int = Field(
-        description='Maximum number of retries for Course Couponz requests',
-        default=BOT_DEFAULTS['coursecouponz']['retries']
-    )
-    coursecouponz_threads: int = Field(
-        description='Number of threads for Course Couponz requests',
-        default=BOT_DEFAULTS['coursecouponz']['threads']
-    )
-    coursecouponz_timeout: int = Field(
-        description='Timeout (in seconds) for Course Couponz requests',
-        default=BOT_DEFAULTS['coursecouponz']['timeout']
-    )
-
-    coursetreat_retries: int = Field(
-        description='Maximum number of retries for Course Treat requests',
-        default=BOT_DEFAULTS['coursetreat']['retries']
-    )
-    coursetreat_threads: int = Field(
-        description='Number of threads for Course Treat requests',
-        default=BOT_DEFAULTS['coursetreat']['threads']
-    )
-    coursetreat_timeout: int = Field(
-        description='Timeout (in seconds) for Course Treat requests',
-        default=BOT_DEFAULTS['coursetreat']['timeout']
     )
 
     easylearn_retries: int = Field(
@@ -144,19 +115,6 @@ class HeadlessSettings(BaseSettings):
     inventhigh_timeout: int = Field(
         description='Timeout (in seconds) for InventHigh requests and actions',
         default=BOT_DEFAULTS['inventhigh']['timeout']
-    )
-
-    line51_retries: int = Field(
-        description='Maximum number of retries for Line51 requests and actions',
-        default=BOT_DEFAULTS['line51']['retries']
-    )
-    line51_threads: int = Field(
-        description='Number of threads for Line51 requests and actions',
-        default=2
-    )
-    line51_timeout: int = Field(
-        description='Timeout (in seconds) for Line51 requests and actions',
-        default=BOT_DEFAULTS['line51']['timeout']
     )
 
     real_discount_retries: int = Field(

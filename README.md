@@ -139,16 +139,6 @@ Create a Reddit bot and get environment variables
    # Required if you want to enroll in courses with a user profile.
    USER_DATA_DIR="C:\\Users\\username\\AppData\\Local\\Google\\Chrome\\User Data\\Udemate"
 
-   # CourseCouponz config
-   COURSECOUPONZ_RETRIES=3
-   COURSECOUPONZ_THREADS=2
-   COURSECOUPONZ_TIMEOUT=30
-
-   # Course Treat config
-   COURSETREAT_RETRIES=3
-   COURSETREAT_THREADS=2
-   COURSETREAT_TIMEOUT=30
-
    # Easy Learning config
    EASYLEARN_RETRIES=3
    EASYLEARN_THREADS=10
@@ -168,11 +158,6 @@ Create a Reddit bot and get environment variables
    INVENTHIGH_RETRIES=3
    INVENTHIGH_THREADS=2
    INVENTHIGH_TIMEOUT=30
-
-   # Line51 config
-   LINE51_RETRIES=3
-   LINE51_THREADS=2
-   LINE51_TIMEOUT=30
 
    # Real Discount config
    REAL_DISCOUNT_RETRIES=3

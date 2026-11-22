@@ -8,13 +8,10 @@ from typing import Any
 
 import undetected_chromedriver as uc
 
-from bot.coursecouponz import CourseCouponz
-from bot.coursetreat import CourseTreat
 from bot.easy_learning import EasyLearning
 from bot.freewebcart import Freewebcart
 from bot.idownloadcoupon import IDownloadCoupon
 from bot.invent_high import InventHigh
-from bot.line51 import Line51
 from bot.real_discount import RealDiscount
 from bot.webhelperapp import WebHelperApp
 from bot.udemy import Udemy
@@ -99,24 +96,6 @@ class Udemate:
         spiders: dict[str, Any] = {}
         for middleman, urls in middleman_urls.items():
             match middleman:
-                case 'coursecouponz':
-                    spiders[middleman] = CourseCouponz(
-                        urls=urls,
-                        config=SpiderConfig(
-                            retries=self.config.coursecouponz_retries,
-                            threads=self.config.coursecouponz_threads,
-                            timeout=self.config.coursecouponz_timeout
-                        ), logger=self.logger
-                    )
-                case 'coursetreat':
-                    spiders[middleman] = CourseTreat(
-                        urls=urls,
-                        config=SpiderConfig(
-                            retries=self.config.coursetreat_retries,
-                            threads=self.config.coursetreat_threads,
-                            timeout=self.config.coursetreat_timeout
-                        ), logger=self.logger
-                    )
                 case 'easylearn':
                     spiders[middleman] = EasyLearning(
                         urls=urls,
@@ -154,18 +133,6 @@ class Udemate:
                             retries=self.config.inventhigh_retries,
                             threads=self.config.inventhigh_threads,
                             timeout=self.config.inventhigh_timeout
-                        ), logger=self.logger
-                    )
-                case 'line51':
-                    headless_driver: uc.Chrome = self.browser.setup(
-                        headless=True)
-                    spiders[middleman] = Line51(
-                        driver=headless_driver,
-                        urls=urls,
-                        config=SpiderConfig(
-                            retries=self.config.line51_retries,
-                            threads=self.config.line51_threads,
-                            timeout=self.config.line51_timeout
                         ), logger=self.logger
                     )
                 case 'real':
