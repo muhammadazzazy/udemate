@@ -255,13 +255,13 @@ Command-line arguments are optional and they override the environment variables 
 - [x] Implement refresh token authentication
 - [x] Add functionality to generate JSON files containing middleman links grouped by hostname
 - [x] Scrape intermediate links from the following middlemen:
-  - [x] [CourseCouponz](https://www.coursecouponz.com)
-  - [x] [Course Treat](https://coursetreat.com)
+  - [x] [CourseCouponz](https://www.coursecouponz.com) (defunct; domain registration expired, spider retained)
+  - [x] [Course Treat](https://coursetreat.com) (defunct; website unavailable; spider retained)
   - [x] [Easy Learning](https://easylearn.ing)
-  - [x] [Freewebcart](https://freewebcart.com)
+  - [x] [Freewebcart](https://freewebcart.com) (renamed to [Deelcart](https://deelcart.com))
   - [x] [IDownloadCoupon](https://idownloadcoupon.com)
   - [x] [Invent High](https://inventhigh.com)
-  - [x] Line51 (website is no longer available, but its spider remains supported)
+  - [x] Line51 (defunct; website unavailable; spider retained)
   - [x] [Real Discount](https://www.real.discount/)
   - [x] [WebHelperApp](https://webhelperapp.com)
 
@@ -361,7 +361,7 @@ Project Link: [https://github.com/muhammadazzazy/udemate](https://github.com/muh
 [buymeacoffee-shield]: https://img.shields.io/badge/Buy%20Me%20a%20Coffee-yellow?style=for-the-badge&logo=buy-me-a-coffee
 [buymeacoffee-url]: https://www.buymeacoffee.com/muhammadazzazy
 [linkedin-shield]: https://img.shields.io/badge/LinkedIn-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white
-[linkedin-url]: https://linkedin.com/in/muhammad-azzazy
+[linkedin-url]: https://www.linkedin.com/in/muhammad-azzazy
 [x-shield]: https://img.shields.io/badge/X-000000?style=for-the-badge&logo=x&logoColor=white
 [x-url]: https://x.com/Muhamma28153589
 [peerlist-shield]: https://img.shields.io/badge/Peerlist-00AA6C?style=for-the-badge&logo=peerlist&logoColor=white
