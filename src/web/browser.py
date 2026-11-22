@@ -12,8 +12,7 @@ from utils.logger import Logger
 class Browser(ABC):
     """Manage browser configuration and expose Undetected Chromedriver."""
 
-    def __init__(self, *, user_data_dir: str, major_version: int, logger: Logger) -> None:
-        self.major_version = major_version
+    def __init__(self, *, user_data_dir: str, logger: Logger) -> None:
         self.user_data_dir = user_data_dir
         self.logger = logger
 
@@ -66,14 +65,12 @@ class Browser(ABC):
             self.delete_user_data_dir()
             return uc.Chrome(
                 options=options,
-                version_main=self.major_version,
                 browser_executable_path=browser_executable,
                 user_data_dir=self.user_data_dir,
                 headless=headless
             )
         return uc.Chrome(
             options=options,
-            version_main=self.major_version,
             browser_executable_path=browser_executable,
             headless=headless
         )

@@ -12,8 +12,6 @@ DEFAULT_SUBREDDIT_LIMIT: Final[int] = 500
 MIN_SUBREDDIT_LIMIT: Final[int] = 0
 MAX_SUBREDDIT_LIMIT: Final[int] = 1000
 
-DEFAULT_BROWSER_MAJOR_VERSION: Final[int] = 156
-
 BOT_DEFAULTS: Final[dict[str, dict[str, int]]] = {
     'coursecouponz': {'retries': 3, 'threads': 2, 'timeout': 30},
     'coursetreat': {'retries': 3, 'threads': 2, 'timeout': 30},
@@ -66,10 +64,6 @@ class HeadlessSettings(BaseSettings):
         description='Maximum number of posts parsed from r/udemyfreecourses subreddit'
     )
 
-    browser_major_version: int = Field(
-        description='Major version of the browser to be automated',
-        default=DEFAULT_BROWSER_MAJOR_VERSION
-    )
     user_data_dir: str = Field(
         description='Path to Chrome browser user data directory'
     )

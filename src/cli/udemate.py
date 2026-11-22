@@ -34,12 +34,10 @@ class Udemate:
     def __init__(self, *, settings: Settings, logger: Logger) -> None:
         if 'brave' in settings.user_data_dir.lower():
             self.browser = Brave(
-                major_version=settings.browser_major_version,
                 user_data_dir=settings.user_data_dir,
                 logger=logger)
         elif 'chrome' in settings.user_data_dir.lower():
             self.browser = GoogleChrome(
-                major_version=settings.browser_major_version,
                 user_data_dir=settings.user_data_dir,
                 logger=logger)
         self.cache = Cache(data_dir=settings.data_dir, logger=logger)
