@@ -1,4 +1,4 @@
-"""Convert Freewebcart links to Udemy links."""
+"""Convert Deelcart (formely Freewebcart) links to Udemy links."""
 from logging import Logger
 
 import undetected_chromedriver as uc
@@ -12,15 +12,15 @@ from bot.spider import Spider
 from config.bot import SpiderConfig
 
 
-class Freewebcart(Spider):
-    """Get Udemy links with coupons from Freewebcart."""
+class Deelcart(Spider):
+    """Get Udemy links with coupons from Deelcart."""
 
     def __init__(self, *, driver: uc.Chrome, urls: list[str], config: SpiderConfig, logger: Logger) -> None:
         self.driver = driver
         super().__init__(urls=urls, config=config, logger=logger)
 
     def transform(self, url: str) -> str:
-        """Return Udemy link from Freewebcart link."""
+        """Return Udemy link from Deelcart link."""
         self.driver.get(url)
         wait: WebDriverWait = WebDriverWait(self.driver, self.config.timeout)
         link: uc.WebElement = wait.until(
@@ -32,8 +32,8 @@ class Freewebcart(Spider):
         return udemy_url
 
     def run(self) -> list[str]:
-        """Return list of Udemy links extracted from Freewebcart."""
-        self.logger.info('Processing %d links from Freewebcart...',
+        """Return list of Udemy links extracted from Deelcart."""
+        self.logger.info('Processing %d links from Deelcart...',
                          len(self.urls))
         udemy_urls: list[str] = []
         for url in self.urls:
@@ -54,7 +54,7 @@ class Freewebcart(Spider):
             except ReadTimeoutError as e:
                 self.logger.error('Read timeout error for %s: %r', url, e)
                 continue
-        self.logger.info('Freewebcart spider scraped %d Udemy links.',
+        self.logger.info('Deelcart spider scraped %d Udemy links.',
                          len(udemy_urls))
         self.driver.quit()
         return sorted(set(udemy_urls))

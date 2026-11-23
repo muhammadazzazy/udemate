@@ -9,7 +9,7 @@ from typing import Any
 import undetected_chromedriver as uc
 
 from bot.easy_learning import EasyLearning
-from bot.freewebcart import Freewebcart
+from bot.deelcart import Deelcart
 from bot.idownloadcoupon import IDownloadCoupon
 from bot.invent_high import InventHigh
 from bot.real_discount import RealDiscount
@@ -17,6 +17,7 @@ from bot.webhelperapp import WebHelperApp
 from bot.udemy import Udemy
 from client.get_refresh_token import get_refresh_token
 from client.reddit import RedditClient
+from client.telegram import TelegramBot
 from utils.cache import Cache
 from config.bot import BotConfig, SpiderConfig
 from config.reddit import RedditConfig, SubredditConfig
@@ -105,16 +106,16 @@ class Udemate:
                             timeout=self.config.easylearn_timeout
                         ), logger=self.logger
                     )
-                case 'freewebcart':
+                case 'deelcart':
                     headless_driver: uc.Chrome = self.browser.setup(
                         headless=True)
-                    spiders[middleman] = Freewebcart(
+                    spiders[middleman] = Deelcart(
                         driver=headless_driver,
                         urls=urls,
                         config=SpiderConfig(
-                            retries=self.config.freewebcart_retries,
-                            threads=self.config.freewebcart_threads,
-                            timeout=self.config.freewebcart_timeout
+                            retries=self.config.deelcart_retries,
+                            threads=self.config.deelcart_threads,
+                            timeout=self.config.deelcart_timeout
                         ), logger=self.logger
                     )
                 case 'idownloadcoupon':

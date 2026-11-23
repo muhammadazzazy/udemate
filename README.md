@@ -144,10 +144,10 @@ Create a Reddit bot and get environment variables
    EASYLEARN_THREADS=10
    EASYLEARN_TIMEOUT=30
 
-   # Freewebcart config
-   FREEWEBCART_RETRIES=3
-   FREEWEBCART_THREADS=2
-   FREEWEBCART_TIMEOUT=30
+   # Deelcart config
+   DEELCART_RETRIES=3
+   DEELCART_THREADS=2
+   DEELCART_TIMEOUT=30
 
    # IDownloadCoupon config
    IDOWNLOADCOUPON_RETRIES=3
@@ -242,7 +242,7 @@ Command-line arguments are optional and they override the environment variables 
   - [x] [CourseCouponz](https://www.coursecouponz.com) (defunct; domain registration expired, spider retained)
   - [x] [Course Treat](https://coursetreat.com) (defunct; website unavailable; spider retained)
   - [x] [Easy Learning](https://easylearn.ing)
-  - [x] [Freewebcart](https://freewebcart.com) (renamed to [Deelcart](https://deelcart.com))
+  - [x] [Deelcart](https://deelcart.com) (formerly [Freewebcart](https://freewebcart.com))
   - [x] [IDownloadCoupon](https://idownloadcoupon.com)
   - [x] [Invent High](https://inventhigh.com)
   - [x] Line51 (defunct; website unavailable; spider retained)

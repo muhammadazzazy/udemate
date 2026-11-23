@@ -14,7 +14,7 @@ MAX_SUBREDDIT_LIMIT: Final[int] = 1000
 
 BOT_DEFAULTS: Final[dict[str, dict[str, int]]] = {
     'easylearn': {'retries': 3, 'threads': 10, 'timeout': 30},
-    'freewebcart': {'retries': 3, 'threads': 2, 'timeout': 30},
+    'deelcart': {'retries': 3, 'threads': 2, 'timeout': 30},
     'idownloadcoupon': {'retries': 3, 'threads': 25, 'timeout': 30},
     'inventhigh': {'retries': 3, 'threads': 2, 'timeout': 30},
     'realdiscount': {'retries': 3, 'threads': 2, 'timeout': 30},
@@ -78,17 +78,17 @@ class HeadlessSettings(BaseSettings):
         default=BOT_DEFAULTS['easylearn']['timeout']
     )
 
-    freewebcart_retries: int = Field(
-        description='Maximum number of retries for Freewebcart requests and actions',
-        default=BOT_DEFAULTS['freewebcart']['retries']
+    deelcart_retries: int = Field(
+        description='Maximum number of retries for Deelcart requests and actions',
+        default=BOT_DEFAULTS['deelcart']['retries']
     )
-    freewebcart_threads: int = Field(
-        description='Number of threads for Freewebcart requests and actions',
-        default=BOT_DEFAULTS['freewebcart']['threads']
+    deelcart_threads: int = Field(
+        description='Number of threads for Deelcart requests and actions',
+        default=BOT_DEFAULTS['deelcart']['threads']
     )
-    freewebcart_timeout: int = Field(
-        description='Timeout (in seconds) for Freewebcart web requests and actions',
-        default=BOT_DEFAULTS['freewebcart']['timeout']
+    deelcart_timeout: int = Field(
+        description='Timeout (in seconds) for Deelcart web requests and actions',
+        default=BOT_DEFAULTS['deelcart']['timeout']
     )
 
     idownloadcoupon_retries: int = Field(
