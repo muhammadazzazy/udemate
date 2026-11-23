@@ -66,7 +66,7 @@
 
 ## About the Project
 
-An automation tool that reads Reddit posts from various relevant subreddits ([r/udemyfreebies](https://www.reddit.com/r/udemyfreebies/), [r/udemyfreeebies](https://www.reddit.com/r/udemyfreeebies/), and [r/udemyfreecourses](https://www.reddit.com/r/udemyfreecourses/)), extracts course links from middleman websites, converts them into direct Udemy links with coupons, and automates the enrollment process into free courses.
+An automation tool that reads Reddit posts from various relevant subreddits ([r/udemyfreebies](https://www.reddit.com/r/udemyfreebies/), [r/udemyfreeebies](https://www.reddit.com/r/udemyfreeebies/), and [r/udemyfreecourses](https://www.reddit.com/r/udemyfreecourses/)), sifts through messages in a Telegram channel ([@udemylive](https://t.me/udemylive)), extracts course links from a collection of middleman websites, converts them into direct Udemy links with coupons, and automates the enrollment process into free Udemy courses.
 
 ![Udemate Demo](./assets/images/udemate-demo.gif)
 
