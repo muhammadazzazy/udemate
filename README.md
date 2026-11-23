@@ -183,8 +183,13 @@ Create a Reddit bot and get environment variables
 
    # Path to data directory containing JSON and JSONL files
    DATA_DIR=""
+
+   # Telegram bot config
+   # Local session filename that is optional.
    TELEGRAM_SESSION_NAME="udemate"
+   # Required if you want to use the Telegram bot.
    TELEGRAM_API_ID=
+   # Required if you want to use the Telegram bot.
    TELEGRAM_API_HASH=""
    ```
 
@@ -291,6 +296,10 @@ Command-line arguments are optional and they override the environment variables 
 - [x] Automate Udemy login flow while detecting maximum resend attempts and maximum session count
 - [x] Detect private and unavailable courses
 - [x] Support free-course enrollment, including radio-button selection
+- [x] Collect [Deelcart](https://deelcart.com) middleman links from the Telegram channel [@udemylive](https://t.me/udemylive)
+
+Historically, Reddit contained [Freewebcart](https://freewebcart.com) links, now branded as [Deelcart](https://deelcart.com).
+[Deelcart](https://deelcart.com) links are currently available through its Telegram channel [@udemylive](https://t.me/udemylive) rather than Reddit.
 
 See the [open issues](https://github.com/muhammadazzazy/udemate/issues) for a full list of proposed features (and known issues).
 
