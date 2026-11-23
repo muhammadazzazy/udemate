@@ -243,8 +243,8 @@ Command-line arguments are optional and they override the environment variables 
 - [x] Implement refresh token authentication
 - [x] Add functionality to generate JSON files containing middleman links grouped by hostname
 - [x] Scrape intermediary links from the following middlemen:
-  - [x] [CourseCouponz](https://www.coursecouponz.com) (defunct; domain registration expired, spider retained)
-  - [x] [Course Treat](https://coursetreat.com) (defunct; website unavailable; spider retained)
+  - [x] CourseCouponz (defunct; domain registration expired, spider retained)
+  - [x] Course Treat (defunct; website unavailable; spider retained)
   - [x] [Easy Learning](https://easylearn.ing)
   - [x] [Deelcart](https://deelcart.com) (formerly [Freewebcart](https://freewebcart.com))
   - [x] [IDownloadCoupon](https://idownloadcoupon.com)
