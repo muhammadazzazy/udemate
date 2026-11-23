@@ -314,7 +314,7 @@ Don't forget to give the project a star! Thanks again!
 
 ## License
 
-Distributed under the MIT License. See [LICENSE](LICENSE) for more information.
+Distributed under the GPLv3 License. See [LICENSE](LICENSE) for more information.
 
 <p align="right">(<a href="#udemate">back to top</a>)</p>
 
