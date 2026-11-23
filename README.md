@@ -66,7 +66,7 @@
 
 ## About the Project
 
-An automation tool that reads Reddit posts from various relevant subreddits ([r/udemyfreebies](https://www.reddit.com/r/udemyfreebies/), [r/udemyfreeebies](https://www.reddit.com/r/udemyfreeebies/), and [r/udemyfreecourses](https://www.reddit.com/r/udemyfreecourses/)), sifts through messages in a Telegram channel ([@udemylive](https://t.me/udemylive)), extracts course links from a collection of middleman websites, converts them into direct Udemy links with coupons, and automates the enrollment process into free Udemy courses.
+An automation tool that reads Reddit posts from various relevant subreddits ([r/udemyfreebies](https://www.reddit.com/r/udemyfreebies/), [r/udemyfreeebies](https://www.reddit.com/r/udemyfreeebies/), and [r/udemyfreecourses](https://www.reddit.com/r/udemyfreecourses/)), sifts through messages in a Telegram channel ([@udemylive](https://t.me/udemylive)), extracts intermediary links from Reddit posts and Telegram messages, converts them into Udemy links with coupons, and automates the enrollment process into free Udemy courses.
 
 ![Udemate Demo](./assets/images/udemate-demo.gif)
 
@@ -298,8 +298,7 @@ Command-line arguments are optional and they override the environment variables 
 - [x] Support free-course enrollment, including radio-button selection
 - [x] Collect [Deelcart](https://deelcart.com) middleman links from the Telegram channel [@udemylive](https://t.me/udemylive)
 
-Historically, Reddit contained [Freewebcart](https://freewebcart.com) links, now branded as [Deelcart](https://deelcart.com).
-[Deelcart](https://deelcart.com) links are currently available through its Telegram channel [@udemylive](https://t.me/udemylive) rather than Reddit.
+> Historically, Reddit contained [Freewebcart](https://freewebcart.com) links, now branded as [Deelcart](https://deelcart.com). [Deelcart](https://deelcart.com) links are currently available through its Telegram channel [@udemylive](https://t.me/udemylive) rather than Reddit. The Reddit client currently returns intermediary links from [Real Discount](https://www.real.discount/) and [IDownloadCoupon](https://idownloadcoupon.com).
 
 See the [open issues](https://github.com/muhammadazzazy/udemate/issues) for a full list of proposed features (and known issues).
 
