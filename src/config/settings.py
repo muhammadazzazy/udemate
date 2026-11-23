@@ -150,6 +150,17 @@ class HeadlessSettings(BaseSettings):
         description='Directory for application logs'
     )
 
+    telegram_session_name: str = Field(
+        description='Session name for Telegram client',
+        default='udemate'
+    )
+    telegram_api_id: int | None = Field(
+        description='Telegram API ID for Telegram client',
+    )
+    telegram_api_hash: str | None = Field(
+        description='Telegram API hash for Telegram client',
+    )
+
 
 class Settings(HeadlessSettings):
     """Encapsulate headless and GUI configuration attributes loaded from .env file."""

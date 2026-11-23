@@ -74,6 +74,7 @@ An automation tool that reads Reddit posts from various relevant subreddits ([r/
 
 - [![Python][Python]][Python-url]
 - [![PRAW][PRAW]][PRAW-url]
+- [![Telethon][Telethon]][Telethon-url]
 - <a href="https://github.com/ultrafunkamsterdam/undetected-chromedriver">
     <img src="https://avatars.githubusercontent.com/u/21027969?v=4" width="50" alt="undetected-chromedriver">
   </a>
@@ -354,3 +355,5 @@ Project Link: [https://github.com/muhammadazzazy/udemate](https://github.com/muh
 [Python-url]: https://python.org
 [PRAW]: https://avatars.githubusercontent.com/u/1696888?s=50&v=4
 [PRAW-url]: https://github.com/praw-dev/praw
+[Telethon-url]: https://github.com/LonamiWebs/Telethon
+[Telethon]: https://avatars.githubusercontent.com/u/9887454?s=50&v=4

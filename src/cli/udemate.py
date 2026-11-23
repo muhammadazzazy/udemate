@@ -80,14 +80,25 @@ class Udemate:
         """Collect middleman links from Reddit."""
         reddit_client: RedditClient = self.setup_reddit_client()
         reddit_client.populate_submissions()
-        middlemen: list[str] = reddit_client.get_middlemen()
+        reddit_middlemen: list[str] = reddit_client.get_middlemen()
         middleman_urls: dict[
             str,
             list[str]
-        ] = reddit_client.get_middleman_urls(middlemen)
-        for middleman in middlemen:
+        ] = reddit_client.get_middleman_urls(reddit_middlemen)
+        deelcart_links: list[str] = []
+        if self.config.telegram_api_id and self.config.telegram_api_hash:
+            telegram_bot: TelegramBot = TelegramBot(
+                name=self.config.telegram_session_name,
+                api_id=self.config.telegram_api_id,
+                api_hash=self.config.telegram_api_hash,
+                logger=self.logger
+            )
+            deelcart_links: list[str] = telegram_bot.run()
+        if deelcart_links:
+            middleman_urls['deelcart'] = deelcart_links
+        for middleman, urls in middleman_urls.items():
             self.cache.write_json(
-                data=middleman_urls[middleman],
+                data=urls,
                 filename=f'{middleman}.json'
             )
         return middleman_urls
