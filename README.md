@@ -183,6 +183,9 @@ Create a Reddit bot and get environment variables
 
    # Path to data directory containing JSON and JSONL files
    DATA_DIR=""
+   TELEGRAM_SESSION_NAME="udemate"
+   TELEGRAM_API_ID=
+   TELEGRAM_API_HASH=""
    ```
 
 4. Create a virtual environment
