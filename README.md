@@ -214,7 +214,7 @@ Create a Reddit bot and get environment variables
    pip install -r requirements.txt
    ```
 
-7. Run the automation tool in headless mode to scrape intermediate links
+7. Run the automation tool in headless mode to scrape intermediary links
 
    ```sh
    # Windows
@@ -242,7 +242,7 @@ Command-line arguments are optional and they override the environment variables 
 - [x] Add `requirements.txt`
 - [x] Implement refresh token authentication
 - [x] Add functionality to generate JSON files containing middleman links grouped by hostname
-- [x] Scrape intermediate links from the following middlemen:
+- [x] Scrape intermediary links from the following middlemen:
   - [x] [CourseCouponz](https://www.coursecouponz.com) (defunct; domain registration expired, spider retained)
   - [x] [Course Treat](https://coursetreat.com) (defunct; website unavailable; spider retained)
   - [x] [Easy Learning](https://easylearn.ing)
