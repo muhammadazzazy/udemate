@@ -100,12 +100,28 @@ Create a Reddit bot and get environment variables
 
 1. Visit [Third-party app authorizations](https://www.reddit.com/prefs/apps/)
 2. Click on **create another app** button at the bottom
-3. Set **name** to _Udemate_
+3. Set **name** to `Udemate`
 4. Select **script**
 5. Set **description** to an appropriate description (e.g. repo description)
-6. Set **redirect uri** to _http://localhost:8080_
+6. Set **redirect uri** to `http://localhost:8080`
 
 > Reddit no longer allows the creation of applications without submitting a ticket request. You can learn more from [this post](https://www.reddit.com/r/redditdev/s/BvANpYtdc4) on [r/redditdev](https://www.reddit.com/r/redditdev). Read more about the [Reddit Responsible Builder Policy](https://support.reddithelp.com/hc/en-us/articles/42728983564564-Responsible-Builder-Policy).
+
+#### Telegram API Setup
+
+1. Go to [mytelegram.org](https://my.telegram.org/)
+2. Log in by entering your country code and phone number associated with your Telegram account and clicking on the **Sign in** button.
+3. Enter the confirmation (login) code sent on Telegram.
+4. Click on **Development Tools**.
+5. Click on **Create application** after doing the following:
+   1. Enter `Udemate` as the **App title**.
+   2. Type in `udemate` in the **Short name** text input.
+   3. Enter `https://github.com/muhammadazzazy/udemate` as the **URL**.
+   4. Select **Bot/Server** as the platform.
+6. Copy the **App** `api_id` for future reference during [installation](#installation).
+7. Copy the **App** `api_hash` (blurred) for future reference during [installation](#installation).
+
+> These credentials are optional and are only required when you want to scrape links from [Deelcart](https://deelcart.com). Keep your `api_hash` private and never commit it to the repository.
 
 ### Installation
 
