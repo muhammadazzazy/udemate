@@ -18,14 +18,14 @@ class TelegramBot:
         """Fetch the latest messages from the Telegram channel."""
         deelcart_replies: list = []
         async for message in self.client.iter_messages('udemylive', limit=5):
+            self.logger.info('Processing message: %s', message.id)
             async for reply in self.client.iter_messages(
                 'udemylive',
                 reply_to=message.id,
                 limit=100,
             ):
-                self.logger.info('Reply %s: %s', reply.id, reply.text)
+                self.logger.info('Processing reply: %s', reply.id)
                 deelcart_replies.append(reply)
-
         return deelcart_replies
 
     def extract_deelcart_links(self, replies: list) -> list[str]:

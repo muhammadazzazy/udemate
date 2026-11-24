@@ -179,7 +179,6 @@ class Udemate:
             futures = {executor.submit(
                 spider.run): middleman for middleman, spider in spiders.items()}
             for future in as_completed(futures):
-                __name: str = futures[future]
                 result: list[str] = future.result()
                 udemy_urls.extend(result)
         udemy_urls = sorted(set(udemy_urls))

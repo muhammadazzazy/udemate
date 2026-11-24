@@ -6,6 +6,7 @@ from selenium.common.exceptions import TimeoutException, WebDriverException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from urllib.parse import urljoin
 from urllib3.exceptions import ProtocolError, ReadTimeoutError
 
 from bot.spider import Spider
@@ -15,7 +16,8 @@ from config.bot import SpiderConfig
 class Deelcart(Spider):
     """Get Udemy links with coupons from Deelcart."""
 
-    def __init__(self, *, driver: uc.Chrome, urls: list[str], config: SpiderConfig, logger: Logger) -> None:
+    def __init__(self, *, driver: uc.Chrome, urls: list[str],
+                 config: SpiderConfig, logger: Logger) -> None:
         self.driver = driver
         super().__init__(urls=urls, config=config, logger=logger)
 
@@ -23,11 +25,21 @@ class Deelcart(Spider):
         """Return Udemy link from Deelcart link."""
         self.driver.get(url)
         wait: WebDriverWait = WebDriverWait(self.driver, self.config.timeout)
-        link: uc.WebElement = wait.until(
-            EC.visibility_of_element_located(
-                (By.XPATH, "//a[contains(text(), 'Get 100% OFF Coupon')]"))
+        redirect_link: uc.WebElement = wait.until(
+            EC.element_to_be_clickable(
+                (By.CSS_SELECTOR, "a[href^='/redirect/']")
+            )
         )
-        href: str = link.get_attribute('href')
+        redirect_href: str = redirect_link.get_attribute('href')
+        redirect_url: str = urljoin('https://deelcart.com', redirect_href)
+
+        self.driver.get(redirect_url)
+        udemy_link: uc.WebElement = wait.until(
+            EC.presence_of_element_located(
+                (By.CSS_SELECTOR, "a[href*='udemy.com/course/']")
+            )
+        )
+        href: str = udemy_link.get_attribute('href')
         udemy_url: str = self.clean(href)
         return udemy_url
 
