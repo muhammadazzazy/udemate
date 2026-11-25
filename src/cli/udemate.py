@@ -85,7 +85,6 @@ class Udemate:
             str,
             list[str]
         ] = reddit_client.get_middleman_urls(reddit_middlemen)
-        deelcart_links: list[str] = []
         if self.config.telegram_api_id and self.config.telegram_api_hash:
             telegram_bot: TelegramBot = TelegramBot(
                 name=self.config.telegram_session_name,
@@ -93,9 +92,10 @@ class Udemate:
                 api_hash=self.config.telegram_api_hash,
                 logger=self.logger
             )
-            deelcart_links: list[str] = telegram_bot.run()
-        if deelcart_links:
-            middleman_urls['deelcart'] = deelcart_links
+            telegram_urls: dict[str, list[str]] = telegram_bot.run()
+            middleman_urls['deelcart'] = telegram_urls['deelcart']
+            middleman_urls['inventhigh'] = telegram_urls['inventhigh']
+
         for middleman, urls in middleman_urls.items():
             self.cache.write_json(
                 data=urls,

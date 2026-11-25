@@ -1,4 +1,4 @@
-"""Collect Freewebcart links from the Telegram channel @udemylive."""
+"""Collect middleman links from Telegram channels."""
 import re
 from logging import Logger
 
@@ -6,7 +6,10 @@ from telethon import TelegramClient
 
 
 class TelegramBot:
-    """Parse Freewebcart links from the Telegram channel @udemylive."""
+    """
+    Parse Deelcart and InventHigh links 
+    from the Telegram channels @udemylive and @udemyoffer, respectively.
+    """
 
     def __init__(self, *, name: str, api_id: int, api_hash: str, logger: Logger) -> None:
         self.api_id = api_id
@@ -42,10 +45,40 @@ class TelegramBot:
                         self.logger.info('Found Deelcart link: %s', link)
         return deelcart_links
 
-    def run(self) -> list[str]:
-        """Run the Telegram bot."""
+    async def fetch_inventhigh_messages(self) -> list:
+        """Fetch the latest messages from the Telegram channel @udemyoffer."""
+        inventhigh_messages: list = []
+        async for message in self.client.iter_messages('udemyoffer', limit=10):
+            self.logger.info('Processing message: %s', message.id)
+            inventhigh_messages.append(message)
+        return inventhigh_messages
+
+    def extract_inventhigh_links(self, messages: list) -> list[str]:
+        """Extract InventHigh links from the messages."""
+        inventhigh_links: list[str] = []
+        for message in messages:
+            if message is not None:
+                for link in re.findall(
+                    r'https://inventhigh\.net/udemy/[^\s)]+',
+                    message.text or '',
+                ):
+                    if link not in inventhigh_links:
+                        inventhigh_links.append(link)
+                        self.logger.info('Found Inventhigh link: %s', link)
+        return inventhigh_links
+
+    def run(self) -> dict[str, list[str]]:
+        """Return a dictionary containing Deelcart and InventHigh links."""
+        middleman_links: dict[str, list[str]] = {}
         with self.client:
-            deelcart_replies = self.client.loop.run_until_complete(
+            deelcart_replies: list = self.client.loop.run_until_complete(
                 self.fetch_deelcart_replies())
-            deelcart_links = self.extract_deelcart_links(deelcart_replies)
-            return deelcart_links
+            deelcart_links: list[str] = self.extract_deelcart_links(
+                deelcart_replies)
+            inventhigh_messages: list = self.client.loop.run_until_complete(
+                self.fetch_inventhigh_messages())
+            inventhigh_links: list[str] = self.extract_inventhigh_links(
+                inventhigh_messages)
+            middleman_links['deelcart'] = deelcart_links
+            middleman_links['inventhigh'] = inventhigh_links
+        return middleman_links

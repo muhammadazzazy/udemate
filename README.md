@@ -66,7 +66,7 @@
 
 ## About the Project
 
-An automation tool that reads Reddit posts from various relevant subreddits ([r/udemyfreebies](https://www.reddit.com/r/udemyfreebies/), [r/udemyfreeebies](https://www.reddit.com/r/udemyfreeebies/), and [r/udemyfreecourses](https://www.reddit.com/r/udemyfreecourses/)), sifts through messages in a Telegram channel ([@udemylive](https://t.me/udemylive)), extracts intermediary links from Reddit posts and Telegram messages, converts them into Udemy links with coupons, and automates the enrollment process into free Udemy courses.
+An automation tool that reads Reddit posts from various relevant subreddits ([r/udemyfreebies](https://www.reddit.com/r/udemyfreebies/), [r/udemyfreeebies](https://www.reddit.com/r/udemyfreeebies/), and [r/udemyfreecourses](https://www.reddit.com/r/udemyfreecourses/)), sifts through messages in some Telegram channels ([@udemylive](https://t.me/udemylive) and [@udemyoffer](https://t.me/udemyoffer)), extracts intermediary links from Reddit posts and Telegram messages, converts them into Udemy links with coupons, and automates the enrollment process into free Udemy courses.
 
 ![Udemate Demo](./assets/images/udemate-demo.gif)
 
@@ -121,7 +121,7 @@ Create a Reddit bot and get environment variables
 6. Copy the **App** `api_id` for future reference during [installation](#installation).
 7. Copy the **App** `api_hash` (blurred) for future reference during [installation](#installation).
 
-> These credentials are optional and are only required when you want to scrape links from [Deelcart](https://deelcart.com). Keep your `api_hash` private and never commit it to the repository.
+> These credentials are optional and are only required when you want to scrape links from [Deelcart](https://deelcart.com) and [InventHigh](https://inventhigh.net). Keep your `api_hash` private and never commit it to the repository.
 
 ### Installation
 
@@ -269,7 +269,7 @@ Command-line arguments are optional and they override the environment variables 
   - [x] [Easy Learning](https://easylearn.ing)
   - [x] [Deelcart](https://deelcart.com) (formerly [Freewebcart](https://freewebcart.com))
   - [x] [IDownloadCoupon](https://idownloadcoupon.com)
-  - [x] [Invent High](https://inventhigh.com)
+  - [x] [InventHigh](https://inventhigh.com)
   - [x] Line51 (defunct; website unavailable; spider retained)
   - [x] [Real Discount](https://www.real.discount/)
   - [x] [WebHelperApp](https://webhelperapp.com)
@@ -295,7 +295,7 @@ Command-line arguments are optional and they override the environment variables 
   - [x] Course Treat
   - [x] Easy Learning
   - [x] IDownloadCoupon
-  - [x] Invent High
+  - [x] InventHigh
   - [x] WebHelperApp
 
 - [x] Prevent GUI driver from starting when no new Udemy links are available
@@ -312,9 +312,10 @@ Command-line arguments are optional and they override the environment variables 
 - [x] Automate Udemy login flow while detecting maximum resend attempts and maximum session count
 - [x] Detect private and unavailable courses
 - [x] Support free-course enrollment, including radio-button selection
-- [x] Collect [Deelcart](https://deelcart.com) middleman links from the Telegram channel [@udemylive](https://t.me/udemylive)
+- [x] Collect [Deelcart](https://deelcart.com) links from the Telegram channel [@udemylive](https://t.me/udemylive)
+- [x] Collect [InventHigh](https://inventhigh.net) links from the Telegram channel [@udemyoffer](https://t.me/udemyoffer)
 
-> Historically, Reddit contained [Freewebcart](https://freewebcart.com) links, now branded as [Deelcart](https://deelcart.com). [Deelcart](https://deelcart.com) links are currently available through its Telegram channel [@udemylive](https://t.me/udemylive) rather than Reddit. The Reddit client currently returns intermediary links from [Real Discount](https://www.real.discount/) and [IDownloadCoupon](https://idownloadcoupon.com).
+> Historically, Reddit contained [Freewebcart](https://freewebcart.com) links, now branded as [Deelcart](https://deelcart.com), and [InventHigh](https://inventhigh.net) links. [Deelcart](https://deelcart.com) links are currently available through its Telegram channel [@udemylive](https://t.me/udemylive) rather than Reddit. Similarly, [InventHigh](https://inventhigh.net) links are available through its Telegram channel [@udemyoffer](https://t.me/udemyoffer) rather than Reddit. The Reddit client currently returns intermediary links from [IDownloadCoupon](https://idownloadcoupon.com) and [Real Discount](https://www.real.discount/).
 
 See the [open issues](https://github.com/muhammadazzazy/udemate/issues) for a full list of proposed features (and known issues).
 
