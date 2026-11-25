@@ -405,7 +405,7 @@ class Udemy:
                     'Course is private. Skipping...'
                 )
                 continue
-            course_name: str = self.driver.title.removesuffix(' | Udemy')
+            course_name: str = self.driver.title
             if self.is_owned():
                 self.logger.info('%s is owned. Skipping...', course_name)
             elif self.is_paid():
