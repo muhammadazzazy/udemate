@@ -27,7 +27,7 @@ class Udemy:
         self.urls = urls
         self.wait = WebDriverWait(self.driver, timeout=self.config.timeout)
 
-    def enter_email(self, email: str):
+    def enter_email(self, email: str) -> None:
         """Enter email into login form."""
         self.logger.info('Entering email...')
         for retry in range(self.config.retries):
@@ -50,6 +50,8 @@ class Udemy:
                 )
                 time.sleep(random.uniform(
                     self.config.timeout/2, self.config.timeout))
+        self.driver.quit()
+        raise SystemError('Exiting...')
 
     def click_login_btn(self) -> None:
         """Click on the 'Log in' button on Udemy homepage."""
@@ -165,7 +167,6 @@ class Udemy:
         self.driver.get('https://www.udemy.com/')
         self.wait: WebDriverWait = WebDriverWait(
             self.driver, timeout=self.config.timeout)
-
         self.click_login_btn()
         self.enter_email(email)
         self.click_purple_button(text='Continue')
@@ -174,6 +175,7 @@ class Udemy:
                 '%s has reached max resend attempts.',
                 email
             )
+            self.driver.quit()
             raise SystemError('Exiting...')
         gmail_client: GmailClient = GmailClient(
             client_secret=Path(self.config.gmail_client_secret)
@@ -324,6 +326,11 @@ class Udemy:
                 enroll_button.click()
                 time.sleep(random.uniform(
                     self.config.timeout/2, self.config.timeout))
+                self.logger.info(
+                    'Attempt %d/%d succeeded!',
+                    attempt+1,
+                    self.config.retries
+                )
                 return
             except (WebDriverException, AttributeError):
                 self.logger.warning('Attempt %d/%d failed.',
