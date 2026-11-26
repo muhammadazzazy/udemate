@@ -313,9 +313,10 @@ Command-line arguments are optional and they override the environment variables 
 - [x] Detect private and unavailable courses
 - [x] Support free-course enrollment, including radio-button selection
 - [x] Collect [Deelcart](https://deelcart.com) links from the Telegram channel [@udemylive](https://t.me/udemylive)
+- [x] Fix `TimeoutException` when converting Deelcart links to Udemy links by selecting the `/redirect/` using the `href` attribute
 - [x] Collect [InventHigh](https://inventhigh.net) links from the Telegram channel [@udemyoffer](https://t.me/udemyoffer)
 
-> Historically, Reddit contained [Freewebcart](https://freewebcart.com) links, now branded as [Deelcart](https://deelcart.com), and [InventHigh](https://inventhigh.net) links. [Deelcart](https://deelcart.com) links are currently available through its Telegram channel [@udemylive](https://t.me/udemylive) rather than Reddit. Similarly, [InventHigh](https://inventhigh.net) links are available through its Telegram channel [@udemyoffer](https://t.me/udemyoffer) rather than Reddit. The Reddit client currently returns intermediary links from [IDownloadCoupon](https://idownloadcoupon.com) and [Real Discount](https://www.real.discount/).
+> Historically, Reddit contained [Freewebcart](https://freewebcart.com) links, now branded as [Deelcart](https://deelcart.com), and [InventHigh](https://inventhigh.net) links. [Deelcart](https://deelcart.com) links are currently available through its Telegram channel [@udemylive](https://t.me/udemylive), while [InventHigh](https://inventhigh.net) links are available through its Telegram channel [@udemyoffer](https://t.me/udemyoffer). [Deelcart](https://deelcart.com) and [InventHigh](https://inventhigh.net) links are no longer available on Reddit. The Reddit client currently returns intermediary links from [IDownloadCoupon](https://idownloadcoupon.com) and [Real Discount](https://www.real.discount/).
 
 See the [open issues](https://github.com/muhammadazzazy/udemate/issues) for a full list of proposed features (and known issues).
 
