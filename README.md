@@ -137,23 +137,23 @@ Create a Reddit bot and get environment variables
 
    ```env
    # Reddit config
-   # Required.
+   # Required
    REDDIT_CLIENT_ID=""
-   # Required.
+   # Required
    REDDIT_CLIENT_SECRET=""
-   # Optional. Default is 'script:Udemate:v1.0 (by u/kemitche)'.
+   # Default is 'script:Udemate:v1.0 (by u/kemitche)'
    REDDIT_USER_AGENT=""
-   # Required if 2FA is not enabled.
+   # Required if 2FA is not enabled
    REDDIT_PASSWORD=""
-   # Required if 2FA is not enabled.
+   # Required if 2FA is not enabled
    REDDIT_USERNAME=""
-   # Optional. Default is 500.
-   UDEMY_FREEBIES_LIMIT=1000
-   UDEMY_FREEEBIES_LIMIT=1000
-   UDEMY_FREE_COURSES_LIMIT=1000
+   # Default is 500
+   UDEMY_FREEBIES_LIMIT=500
+   UDEMY_FREEEBIES_LIMIT=500
+   UDEMY_FREE_COURSES_LIMIT=500
 
    # Browser config
-   # Required if you want to enroll in courses with a user profile.
+   # Required if you want to enroll in courses with a user profile
    USER_DATA_DIR="C:\\Users\\username\\AppData\\Local\\Google\\Chrome\\User Data\\Udemate"
 
    # Deelcart config
@@ -201,11 +201,11 @@ Create a Reddit bot and get environment variables
    DATA_DIR=""
 
    # Telegram bot config
-   # Local session filename that is optional.
+   # Local session filename (optional)
    TELEGRAM_SESSION_NAME="udemate"
-   # Required if you want to use the Telegram bot.
+   # Required if you want to use the Telegram bot
    TELEGRAM_API_ID=
-   # Required if you want to use the Telegram bot.
+   # Required if you want to use the Telegram bot
    TELEGRAM_API_HASH=""
    ```
 
@@ -268,7 +268,6 @@ Command-line arguments are optional and they override the environment variables 
   - [x] [Deelcart](https://deelcart.com) (formerly [Freewebcart](https://freewebcart.com))
   - [x] [IDownloadCoupon](https://idownloadcoupon.com)
   - [x] [InventHigh](https://inventhigh.com)
-  - [x] Line51 (defunct; website unavailable; spider retained)
   - [x] [Real Discount](https://www.real.discount/)
   - [x] [WebHelperApp](https://webhelperapp.com)
 
