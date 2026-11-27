@@ -7,7 +7,7 @@ from config.settings import FORMATTED_DATE
 
 
 class Cache:
-    """Read and write cached middleman and Udemy links to JSON files."""
+    """Read and write cached intermediary and Udemy links to JSON files."""
 
     def __init__(self, data_dir: Path, logger: Logger) -> None:
         self.json_dir = data_dir / FORMATTED_DATE / 'json'
@@ -16,7 +16,7 @@ class Cache:
         self.urls = {}
 
     def read_json(self, filename: str) -> list[str]:
-        """Parse cached middleman and Udemy links with coupons from JSON files."""
+        """Parse cached intermediary and Udemy links with coupons from JSON files."""
         file_path: Path = self.json_dir / filename
         if file_path.exists():
             with file_path.open('r', encoding='utf-8') as f:
@@ -53,14 +53,14 @@ class Cache:
         return []
 
     def append_jsonl(self, *, filename: str, url: str) -> None:
-        """Append middleman or Udemy link to corresponding JSONL file."""
+        """Append intermediary or Udemy link to corresponding JSONL file."""
         file_path: Path = self.json_dir / filename
         with file_path.open(mode='a', encoding='utf-8') as f:
             json.dump(url, f, ensure_ascii=False)
             f.write('\n')
 
     def filter_urls(self, bot: str) -> list[str]:
-        """Return list of unprocessed links associated with middleman scraper or Udemy bot."""
+        """Return list of unprocessed links associated with intermediary scraper or Udemy bot."""
         filtered_urls: list[str] = sorted(set(self.read_json(
             f'{bot}.json')) - set(self.read_jsonl(f'{bot}.jsonl')))
         self.logger.info(

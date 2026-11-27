@@ -1,4 +1,4 @@
-"""Encapsulate common attributes and functionality between middleman spiders."""
+"""Encapsulate common attributes and functionality between intermediary spiders."""
 from abc import ABC, abstractmethod
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from logging import Logger
@@ -36,7 +36,7 @@ class Spider(ABC):
         )
 
     def run(self) -> list[str]:
-        """Return list of Udemy links extracted from middleman website."""
+        """Return list of Udemy links extracted from intermediary website."""
         self.logger.info('Processing %d intermediary links from %s...',
                          len(self.urls), self.name)
         udemy_urls: list[str] = []
@@ -53,4 +53,4 @@ class Spider(ABC):
 
     @abstractmethod
     def transform(self, url: str) -> str | None:
-        """Return a Udemy link extracted from middleman link."""
+        """Return a Udemy link extracted from intermediary link."""

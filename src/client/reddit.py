@@ -55,9 +55,9 @@ class RedditClient:
         except RequestException as e:
             self.logger.error('Failed to fetch Reddit posts: %r', e)
 
-    def get_middlemen(self) -> list[str]:
-        """Return list of detected middlemen hostnames."""
-        middlemen: list[str] = []
+    def get_intermediaries(self) -> list[str]:
+        """Return list of detected intermediaries hostnames."""
+        intermediaries: list[str] = []
         for submission in self.submissions:
             result = urlparse(submission.url)
             flag: bool = all(
@@ -67,26 +67,35 @@ class RedditClient:
                 continue
             standard_url: str = self.clean(submission.url)
             hostname: str = standard_url.split('/')[2]
-            middleman: str = hostname.split('.')[0]
-            if middleman not in middlemen:
-                middlemen.append(middleman)
+            intermediary: str = hostname.split('.')[0]
+            if intermediary not in intermediaries:
+                intermediaries.append(intermediary)
 
-        return middlemen
+        return intermediaries
 
     def parse_markdown(self, markdown: str) -> list[str]:
-        """Return list of middleman URLs from Reddit post selftext."""
+        """Return list of intermediary URLs from Reddit post selftext."""
         pattern: str = r'\*\s+(.*?)\s+\[REDEEM OFFER\]\((https?://[^)]+)\)'
         matches: list[tuple[str, str]] = re.findall(pattern, markdown)
-        middleman_urls: list[str] = []
+        intermediary_urls: list[str] = []
         for _title, url in matches:
-            middleman_urls.append(self.clean(url))
-        return sorted(set(middleman_urls))
+            intermediary_urls.append(self.clean(url))
+        return sorted(set(intermediary_urls))
 
-    def get_middleman_urls(self, middlemen: list[str]) -> dict[str, list[str]]:
-        """Return mapping between middlemen and submission links."""
+    def clean(self, url: str) -> str:
+        """Return clean intermediaries link."""
+        parts: list[str] = url.split('/')
+        while '' in parts:
+            parts.remove('')
+        clean_url: str = parts[0] + '//' + '/'.join(parts[1:4])
+        clean_url = clean_url.replace('www.', '')
+        return clean_url
+
+    def collect_intermediary_urls(self, intermediaries: list[str]) -> dict[str, list[str]]:
+        """Return mapping between intermediaries and submission links."""
         urls: dict[str, list[str]] = {}
-        for middleman in middlemen:
-            urls[middleman] = []
+        for intermediary in intermediaries:
+            urls[intermediary] = []
         udemy_urls: list[str] = []
         for submission in self.submissions:
             if submission.selftext:
@@ -94,21 +103,12 @@ class RedditClient:
                     submission.selftext))
             if submission.url:
                 udemy_urls.append(self.clean(submission.url))
-        for middleman in middlemen:
+        for intermediary in intermediaries:
             for url in udemy_urls:
                 hostname: str = url.split('/')[2]
-                intermediary: str = hostname.split('.')[0]
-                if intermediary == middleman:
-                    urls[middleman].append(url)
-        for middleman in middlemen:
-            urls[middleman] = sorted(set(urls[middleman]))
+                intermediary_hostname: str = hostname.split('.')[0]
+                if intermediary == intermediary_hostname:
+                    urls[intermediary].append(url)
+        for intermediary in intermediaries:
+            urls[intermediary] = sorted(set(urls[intermediary]))
         return urls
-
-    def clean(self, url: str) -> str:
-        """Return clean middlemen link."""
-        parts: list[str] = url.split('/')
-        while '' in parts:
-            parts.remove('')
-        clean_url: str = parts[0] + '//' + '/'.join(parts[1:4])
-        clean_url = clean_url.replace('www.', '')
-        return clean_url

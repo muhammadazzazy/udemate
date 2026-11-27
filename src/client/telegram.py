@@ -1,4 +1,4 @@
-"""Collect middleman links from Telegram channels."""
+"""Collect intermediary links from Telegram channels."""
 import re
 from logging import Logger
 
@@ -67,9 +67,9 @@ class TelegramBot:
                         self.logger.info('Found Inventhigh link: %s', link)
         return inventhigh_links
 
-    def run(self) -> dict[str, list[str]]:
+    def collect_intermediary_links(self) -> dict[str, list[str]]:
         """Return a dictionary containing Deelcart and InventHigh links."""
-        middleman_links: dict[str, list[str]] = {}
+        intermediary_links: dict[str, list[str]] = {}
         with self.client:
             deelcart_replies: list = self.client.loop.run_until_complete(
                 self.fetch_deelcart_replies())
@@ -79,6 +79,7 @@ class TelegramBot:
                 self.fetch_inventhigh_messages())
             inventhigh_links: list[str] = self.extract_inventhigh_links(
                 inventhigh_messages)
-            middleman_links['deelcart'] = deelcart_links
-            middleman_links['inventhigh'] = inventhigh_links
-        return middleman_links
+            intermediary_links: dict[str, list[str]] = {}
+            intermediary_links['deelcart'] = deelcart_links
+            intermediary_links['inventhigh'] = inventhigh_links
+        return intermediary_links

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-"""Autoenroll into free Udemy courses based on links posted on various middlemen websites."""
+"""Autoenroll into free Udemy courses based on links posted on various intermediary websites."""
 from argparse import ArgumentParser, Namespace
 from logging import Logger
 from pydantic_settings import BaseSettings
