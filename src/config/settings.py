@@ -7,7 +7,7 @@ from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 BASE_DIR: Final[str] = Path(__file__).resolve().parent.parent.parent
-DEFAULT_USER_AGENT: Final[str] = 'Udemate:v1.0.0 (by u/kemitche)'
+DEFAULT_USER_AGENT: Final[str] = 'script:Udemate:v1.0.0 (by u/kemitche)'
 DEFAULT_SUBREDDIT_LIMIT: Final[int] = 500
 MIN_SUBREDDIT_LIMIT: Final[int] = 0
 MAX_SUBREDDIT_LIMIT: Final[int] = 1000
@@ -30,15 +30,27 @@ class HeadlessSettings(BaseSettings):
     model_config = SettingsConfigDict(env_file='.env',
                                       env_file_encoding='utf-8',
                                       case_sensitive=False)
-    reddit_client_id: str = Field(description='Reddit script client ID')
-    reddit_client_secret: str = Field(
-        description='Reddit script client secret')
+    reddit_client_id: str | None = Field(
+        default=None,
+        description='Reddit script client ID'
+    )
+    reddit_client_secret: str | None = Field(
+        default=None,
+        description='Reddit script client secret'
+
+    )
     reddit_user_agent: str = Field(
-        default=DEFAULT_USER_AGENT, description='Reddit script user agent')
-    reddit_password: str = Field(
-        description='Password of Reddit account')
-    reddit_username: str = Field(
-        description='Username of Reddit account')
+        default=DEFAULT_USER_AGENT,
+        description='Reddit script user agent',
+    )
+    reddit_password: str | None = Field(
+        default=None,
+        description='Password of Reddit account'
+    )
+    reddit_username: str | None = Field(
+        default=None,
+        description='Username of Reddit account'
+    )
 
     udemy_freebies_limit: int = Field(
         default=DEFAULT_SUBREDDIT_LIMIT,

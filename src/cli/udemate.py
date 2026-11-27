@@ -42,8 +42,13 @@ class Udemate:
         self.config = settings
         self.logger = logger
 
-    def setup_reddit_client(self) -> RedditClient:
-        """Return Reddit client for r/udemyfreebies."""
+    def setup_reddit_client(self) -> RedditClient | None:
+        """Return Reddit client associated with various subreddits."""
+        if not self.config.reddit_client_id or not self.config.reddit_client_secret:
+            self.logger.warning(
+                'Reddit client ID and secret are required to collect middleman links.'
+            )
+            return None
         reddit_config = RedditConfig(
             client_id=self.config.reddit_client_id,
             client_secret=self.config.reddit_client_secret,
@@ -76,47 +81,40 @@ class Udemate:
             )
         return reddit_client
 
-    def collect_middleman_links(self) -> dict[str, set[str]]:
+    def collect_reddit_links(self) -> dict[str, list[str]]:
         """Collect middleman links from Reddit."""
-        reddit_client: RedditClient = self.setup_reddit_client()
+        reddit_client: RedditClient | None = self.setup_reddit_client()
+        if not reddit_client:
+            return {}
         reddit_client.populate_submissions()
         reddit_middlemen: list[str] = reddit_client.get_middlemen()
-        middleman_urls: dict[
+        reddit_links: dict[
             str,
             list[str]
         ] = reddit_client.get_middleman_urls(reddit_middlemen)
-        if self.config.telegram_api_id and self.config.telegram_api_hash:
-            telegram_bot: TelegramBot = TelegramBot(
-                name=self.config.telegram_session_name,
-                api_id=self.config.telegram_api_id,
-                api_hash=self.config.telegram_api_hash,
-                logger=self.logger
-            )
-            telegram_urls: dict[str, list[str]] = telegram_bot.run()
-            middleman_urls['deelcart'] = telegram_urls['deelcart']
-            middleman_urls['inventhigh'] = telegram_urls['inventhigh']
+        return reddit_links
 
-        for middleman, urls in middleman_urls.items():
-            self.cache.write_json(
-                data=urls,
-                filename=f'{middleman}.json'
+    def collect_telegram_links(self) -> dict[str, list[str]]:
+        """Collect middleman links from Telegram."""
+        if not self.config.telegram_api_id or not self.config.telegram_api_hash:
+            self.logger.warning(
+                'Telegram API ID and hash are required. Skipping Deelcart and InventHigh links.'
             )
-        return middleman_urls
+            return {}
+        telegram_bot: TelegramBot = TelegramBot(
+            name=self.config.telegram_session_name,
+            api_id=self.config.telegram_api_id,
+            api_hash=self.config.telegram_api_hash,
+            logger=self.logger
+        )
+        telegram_links: dict[str, list[str]] = telegram_bot.run()
+        return telegram_links
 
     def initialize_spiders(self, middleman_urls: dict[str, set[str]]) -> dict[str, Any]:
         """Initialize spiders for each middleman."""
         spiders: dict[str, Any] = {}
         for middleman, urls in middleman_urls.items():
             match middleman:
-                case 'easylearn':
-                    spiders[middleman] = EasyLearning(
-                        urls=urls,
-                        config=SpiderConfig(
-                            retries=self.config.easylearn_retries,
-                            threads=self.config.easylearn_threads,
-                            timeout=self.config.easylearn_timeout
-                        ), logger=self.logger
-                    )
                 case 'deelcart':
                     headless_driver: uc.Chrome = self.browser.setup(
                         headless=True)
@@ -127,6 +125,15 @@ class Udemate:
                             retries=self.config.deelcart_retries,
                             threads=self.config.deelcart_threads,
                             timeout=self.config.deelcart_timeout
+                        ), logger=self.logger
+                    )
+                case 'easylearn':
+                    spiders[middleman] = EasyLearning(
+                        urls=urls,
+                        config=SpiderConfig(
+                            retries=self.config.easylearn_retries,
+                            threads=self.config.easylearn_threads,
+                            timeout=self.config.easylearn_timeout
                         ), logger=self.logger
                     )
                 case 'idownloadcoupon':
@@ -172,9 +179,16 @@ class Udemate:
 
     def scrape(self) -> list[str]:
         """Fetch collection of Udemy links with coupons using middleman spiders."""
-        middleman_urls: dict[str, set[str]] = self.collect_middleman_links()
+        reddit_urls: dict[str, list[str]] = self.collect_reddit_links()
+        telegram_urls: dict[str, list[str]] = self.collect_telegram_links()
+        middleman_urls: dict[str, list[str]] = {**reddit_urls, **telegram_urls}
         udemy_urls: list[str] = []
         spiders: dict[str, Any] = self.initialize_spiders(middleman_urls)
+        if len(spiders) == 0:
+            self.logger.warning(
+                'No middleman links to scrape. Exiting...'
+            )
+            return []
         with ThreadPoolExecutor(max_workers=min(8, len(spiders))) as executor:
             futures = {executor.submit(
                 spider.run): middleman for middleman, spider in spiders.items()}
