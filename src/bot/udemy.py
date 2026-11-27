@@ -279,6 +279,20 @@ class Udemy:
         except WebDriverException:
             return False
 
+    def is_not_found(self) -> bool:
+        """Return a flag indicating whether the page is not found (404)."""
+        self.logger.info('Checking if page is not found (404)...')
+        message_xpath: str = (
+            "//h1[contains(normalize-space(), "
+            "'We can\\u2019t find the page you\\u2019re looking for')]"
+        )
+        try:
+            self.wait.until(EC.visibility_of_element_located(
+                (By.XPATH, message_xpath)))
+            return True
+        except WebDriverException:
+            return False
+
     def is_free(self) -> bool:
         """Return a flag indicating whether a course is free."""
         self.logger.info('Checking if course is free...')
@@ -395,6 +409,11 @@ class Udemy:
                 filename='udemy.jsonl',
                 url=udemy_url
             )
+            if self.is_not_found():
+                self.logger.info(
+                    'Course not found (404). Skipping...'
+                )
+                continue
             if self.is_unavailable():
                 self.logger.info(
                     'Course is not accepting enrollments. Skipping...'

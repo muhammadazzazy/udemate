@@ -310,7 +310,7 @@ Command-line arguments are optional and they override the environment variables 
 
 - [x] Improve Reddit scraping flexibility with per-subreddit limits
 - [x] Automate Udemy login flow while detecting maximum resend attempts and maximum session count
-- [x] Detect private and unavailable courses
+- [x] Detect private, unavailable, and missing courses
 - [x] Support free-course enrollment, including radio-button selection
 - [x] Collect [Deelcart](https://deelcart.com) links from the Telegram channel [@udemylive](https://t.me/udemylive)
 - [x] Fix `TimeoutException` when converting Deelcart links to Udemy links by selecting the `/redirect/` using the `href` attribute

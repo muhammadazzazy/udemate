@@ -23,9 +23,9 @@ class Cache:
                 self.urls[filename[:-5]] = list(json.load(f))
             if self.urls[filename[:-5]]:
                 self.logger.info('Read %d links from %s.',
-                                 len(self.urls[filename[:-5]]), filename[:-5])
+                                 len(self.urls[filename[:-5]]), filename)
             return self.urls[filename[:-5]]
-        self.logger.info('No links in JSON cache for %s.', filename[:-5])
+        self.logger.info('No links in  %s.', filename)
         return []
 
     def write_json(self, *, filename: str, data: list[str]) -> None:
